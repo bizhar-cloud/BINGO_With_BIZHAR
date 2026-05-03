@@ -15,16 +15,21 @@
     <link rel="apple-touch-icon" href="https://i.postimg.cc/zvmXKRKR/5B6603C5-50DF-4389-88A5-8919A0E4317C.png">
     <link rel="icon" type="image/png" href="https://i.postimg.cc/zvmXKRKR/5B6603C5-50DF-4389-88A5-8919A0E4317C.png">
     
-    <title>یارییا بینگۆ (1 - 99)</title>
+    <title>یارییا بینگۆ</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
     <style>
-        /* دیزاینا کلاسیک */
+        /* گۆڕاوێن ڕەنگان (بۆ تھیمێن جیاواز) */
         :root {
+            --bg-body: #000000;
             --bg-dark-red: #9e0b0f;
             --bg-left-yellow: #fce883;
             --bg-right-gold: #cba85a;
+            --text-main: #333333;
+            --text-light: #ffffff;
+            --border-main: #5a0000;
+            
             --col-b: #00bfff;
             --col-i: #dc143c;
             --col-n: #a9a9a9;
@@ -34,8 +39,8 @@
 
         body {
             font-family: 'Noto Sans Arabic', Tahoma, Arial, sans-serif;
-            background-color: #000;
-            color: #333;
+            background-color: var(--bg-body);
+            color: var(--text-main);
             text-align: center;
             margin: 0;
             padding: 10px;
@@ -47,9 +52,10 @@
             touch-action: manipulation; 
             -webkit-user-select: none; 
             user-select: none;
+            transition: background-color 0.3s;
         }
         
-        input {
+        input, select {
             -webkit-user-select: auto;
             user-select: auto;
         }
@@ -62,6 +68,7 @@
             border-radius: 10px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.8);
             margin: auto;
+            transition: background-color 0.3s;
         }
 
         .layout-wrapper {
@@ -74,21 +81,23 @@
             flex: 1.2;
             background-color: var(--bg-left-yellow);
             border-radius: 8px;
-            border: 2px solid #5a0000;
+            border: 2px solid var(--border-main);
             padding: 15px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            transition: all 0.3s;
         }
 
         .right-panel {
             flex: 1.5;
             background-color: var(--bg-right-gold);
             border-radius: 8px;
-            border: 2px solid #5a0000;
+            border: 2px solid var(--border-main);
             padding: 8px;
             display: flex;
             flex-direction: column;
+            transition: all 0.3s;
         }
 
         .monitor-box {
@@ -100,7 +109,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 10px auto 10px; /* کێمکرنا مەودایێ ژێرین */
+            margin: 10px auto 10px; 
             box-shadow: 0 6px 12px rgba(0,0,0,0.4), inset 0 -6px 10px rgba(0,0,0,0.1);
         }
         
@@ -111,11 +120,10 @@
             font-family: Arial, sans-serif;
         }
 
-        /* ستایلا نوی بۆ بۆکسێ ژمارەیا ماینە */
         .remaining-count {
             display: inline-block;
             background: linear-gradient(to bottom, #ffffff, #f0f0f0);
-            border: 2px solid #cba85a;
+            border: 2px solid var(--bg-right-gold);
             color: #8b0000;
             font-size: 16px;
             font-weight: bold;
@@ -136,7 +144,7 @@
             padding: 10px;
             border-radius: 8px;
             margin-bottom: 20px;
-            border: 2px solid #5a0000;
+            border: 2px solid var(--border-main);
             box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
             min-height: 50px;
             display: flex;
@@ -190,6 +198,7 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.3);
             display: flex;
             flex-direction: column;
+            transition: all 0.3s;
         }
         .players-header {
             background: var(--bg-dark-red);
@@ -200,6 +209,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: all 0.3s;
         }
         .btn-menu-toggle {
             background: #ffd700;
@@ -218,11 +228,10 @@
         
         .players-body { padding: 10px; display: flex; flex-direction: column; gap: 8px; flex: 1; overflow: hidden; }
         
-        /* ستایلا مینیۆیێ دگەل سکرۆلێ */
         .player-menu-content {
             display: none; 
-            background: #fce883;
-            border: 2px solid #5a0000;
+            background: var(--bg-left-yellow);
+            border: 2px solid var(--border-main);
             padding: 10px;
             border-radius: 6px;
             margin-bottom: 10px;
@@ -230,6 +239,7 @@
             max-height: 55vh; 
             overflow-y: auto;
             flex-shrink: 0;
+            transition: all 0.3s;
         }
 
         .menu-btn-item {
@@ -247,21 +257,13 @@
             font-family: inherit;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
-        .btn-share {
-            background: #ff9800;
-            border-color: #e65100;
-            color: #fff;
-        }
-        .btn-about {
-            background: #e0e0e0;
-            border-color: #999;
-            color: #333;
-        }
-        .btn-disabled {
-            opacity: 0.5;
-            cursor: not-allowed !important;
-            pointer-events: none;
-        }
+        .btn-share { background: #ff9800; border-color: #e65100; color: #fff; }
+        .btn-history { background: #8e44ad; border-color: #732d91; color: #fff; }
+        .btn-fullscreen { background: #34495e; border-color: #2c3e50; color: #fff; }
+        .btn-lang { background: #4caf50; border-color: #388e3c; color: #fff; }
+        .btn-about { background: #e0e0e0; border-color: #999; color: #333; }
+        
+        .btn-disabled { opacity: 0.5; cursor: not-allowed !important; pointer-events: none; }
         
         .menu-panel {
             display: none;
@@ -277,10 +279,12 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 10px;
+            color: #5a0000;
         }
+        .settings-label { font-size: 14px; font-weight: bold; }
 
         .speed-input-menu {
-            width: 50px;
+            width: 70px;
             padding: 5px;
             text-align: center;
             border: 2px solid #8b0000;
@@ -301,7 +305,6 @@
             width: 100%;
         }
 
-        /* ستایلا دوگمەیێن کۆنترۆلا ئەلێرتان */
         .toggle-btn {
             background: #4caf50;
             color: white;
@@ -314,83 +317,53 @@
             width: 80px;
             text-align: center;
         }
-        .toggle-btn.off {
-            background: #f44336;
-        }
+        .toggle-btn.off { background: #f44336; }
 
         .input-group { display: flex; flex-direction: column; gap: 8px; }
         .custom-input { padding: 8px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px; text-align: center; font-family: inherit; }
         .btn-add { background: linear-gradient(to bottom, #b5b5b5, #7a7a7a); color: white; padding: 10px; font-size: 16px; font-weight: bold; border: 2px solid #555; border-radius: 6px; cursor: pointer; text-shadow: 1px 1px 2px #000; }
         .btn-clear-all { background: linear-gradient(to bottom, #ff9999, #cc0000); color: white; padding: 10px; width: 100%; font-size: 14px; font-weight: bold; border: 2px solid #555; border-radius: 6px; cursor: pointer; text-shadow: 1px 1px 2px #000; margin-top: 8px; }
 
+        .dynamic-inputs-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            justify-content: center;
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .num-input-box {
+            width: 45px;
+            height: 45px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            border: 2px solid #cba85a;
+            border-radius: 6px;
+            outline: none;
+        }
+        .num-input-box:focus { border-color: #9e0b0f; box-shadow: 0 0 5px rgba(158, 11, 15, 0.5); }
+        .btn-add-box { background: #4caf50; color: white; border: none; padding: 8px; border-radius: 4px; cursor: pointer; font-weight: bold; font-family: inherit; margin-bottom: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+
         .players-list { text-align: right; overflow-y: auto; padding-right: 5px; flex: 1;}
         
-        .players-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: #fff;
-            border-radius: 4px;
-            overflow: hidden;
-            margin-top: 5px;
-        }
-        .players-table th, .players-table td {
-            border: 1px solid #ddd;
-            padding: 6px 4px;
-            text-align: center;
-            vertical-align: middle;
-        }
-        .players-table th {
-            background: #fce883; 
-            color: #5a0000;
-            font-weight: bold;
-            font-size: 13px;
-        }
-        .players-table td {
-            font-size: 13px;
-            color: #000;
-        }
-        .players-table tr {
-            transition: background-color 0.2s;
-        }
-        .players-table tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        /* --- ڕەنگێ قورتالبووی (کەسک) --- */
-        .players-table tr.safe {
-            background-color: #90ee90 !important;
-        }
-        /* --- ڕەنگێ خوسارەتی (سۆر) و جوانکرنا وێ --- */
-        .players-table tr.loser {
-            background-color: #ff4d4d !important;
-        }
-        .players-table tr.loser td, .players-table tr.loser strong {
-            color: #fff !important;
-        }
+        .players-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 4px; overflow: hidden; margin-top: 5px; }
+        .players-table th, .players-table td { border: 1px solid #ddd; padding: 6px 4px; text-align: center; vertical-align: middle; }
+        .players-table th { background: var(--bg-left-yellow); color: var(--border-main); font-weight: bold; font-size: 13px; }
+        .players-table td { font-size: 13px; color: #000; }
+        .players-table tr { transition: background-color 0.2s; }
+        .players-table tr:nth-child(even) { background-color: #f9f9f9; }
+        .players-table tr.safe { background-color: #90ee90 !important; }
+        .players-table tr.loser { background-color: #ff4d4d !important; }
+        .players-table tr.loser td, .players-table tr.loser strong { color: #fff !important; }
         
-        .btn-edit-table {
-            background: #ffd700;
-            color: #000;
-            border: 1px solid #b8860b;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .btn-delete-table {
-            background: #f44336;
-            color: #fff;
-            border: 1px solid #d32f2f;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            cursor: pointer;
-            font-weight: bold;
-        }
+        .btn-edit-table { background: #ffd700; color: #000; border: 1px solid #b8860b; padding: 4px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: bold; }
+        .btn-delete-table { background: #f44336; color: #fff; border: 1px solid #d32f2f; padding: 4px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: bold; }
         .safe-badge { color: #006400; font-size: 11px; font-weight: bold;}
         .loser-badge { color: #ffcccc; font-size: 11px; font-weight: bold;}
 
-        /* ----- ستایلا بەشێ ڕاستێ (بۆرد) ----- */
         .bingo-board {
             display: grid;
             grid-template-columns: repeat(10, 1fr); 
@@ -446,82 +419,48 @@
         .loser-text span { color: #fff; font-size: 1.2em; }
         .btn-restart { background: linear-gradient(to bottom, #d4d4d4, #7a7a7a); color: white; padding: 15px 40px; font-size: 20px; font-weight: 900; border: 2px solid #555; border-radius: 10px; cursor: pointer; text-shadow: 1px 1px 2px #000; }
 
-        /* ستایلا مۆدالێ دەربارەی گەشەپێدەر */
         @keyframes fadeInBackground { from { opacity: 0; } to { opacity: 1; } }
         @keyframes popUpBox { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
         .about-modal {
             display: none; 
-            position: fixed; 
-            top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0, 0, 0, 0.5); 
-            backdrop-filter: blur(5px); 
-            -webkit-backdrop-filter: blur(5px);
-            justify-content: center; align-items: center; z-index: 3000;
-            padding: 20px;
-            box-sizing: border-box;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
+            justify-content: center; align-items: center; z-index: 3000; padding: 20px; box-sizing: border-box;
             animation: fadeInBackground 0.3s ease forwards;
         }
         .about-box {
-            background: #fff;
-            border: 3px solid #8b0000;
-            padding: 25px 20px;
-            border-radius: 16px;
-            max-width: 350px;
-            width: 100%;
-            text-align: center;
-            color: #333;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            background: #fff; border: 3px solid var(--border-main); padding: 25px 20px; border-radius: 16px;
+            max-width: 350px; width: 100%; text-align: center; color: #333; box-shadow: 0 15px 35px rgba(0,0,0,0.4);
             animation: popUpBox 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
-        .about-box h3 {
-            color: #5a0000;
-            margin-top: 0;
-            margin-bottom: 15px;
-            font-size: 18px;
-            border-bottom: 2px dashed #ccc;
-            padding-bottom: 10px;
+        .about-box h3 { color: var(--border-main); margin-top: 0; margin-bottom: 15px; font-size: 18px; border-bottom: 2px dashed #ccc; padding-bottom: 10px; }
+        .about-box p { margin: 12px 0; font-size: 15px; line-height: 1.6; color: #444; }
+        .btn-close-about { background: #f44336; color: white; border: none; padding: 10px 35px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 15px; font-family: inherit; box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
+
+        /* ستايلێن دۆخێ تاری (Dark Mode) و تھیمێن دی */
+        body.theme-dark {
+            --bg-body: #121212; --bg-dark-red: #1e1e1e; --bg-left-yellow: #2d2d2d; --bg-right-gold: #383838;
+            --border-main: #555; --text-main: #fff;
         }
-        .about-box p {
-            margin: 12px 0;
-            font-size: 15px;
-            line-height: 1.6;
-            color: #444;
+        body.theme-dark .container, body.theme-dark .match-display { box-shadow: 0 0 15px rgba(255,255,255,0.1); }
+        body.theme-dark .players-section, body.theme-dark .menu-panel { background: #2d2d2d; color: #fff; border-color: #555; }
+        body.theme-dark .settings-row { color: #fff; }
+        body.theme-dark .players-table, body.theme-dark .players-table th, body.theme-dark .players-table td { background: #333; color: #fff; border-color: #555; }
+        body.theme-dark .players-table tr:nth-child(even) td { background: #404040; }
+        body.theme-dark .board-cell { background: #444; color: #fff; border-color: #666; }
+        body.theme-dark .number-circle { background: #555; color: #fff; border-color: #777; }
+        body.theme-dark .remaining-count { background: #333; color: #fff; border-color: #777; }
+        body.theme-dark .about-box { background: #333; color: #fff; }
+        body.theme-dark .about-box p { color: #ccc; }
+
+        body.theme-blue {
+            --bg-body: #001f3f; --bg-dark-red: #003366; --bg-left-yellow: #b3e0ff; --bg-right-gold: #4682B4;
+            --border-main: #001f3f;
         }
-        .about-link {
-            display: inline-block;
-            background: linear-gradient(to right, #fce883, #cba85a);
-            color: #5a0000 !important;
-            padding: 10px 25px;
-            border-radius: 30px;
-            text-decoration: none;
-            font-size: 18px;
-            font-weight: 900;
-            margin: 10px 0;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            border: 2px solid #b8860b;
-            transition: all 0.2s;
-        }
-        .about-link:active {
-            transform: scale(0.95);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-        .btn-close-about {
-            background: #f44336;
-            color: white;
-            border: none;
-            padding: 10px 35px;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-top: 15px;
-            font-family: inherit;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.2);
-            transition: transform 0.2s;
-        }
-        .btn-close-about:active {
-            transform: scale(0.95);
+        body.theme-green {
+            --bg-body: #002200; --bg-dark-red: #004d00; --bg-left-yellow: #c1f0c1; --bg-right-gold: #2e8b57;
+            --border-main: #002200;
         }
 
         @media (min-width: 900px) {
@@ -533,158 +472,41 @@
             .board-cell { font-size: 2.5vh; }
         }
 
-        /* ===== چارەسەرییا لاندسکەیپ ===== */
         @media (orientation: landscape) and (max-height: 600px) {
-            body { 
-                padding: 0; 
-                margin: 0; 
-                height: 100vh; 
-                width: 100vw; 
-                overflow: hidden; 
-                background-color: #000;
-            }
-            
-            .container { 
-                padding: 6px; 
-                max-width: 100%; 
-                height: 100vh; 
-                border-radius: 0; 
-                display: flex; 
-                flex-direction: column; 
-                box-sizing: border-box;
-                margin: 0;
-            }
-            
-            .layout-wrapper { 
-                flex-direction: row; 
-                align-items: stretch; 
-                justify-content: center; 
-                gap: 6px; 
-                height: 100%; 
-                width: 100%;
-                overflow: hidden;
-            }
-            
-            .left-panel { 
-                flex: 1; 
-                max-width: 32%; 
-                height: 96vh; 
-                overflow-y: auto; 
-                padding: 10px; 
-                box-sizing: border-box;
-                margin: auto 0;
-            }
-            
-            .right-panel { 
-                flex: 1.2; 
-                height: 96vh; 
-                padding: 2px; 
-                display: flex; 
-                justify-content: center; 
-                align-items: center; 
-                background: none;
-                border: none;
-                box-sizing: border-box;
-            }
-            
-            .players-section { 
-                flex: 1; 
-                max-width: 35%; 
-                display: flex; 
-                flex-direction: column; 
-                height: 96vh;
-                margin: auto 0;
-                box-sizing: border-box;
-            }
-
-            .bingo-board { 
-                display: grid;
-                grid-template-columns: repeat(10, 1fr);
-                grid-template-rows: repeat(10, 1fr);
-                height: min(92vh, 48vw); 
-                width: min(92vh, 48vw); 
-                gap: 3px; 
-                margin: auto;
-                padding: 6px;
-                box-sizing: border-box;
-                flex-shrink: 0; 
-                background: var(--bg-right-gold);
-                border: 2px solid #5a0000;
-                border-radius: 8px;
-            }
-            
-            .board-cell { 
-                font-size: min(3vh, 2vw); 
-                border-width: 1.5px; 
-                width: 100%;
-                height: 100%;
-                aspect-ratio: auto; 
-                margin: 0;
-            }
-            
-            .monitor-box { 
-                width: 26vh;      
-                height: 26vh;     
-                border-width: 8px; 
-                margin: 0 auto 8px; 
-                padding: 0;
-                flex-shrink: 0; 
-                aspect-ratio: 1 / 1;
-                box-shadow: 0 8px 16px rgba(0,0,0,0.4), inset 0 -6px 12px rgba(0,0,0,0.1);
-            }
+            body { padding: 0; margin: 0; height: 100vh; width: 100vw; overflow: hidden; background-color: var(--bg-body); }
+            .container { padding: 6px; max-width: 100%; height: 100vh; border-radius: 0; display: flex; flex-direction: column; box-sizing: border-box; margin: 0; }
+            .layout-wrapper { flex-direction: row; align-items: stretch; justify-content: center; gap: 6px; height: 100%; width: 100%; overflow: hidden; }
+            .left-panel { flex: 1; max-width: 32%; height: 96vh; overflow-y: auto; padding: 10px; box-sizing: border-box; margin: auto 0; }
+            .right-panel { flex: 1.2; height: 96vh; padding: 2px; display: flex; justify-content: center; align-items: center; background: none; border: none; box-sizing: border-box; }
+            .players-section { flex: 1; max-width: 35%; display: flex; flex-direction: column; height: 96vh; margin: auto 0; box-sizing: border-box; }
+            .bingo-board { display: grid; grid-template-columns: repeat(10, 1fr); grid-template-rows: repeat(10, 1fr); height: min(92vh, 48vw); width: min(92vh, 48vw); gap: 3px; margin: auto; padding: 6px; box-sizing: border-box; flex-shrink: 0; background: var(--bg-right-gold); border: 2px solid var(--border-main); border-radius: 8px; }
+            .board-cell { font-size: min(3vh, 2vw); border-width: 1.5px; width: 100%; height: 100%; aspect-ratio: auto; margin: 0; }
+            .monitor-box { width: 26vh; height: 26vh; border-width: 8px; margin: 0 auto 8px; padding: 0; flex-shrink: 0; aspect-ratio: 1 / 1; box-shadow: 0 8px 16px rgba(0,0,0,0.4), inset 0 -6px 12px rgba(0,0,0,0.1); }
             #drawnNumberDisplay { font-size: 11vh; line-height: 1; } 
-            
-            /* ستایلا لاندسکەیپ بۆ بۆکسێ */
-            .remaining-count { 
-                font-size: 2.2vh; 
-                margin-bottom: 12px; 
-                padding: 4px 12px;
-            }
-            
+            .remaining-count { font-size: 2.2vh; margin-bottom: 12px; padding: 4px 12px; }
             .match-display { min-height: 40px; padding: 10px; margin-bottom: 10px; width: 100%; box-sizing: border-box; }
             .match-text { font-size: 2.8vh; }
             .match-text .highlight-num { font-size: 3.2vh; }
-            
             .buttons-row { margin-bottom: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 6px;}
             .btn-modern { padding: 12px; font-size: 2.4vh; min-height: 40px; } 
-            
             .players-header { font-size: 2.2vh; padding: 8px; }
             .btn-menu-toggle { font-size: 2vh; padding: 4px 8px;}
-            
             .players-body { padding: 8px; flex: 1; display: flex; flex-direction: column; gap: 8px; overflow: hidden; }
-            
-            .player-menu-content { 
-                padding: 8px; 
-                max-height: 55vh; 
-            }
+            .player-menu-content { padding: 8px; max-height: 55vh; }
             .menu-btn-item { padding: 8px; font-size: 2vh;}
-            
             .input-group { margin-bottom: 0; gap: 6px;}
             .custom-input { padding: 8px; font-size: 2.2vh; }
-            .speed-input-menu { padding: 4px; font-size: 2vh; width: 45px;}
+            .speed-input-menu { padding: 4px; font-size: 2vh; width: 65px;}
             .btn-sound { font-size: 2.2vh; padding: 6px; margin-bottom: 10px;}
             .btn-add { padding: 8px; font-size: 2.2vh; }
             .btn-clear-all { padding: 8px; font-size: 2vh; margin-top: 5px; margin-bottom: 0;}
-            
             .players-list { flex: 1; max-height: none; overflow-y: auto; padding-right: 5px; }
-            
             .players-table th, .players-table td { padding: 4px; font-size: 2vh; }
             .btn-edit-table, .btn-delete-table { font-size: 1.8vh; padding: 3px 6px; }
             .safe-badge { font-size: 1.5vh; }
-            
-            .number-circle { 
-                width: 4.5vh;  
-                height: 4.5vh; 
-                line-height: 4.5vh; 
-                font-size: 2.5vh; 
-                margin: 2px;
-            }
-            
+            .number-circle { width: 4.5vh; height: 4.5vh; line-height: 4.5vh; font-size: 2.5vh; margin: 2px; }
             .celebration-toast { font-size: 2em; padding: 20px; width: 85%; }
             .about-box { max-height: 90vh; overflow-y: auto; padding: 15px; }
-            .about-box h3 { font-size: 16px; margin-bottom: 8px; }
-            .about-box p { font-size: 14px; margin: 8px 0; }
-            .about-link { font-size: 16px; padding: 8px 20px; margin: 8px 0; }
         }
 
         @media (max-width: 700px) and (orientation: portrait) {
@@ -696,31 +518,36 @@
         }
     </style>
 </head>
-<body>
+<body class="theme-classic" id="mainBody">
 
     <div class="celebration-toast" id="celebrationToast"></div>
+
+    <div class="about-modal" id="historyModal">
+        <div class="about-box" style="max-width: 90%; width: 450px; padding: 15px;">
+            <h3 style="font-size: 16px; margin-bottom: 10px;">مێژوویا ژمارەیێن دەرکەفتی</h3>
+            <div id="historyList" style="display:flex; flex-wrap:wrap; gap:6px; max-height: 200px; overflow-y:auto; justify-content:center; padding:5px;">
+                </div>
+            <button class="btn-close-about" style="padding: 8px 30px; font-size: 14px; margin-top: 10px;" onclick="closeHistory()">گرتن</button>
+        </div>
+    </div>
 
     <div class="about-modal" id="aboutModal">
         <div class="about-box">
             <h3>دەربارەی گەشەپێدەر</h3>
             <p>ئەڤ یارییە هاتییە دروستکرن ژ لایێ پروگرامساز:</p>
-            <a href="https://bizhar-cloud.github.io/BizharRasheed/" target="_blank" class="about-link">BIZHAR RASHEED</a>
-            <p>هیڤیە ڤێ یاریێ بۆ چ کارێن خراپ و حەرام بکارنەئینن، بتنێ بۆ زەوق و دەمبۆراندنێ بکاربینن گونەها هەوە د ستۆیێ هەوە دابیت 😂</p>
-            <p style="color: #8b0000; font-size: 16px;">هیڤیا دەمێن خۆش بۆ هەوە. ❤️</p>
+            <a href="https://bizhar-cloud.github.io/BizharRasheed/" target="_blank" style="display: inline-block; background: linear-gradient(to right, #fce883, #cba85a); color: #5a0000; padding: 10px 25px; border-radius: 30px; text-decoration: none; font-size: 18px; font-weight: 900; margin: 10px 0; border: 2px solid #b8860b;">BIZHAR RASHEED</a>
+            <p>هیڤیە ڤێ یاریێ بۆ چ کارێن خراپ و حەرام بکارنەئینن، بتنێ بۆ زەوق و دەمبۆراندنێ بکاربینن 😂</p>
             <button class="btn-close-about" onclick="closeAboutDeveloper()">گرتن</button>
         </div>
     </div>
 
     <div class="container">
-        
         <div class="layout-wrapper">
-            
             <div class="left-panel">
-                
                 <div class="monitor-box">
                     <div id="drawnNumberDisplay">--</div>
                 </div>
-                <div id="remainingCountDisplay" class="remaining-count">(99/99) ماینە</div>
+                <div id="remainingCountDisplay" class="remaining-count"></div>
 
                 <div class="match-display" id="matchDisplay">
                     <div class="match-text" id="matchText">چاڤەڕێی ڕاکێشانێ یە...</div>
@@ -731,7 +558,6 @@
                     <button class="btn-modern btn-auto" id="autoBtn" onclick="toggleAutoDraw()">ستارت (Start)</button>
                     <button class="btn-modern full-width" onclick="resetGame()">🔄 نوی کرن (دەستپێکرنا یاریەکا نوی)</button>
                 </div>
-
             </div>
 
             <div class="right-panel">
@@ -747,21 +573,54 @@
                 <div class="players-body">
                     <div id="playerMenuContent" class="player-menu-content">
                         
-                        <button class="menu-btn-item" onclick="toggleSubMenu('settingsPanel')">⚙️ ڕێکخستن</button>
+                        <button class="menu-btn-item" onclick="toggleSubMenu('settingsPanel')">⚙️ ڕێکخستنا یاریێ</button>
                         <div id="settingsPanel" class="menu-panel">
                             <div class="settings-row">
-                                <label for="speedInput" style="font-size: 14px; font-weight: bold; color: #8b0000;">لەزاتی (چرکە):</label>
+                                <span class="settings-label">ژمارا کۆتایی (مەودا):</span>
+                                <input type="number" id="maxNumInput" class="speed-input-menu" min="10" max="500" value="99" onchange="changeMaxNumber()">
+                            </div>
+                            <div class="settings-row">
+                                <span class="settings-label">لەزاتی (چرکە):</span>
                                 <input type="number" id="speedInput" class="speed-input-menu" min="1" max="30" value="3">
                             </div>
-                            <button class="btn-sound" id="soundBtn" onclick="toggleSoundMode()">🔊 دەنگ + خواندن</button>
+                            <div class="settings-row">
+                                <span class="settings-label">ڕەنگێ یاریێ (Theme):</span>
+                                <select id="themeSelect" class="speed-input-menu" style="width: 100px;" onchange="changeTheme()">
+                                    <option value="classic">کلاسیک (سۆر)</option>
+                                    <option value="dark">تاری (Dark)</option>
+                                    <option value="blue">شین (Blue)</option>
+                                    <option value="green">کەسک (Green)</option>
+                                </select>
+                            </div>
+                            <button class="btn-sound" id="soundBtn" onclick="toggleSoundMode()" style="margin-bottom: 8px;">🔊 دەنگ + خواندن</button>
+                        </div>
+
+                        <button class="menu-btn-item btn-lang" onclick="toggleSubMenu('langPanel')">🗣️ زمانێ خواندنێ (Voices)</button>
+                        <div id="langPanel" class="menu-panel">
+                            <div class="input-group">
+                                <div style="font-size: 14px; font-weight: bold; color: var(--border-main); text-align: center; margin-bottom: 5px;">زمانێ دەنگی یێ یاریێ هەلبژێرە:</div>
+                                <select id="langSelect" class="custom-input" style="width: 100%; font-weight: bold; font-size: 15px;" onchange="changeLanguage()">
+                                    <option value="en">English (ئینگلیزی)</option>
+                                    <option value="ar">العربية (عەرەبی)</option>
+                                    <option value="fa">فارسی (فارسی)</option>
+                                    <option value="tr">Türkçe (تورکی)</option>
+                                    <option value="ku">Kurdî (کوردی - ئەگەر هەبیت)</option>
+                                </select>
+                            </div>
                         </div>
 
                         <button class="menu-btn-item" id="addPlayerMenuBtn" onclick="toggleSubMenu('addPlayerPanel')">➕ زێدەکرنا یاریزانان</button>
                         <div id="addPlayerPanel" class="menu-panel">
                             <div class="input-group">
                                 <input type="text" id="playerName" class="custom-input" placeholder="ناڤێ یاریزانی (نموونە: بـــژار)">
-                                <input type="text" id="playerNumbers" class="custom-input" placeholder="ژمارەیێن وی (نموونە: 13, 5, 94)">
-                                <button class="btn-add" id="btnAddPlayer" onclick="addPlayer()">Change (زێدەبکە)</button>
+                                <div style="margin-top: 5px; font-size: 13px; font-weight: bold; color: var(--border-main); text-align: center;">ژمارەیێن وی ل خوارێ د خانەیان دا بنڤیسە:</div>
+                                <div id="dynamicNumberInputs" class="dynamic-inputs-container">
+                                    <input type="number" class="num-input-box" placeholder="٠">
+                                    <input type="number" class="num-input-box" placeholder="٠">
+                                    <input type="number" class="num-input-box" placeholder="٠">
+                                </div>
+                                <button class="btn-add-box" onclick="addNumberBox()">➕ خانەیەکا دی زێدەبکە</button>
+                                <button class="btn-add" id="btnAddPlayer" onclick="addPlayer()">زێدەبکە (Save)</button>
                             </div>
                             <button class="btn-clear-all" id="btnClearAll" onclick="clearAllPlayers()">🗑 ڕەشکرنا هەمی یاریزانان</button>
                         </div>
@@ -769,21 +628,23 @@
                         <button class="menu-btn-item" onclick="toggleSubMenu('alertsPanel')">🔔 کۆنترۆلا نامەیان (ئەلێرت)</button>
                         <div id="alertsPanel" class="menu-panel">
                             <div class="settings-row">
-                                <span style="font-size: 13px; font-weight: bold; color: #5a0000;">نامەیا ڕاکێشانا ژمارەیان:</span>
+                                <span class="settings-label">نامەیا ڕاکێشانا ژمارەیان:</span>
                                 <button id="alertDrawBtn" class="toggle-btn" onclick="toggleAlert('draw')">هەلکرن</button>
                             </div>
                             <div class="settings-row">
-                                <span style="font-size: 13px; font-weight: bold; color: #5a0000;">نامەیا پیرۆزباهیێ:</span>
+                                <span class="settings-label">نامەیا پیرۆزباهیێ:</span>
                                 <button id="alertWinBtn" class="toggle-btn" onclick="toggleAlert('win')">هەلکرن</button>
                             </div>
                             <div class="settings-row">
-                                <span style="font-size: 13px; font-weight: bold; color: #5a0000;">نامەیا خوسارەتیێ:</span>
+                                <span class="settings-label">نامەیا خوسارەتیێ:</span>
                                 <button id="alertLoseBtn" class="toggle-btn" onclick="toggleAlert('lose')">هەلکرن</button>
                             </div>
                         </div>
 
-                        <button class="menu-btn-item btn-share" onclick="shareGame()">📤 بەلاڤکرنا یاریێ (Share)</button>
+                        <button class="menu-btn-item btn-history" onclick="showHistory()">📜 مێژوویا ڕاکێشانێ</button>
+                        <button class="menu-btn-item btn-fullscreen" onclick="toggleFullscreen()">🔲 شاشەیا تەمام (Fullscreen)</button>
                         
+                        <button class="menu-btn-item btn-share" onclick="shareGame()">📤 بەلاڤکرنا یاریێ (Share)</button>
                         <button class="menu-btn-item btn-about" onclick="showAboutDeveloper()">ℹ️ دەربارەی گەشەپێدەر</button>
 
                     </div>
@@ -802,34 +663,123 @@
     </div>
 
     <script>
+        let maxGameNumbers = 99; 
         let players = [];
         let drawnNumbers = [];
         let autoInterval = null;
         let isAutoPlaying = false;
         let audioCtx;
-        let celebrationTimeout; 
+        
+        let celebrationTimeout = null; 
+        let pendingAlertTimeout = null;
+        let pendingModalTimeout = null;
         
         let soundMode = 2; 
-
-        let alertsEnabled = {
-            draw: true,
-            win: true,
-            lose: true
-        };
+        let selectedLang = 'en';
+        let currentTheme = 'classic';
+        let alertsEnabled = { draw: true, win: true, lose: true };
 
         let touchstartX = 0;
         let touchstartY = 0;
 
         window.onload = function() {
-            initBoard();
             loadGameState(); 
+            applyTheme();
+            initBoard();
             updateMenuState(); 
-            updateRemainingCount(); // نوی کرن
+            updateRemainingCount(); 
         };
 
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    alert(`ببۆرە، شاشەیا تەمام کار ناکەت د ڤی وێبگەڕی دا.`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+            document.getElementById('playerMenuContent').style.display = 'none';
+        }
+
+        function showHistory() {
+            const listContainer = document.getElementById('historyList');
+            listContainer.innerHTML = '';
+            
+            if(drawnNumbers.length === 0) {
+                listContainer.innerHTML = '<span style="color:#888; font-size:14px;">هێشتا چ ژمارە نەدەرکەفتینە!</span>';
+            } else {
+                drawnNumbers.forEach((num, index) => {
+                    const span = document.createElement('span');
+                    span.className = 'number-circle matched';
+                    span.style.width = '30px'; span.style.height = '30px'; span.style.lineHeight = '30px'; span.style.fontSize = '14px';
+                    span.innerText = num;
+                    span.title = `ڕاکێشانا ژمارە ${index + 1}`;
+                    listContainer.appendChild(span);
+                });
+            }
+            document.getElementById('historyModal').style.display = 'flex';
+            document.getElementById('playerMenuContent').style.display = 'none';
+        }
+
+        function closeHistory() {
+            document.getElementById('historyModal').style.display = 'none';
+        }
+
+        function changeTheme() {
+            currentTheme = document.getElementById('themeSelect').value;
+            applyTheme();
+            saveGameState();
+        }
+
+        function applyTheme() {
+            document.getElementById('themeSelect').value = currentTheme;
+            const body = document.getElementById('mainBody');
+            body.className = ''; 
+            if (currentTheme !== 'classic') {
+                body.classList.add('theme-' + currentTheme);
+            }
+        }
+
+        function changeLanguage() {
+            selectedLang = document.getElementById('langSelect').value;
+            saveGameState();
+        }
+
+        function changeMaxNumber() {
+            if (drawnNumbers.length > 0 || players.length > 0) {
+                alert("نەشێی ژمارا یاریێ بگهۆڕی دەمێ یاریزان هاتینە زێدەکرن یان یاری دەستپێکری!\nهیڤییە هەمی یاریزانان ڕەش بکە پاشی ژمارێ بگهۆڕە.");
+                document.getElementById('maxNumInput').value = maxGameNumbers;
+                return;
+            }
+            let newVal = parseInt(document.getElementById('maxNumInput').value);
+            if(isNaN(newVal) || newVal < 10) newVal = 10;
+            maxGameNumbers = newVal;
+            document.getElementById('maxNumInput').value = maxGameNumbers;
+            saveGameState();
+            initBoard();
+            updateRemainingCount();
+        }
+
         function updateRemainingCount() {
-            let remain = 99 - drawnNumbers.length;
-            document.getElementById('remainingCountDisplay').innerText = `(${remain}/99) ماینە`;
+            let remain = maxGameNumbers - drawnNumbers.length;
+            document.getElementById('remainingCountDisplay').innerText = `(${remain}/${maxGameNumbers}) ماینە`;
+        }
+
+        function addNumberBox(val = '') {
+            const container = document.getElementById('dynamicNumberInputs');
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.className = 'num-input-box';
+            input.placeholder = '٠';
+            if(val !== '') input.value = val;
+            container.appendChild(input);
+        }
+
+        function clearNumberBoxes() {
+            const container = document.getElementById('dynamicNumberInputs');
+            container.innerHTML = '';
         }
 
         function updateMenuState() {
@@ -838,43 +788,40 @@
             const btnAddPlayer = document.getElementById('btnAddPlayer');
             const btnClearAll = document.getElementById('btnClearAll');
             const playerNameInput = document.getElementById('playerName');
-            const playerNumbersInput = document.getElementById('playerNumbers');
+            const maxInput = document.getElementById('maxNumInput');
+            const numInputs = document.querySelectorAll('.num-input-box');
 
             if (isGameStarted) {
                 addPlayerMenuBtn.classList.add('btn-disabled');
                 btnAddPlayer.classList.add('btn-disabled');
                 btnClearAll.classList.add('btn-disabled');
                 playerNameInput.disabled = true;
-                playerNumbersInput.disabled = true;
+                maxInput.disabled = true;
+                numInputs.forEach(inp => inp.disabled = true);
                 document.getElementById('addPlayerPanel').style.display = 'none';
             } else {
                 addPlayerMenuBtn.classList.remove('btn-disabled');
                 btnAddPlayer.classList.remove('btn-disabled');
                 btnClearAll.classList.remove('btn-disabled');
                 playerNameInput.disabled = false;
-                playerNumbersInput.disabled = false;
+                maxInput.disabled = (players.length > 0);
+                numInputs.forEach(inp => inp.disabled = false);
             }
         }
 
         function togglePlayerMenu() {
             const menu = document.getElementById('playerMenuContent');
-            if (menu.style.display === 'none' || menu.style.display === '') {
-                menu.style.display = 'block';
-            } else {
-                menu.style.display = 'none';
-            }
+            menu.style.display = (menu.style.display === 'none' || menu.style.display === '') ? 'block' : 'none';
         }
 
         function toggleSubMenu(id) {
-            if (id === 'addPlayerPanel' && drawnNumbers.length > 0) {
-                return;
-            }
-
+            if (id === 'addPlayerPanel' && drawnNumbers.length > 0) return;
             const panel = document.getElementById(id);
             if (panel.style.display === 'block') {
                 panel.style.display = 'none';
             } else {
                 document.getElementById('settingsPanel').style.display = 'none';
+                document.getElementById('langPanel').style.display = 'none';
                 document.getElementById('addPlayerPanel').style.display = 'none';
                 document.getElementById('alertsPanel').style.display = 'none';
                 panel.style.display = 'block';
@@ -883,112 +830,91 @@
 
         function toggleAlert(type) {
             alertsEnabled[type] = !alertsEnabled[type];
-            let btnId = '';
-            
-            if (type === 'draw') btnId = 'alertDrawBtn';
-            if (type === 'win') btnId = 'alertWinBtn';
-            if (type === 'lose') btnId = 'alertLoseBtn';
-            
+            let btnId = type === 'draw' ? 'alertDrawBtn' : (type === 'win' ? 'alertWinBtn' : 'alertLoseBtn');
             const btn = document.getElementById(btnId);
-            if (alertsEnabled[type]) {
-                btn.innerText = "هەلکرن";
-                btn.classList.remove("off");
-            } else {
-                btn.innerText = "گرتن";
-                btn.classList.add("off");
-            }
             
-            if (type === 'draw') {
-                const matchDisplay = document.getElementById('matchDisplay');
-                if (!alertsEnabled.draw) {
-                    matchDisplay.style.display = 'none';
-                } else {
-                    matchDisplay.style.display = 'flex';
-                }
+            if (alertsEnabled[type]) {
+                btn.innerText = "هەلکرن"; btn.classList.remove("off");
+            } else {
+                btn.innerText = "گرتن"; btn.classList.add("off");
             }
+            if (type === 'draw') { document.getElementById('matchDisplay').style.display = alertsEnabled.draw ? 'flex' : 'none'; }
         }
 
-        function showAboutDeveloper() {
-            document.getElementById('aboutModal').style.display = 'flex';
-            document.getElementById('playerMenuContent').style.display = 'none';
-        }
-
-        function closeAboutDeveloper() {
-            document.getElementById('aboutModal').style.display = 'none';
-        }
+        function showAboutDeveloper() { document.getElementById('aboutModal').style.display = 'flex'; document.getElementById('playerMenuContent').style.display = 'none'; }
+        function closeAboutDeveloper() { document.getElementById('aboutModal').style.display = 'none'; }
 
         function shareGame() {
-            const shareData = {
-                title: 'یارییا بینگۆ (1 - 99)',
-                text: 'گەلەک یا خۆشە! وەرە دگەل من یارییا بینگۆ بکە ب ڕێکا ڤێ لینکێ:',
-                url: 'https://bizhar-cloud.github.io/BINGO_With_BIZHAR/'
-            };
-
+            const shareData = { title: 'یارییا بینگۆ', text: 'وەرە دگەل من یارییا بینگۆ بکە ب ڕێکا ڤێ لینکێ:', url: window.location.href };
             if (navigator.share) {
-                navigator.share(shareData)
-                    .then(() => console.log('Successfully shared'))
-                    .catch((error) => console.log('Error sharing', error));
+                navigator.share(shareData).catch((error) => console.log('Error sharing', error));
             } else {
-                navigator.clipboard.writeText(shareData.url).then(() => {
-                    alert("لینکا یاریێ هاتە کۆپیکرن، نوکە دشێی ل هەر جهەکێ (پەیس - Paste) بکەی:\n\n" + shareData.url);
-                }).catch(err => {
-                    alert("لێبۆرینێ دخوازم، کۆپیکرن ب سەرنەکەفت. لینکا یاریێ ئەڤەیە:\n" + shareData.url);
-                });
+                navigator.clipboard.writeText(shareData.url).then(() => { alert("لینکا یاریێ هاتە کۆپیکرن:\n" + shareData.url); });
             }
-            
             document.getElementById('playerMenuContent').style.display = 'none';
         }
 
         function toggleSoundMode() {
             const btn = document.getElementById('soundBtn');
             soundMode = (soundMode - 1 < 0) ? 2 : soundMode - 1;
-            
-            if (soundMode === 2) {
-                btn.innerText = "🔊 دەنگ + خواندن";
-            } else if (soundMode === 1) {
-                btn.innerText = "🎵 بتنێ موزیک";
-            } else {
-                btn.innerText = "🔇 بێ دەنگ";
-            }
+            if (soundMode === 2) btn.innerText = "🔊 دەنگ + خواندن";
+            else if (soundMode === 1) btn.innerText = "🎵 بتنێ موزیک";
+            else btn.innerText = "🔇 بێ دەنگ";
         }
 
         function speakNumber(number) {
             if (soundMode !== 2) return; 
-            
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
-                
                 const msg = new SpeechSynthesisUtterance();
                 msg.text = number.toString();
+                
                 const voices = window.speechSynthesis.getVoices();
-                msg.voice = voices.find(voice => voice.lang.includes('en')) || voices[0];
+                let targetVoice = voices.find(voice => voice.lang.startsWith(selectedLang));
+                
+                if (!targetVoice && selectedLang === 'ku') {
+                    targetVoice = voices.find(voice => voice.lang.startsWith('ar')) || voices.find(voice => voice.lang.startsWith('en'));
+                }
+                
+                if (targetVoice) msg.voice = targetVoice;
+                
                 msg.rate = 1.0;
                 msg.pitch = 1.1;
-                
                 window.speechSynthesis.speak(msg);
             }
         }
 
         function saveGameState() {
-            localStorage.setItem('bingo1to99Players', JSON.stringify(players));
-            localStorage.setItem('bingo1to99Drawn', JSON.stringify(drawnNumbers));
+            localStorage.setItem('bingoCustomPlayers', JSON.stringify(players));
+            localStorage.setItem('bingoCustomDrawn', JSON.stringify(drawnNumbers));
+            localStorage.setItem('bingoCustomMaxNum', maxGameNumbers.toString());
+            localStorage.setItem('bingoCustomTheme', currentTheme);
+            localStorage.setItem('bingoCustomLang', selectedLang);
             updateMenuState(); 
         }
 
         function loadGameState() {
-            const savedPlayers = localStorage.getItem('bingo1to99Players');
-            const savedDrawn = localStorage.getItem('bingo1to99Drawn');
+            const savedPlayers = localStorage.getItem('bingoCustomPlayers');
+            const savedDrawn = localStorage.getItem('bingoCustomDrawn');
+            const savedMax = localStorage.getItem('bingoCustomMaxNum');
+            const savedTheme = localStorage.getItem('bingoCustomTheme');
+            const savedLang = localStorage.getItem('bingoCustomLang');
 
+            if (savedMax) { maxGameNumbers = parseInt(savedMax); document.getElementById('maxNumInput').value = maxGameNumbers; }
+            if (savedTheme) { currentTheme = savedTheme; document.getElementById('themeSelect').value = currentTheme; }
+            if (savedLang) { selectedLang = savedLang; document.getElementById('langSelect').value = selectedLang; }
             if (savedPlayers) { players = JSON.parse(savedPlayers); }
             if (savedDrawn) { drawnNumbers = JSON.parse(savedDrawn); }
 
             renderPlayers();
 
             if (drawnNumbers.length > 0) {
-                drawnNumbers.forEach(n => {
-                    const cell = document.getElementById('cell-' + n);
-                    if (cell) cell.classList.add('drawn');
-                });
+                setTimeout(() => {
+                    drawnNumbers.forEach(n => {
+                        const cell = document.getElementById('cell-' + n);
+                        if (cell) cell.classList.add('drawn');
+                    });
+                }, 100);
                 const last = drawnNumbers[drawnNumbers.length - 1];
                 document.getElementById('drawnNumberDisplay').innerText = last < 10 ? '0' + last : last;
             }
@@ -996,7 +922,6 @@
 
         function playSound(type) {
             if (soundMode === 0) return; 
-            
             if (!audioCtx) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
             if (audioCtx.state === 'suspended') audioCtx.resume();
 
@@ -1023,11 +948,20 @@
         function initBoard() {
             const board = document.getElementById('bingoBoard');
             board.innerHTML = '';
-            for(let i = 1; i <= 99; i++) {
+            
+            let columns = 10;
+            if(maxGameNumbers <= 50) columns = 5;
+            if(maxGameNumbers > 100) columns = 15;
+            if(window.innerWidth < 900) columns = 10; 
+            
+            board.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
+            
+            for(let i = 1; i <= maxGameNumbers; i++) {
                 let cell = document.createElement('div');
                 cell.className = 'board-cell';
                 cell.id = 'cell-' + i;
                 cell.innerText = i;
+                if(drawnNumbers.includes(i)) cell.classList.add('drawn');
                 board.appendChild(cell);
             }
         }
@@ -1036,336 +970,200 @@
             if (drawnNumbers.length > 0) return; 
 
             const nameInput = document.getElementById('playerName');
-            const numsInput = document.getElementById('playerNumbers');
             const name = nameInput.value.trim();
-            const numsStr = numsInput.value.trim();
+            const inputs = document.querySelectorAll('.num-input-box');
+            let numbers = [];
+            
+            inputs.forEach(input => {
+                let val = parseInt(input.value);
+                if (!isNaN(val) && val >= 1 && val <= maxGameNumbers) { numbers.push(val); }
+            });
 
-            if(!name || !numsStr) { alert('هیڤییە ناڤ و ژماران ب دروستی داخل بکە!'); return; }
-            
-            const numbers = numsStr.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n) && n >= 1 && n <= 99);
-            
-            if(numbers.length === 0) { alert('هیڤییە ژمارەیێن دروست د ناڤبەرا 1 تا 99 بنڤیسە!'); return; }
+            if(!name || numbers.length === 0) { alert(`هیڤییە ناڤێ یاریزانی و لایەنی کێم ژمارەیەکا دروست بنڤیسە!`); return; }
 
             const uniqueNumbers = [...new Set(numbers)];
-            if (uniqueNumbers.length !== numbers.length) {
-                alert('تە ژمارەیەک دوو جاران یا نڤیسی. هیڤییە ژمارەیێن دووبارە ڕابکە!');
-                return;
-            }
+            if (uniqueNumbers.length !== numbers.length) { alert('ژمارە دووبارە کرینە. ڕابکە!'); return; }
 
             let allUsedNumbers = [];
             players.forEach(p => { allUsedNumbers = allUsedNumbers.concat(p.numbers); });
             let duplicateFound = numbers.find(n => allUsedNumbers.includes(n));
             
-            if (duplicateFound !== undefined) {
-                alert(`لێبۆڕینێ دخوازم، ژمارە (${duplicateFound}) پێشتر ژ لایێ کەسەکێ دی ڤە هاتییە هەلبژارتن!\nهیڤییە ژمارەیەکا دی بنڤیسە.`);
-                return;
-            }
+            if (duplicateFound !== undefined) { alert(`ژمارە (${duplicateFound}) پێشتر هاتییە هەلبژارتن!`); return; }
 
             players.push({ id: Date.now(), name: name, numbers: numbers, isSafe: false, isLoser: false });
-            nameInput.value = ''; numsInput.value = '';
-            saveGameState(); 
-            renderPlayers();
-            
-            document.getElementById('playerMenuContent').style.display = 'none';
+            nameInput.value = ''; clearNumberBoxes(); addNumberBox(); addNumberBox(); addNumberBox(); 
+            saveGameState(); renderPlayers(); document.getElementById('playerMenuContent').style.display = 'none';
         }
 
         function editPlayer(id) {
             if (drawnNumbers.length > 0) return; 
-
             const playerIndex = players.findIndex(p => p.id === id);
             if(playerIndex > -1) {
                 const p = players[playerIndex];
                 document.getElementById('playerName').value = p.name;
-                document.getElementById('playerNumbers').value = p.numbers.join(', ');
+                clearNumberBoxes(); p.numbers.forEach(num => { addNumberBox(num); });
                 players.splice(playerIndex, 1);
-                saveGameState(); 
-                renderPlayers();
+                saveGameState(); renderPlayers();
                 
                 document.getElementById('playerMenuContent').style.display = 'block';
                 document.getElementById('settingsPanel').style.display = 'none';
-                document.getElementById('alertsPanel').style.display = 'none';
+                document.getElementById('langPanel').style.display = 'none';
                 document.getElementById('addPlayerPanel').style.display = 'block';
+                
+                setTimeout(() => {
+                    document.querySelector('.players-section').scrollIntoView({ behavior: 'smooth' });
+                }, 100);
             }
         }
 
         function deletePlayer(id) {
             if (drawnNumbers.length > 0) return; 
-
             const player = players.find(p => p.id === id);
-            if (player) {
-                if (confirm(`ئایا تو یێ پشتڕاستی دڤێت یاریزان "${player.name}" ژێ ببەی؟`)) {
-                    players = players.filter(p => p.id !== id);
-                    saveGameState();
-                    renderPlayers();
-                }
+            if (player && confirm(`ئایا تو یێ پشتڕاستی دڤێت یاریزان "${player.name}" ژێ ببەی؟`)) {
+                players = players.filter(p => p.id !== id);
+                saveGameState(); renderPlayers();
             }
         }
 
         function clearAllPlayers() {
-            if (drawnNumbers.length > 0) return; 
-
-            if (players.length === 0) return;
+            if (drawnNumbers.length > 0 || players.length === 0) return; 
             if (confirm("ئایا تو یێ پشتڕاستی دڤێت هەمی یاریزانان ڕەش بکەی؟")) {
-                players = [];
-                drawnNumbers = [];
-                saveGameState();
+                players = []; drawnNumbers = []; saveGameState();
                 document.getElementById('drawnNumberDisplay').innerText = '--';
-                if (alertsEnabled.draw) {
-                    document.getElementById('matchText').innerHTML = 'چاڤەڕێی ڕاکێشانێ یە...';
-                    document.getElementById('matchText').classList.remove('hit');
-                }
-                initBoard(); 
-                renderPlayers();
-                updateRemainingCount(); // نوی کرن
-                document.getElementById('playerMenuContent').style.display = 'none';
+                if (alertsEnabled.draw) { document.getElementById('matchText').innerHTML = 'چاڤەڕێی ڕاکێشانێ یە...'; document.getElementById('matchText').classList.remove('hit'); }
+                initBoard(); renderPlayers(); updateRemainingCount(); document.getElementById('playerMenuContent').style.display = 'none';
             }
         }
 
-        function handleTouchStart(event) {
-            if (drawnNumbers.length > 0) return; 
-            touchstartX = event.changedTouches[0].screenX;
-            touchstartY = event.changedTouches[0].screenY;
-        }
-
+        function handleTouchStart(event) { if (drawnNumbers.length > 0) return; touchstartX = event.changedTouches[0].screenX; touchstartY = event.changedTouches[0].screenY; }
         function handleTouchEnd(event, id) {
             if (drawnNumbers.length > 0) return; 
-            
-            let touchendX = event.changedTouches[0].screenX;
-            let touchendY = event.changedTouches[0].screenY;
-            
-            let diffX = Math.abs(touchendX - touchstartX);
-            let diffY = Math.abs(touchendY - touchstartY);
-            
-            if (diffX > 50 && diffX > diffY) {
-                deletePlayer(id);
-            }
+            let touchendX = event.changedTouches[0].screenX; let touchendY = event.changedTouches[0].screenY;
+            if (Math.abs(touchendX - touchstartX) > 50 && Math.abs(touchendX - touchstartX) > Math.abs(touchendY - touchstartY)) { deletePlayer(id); }
         }
 
         function renderPlayers() {
             const list = document.getElementById('playersList');
+            if (players.length === 0) { list.innerHTML = ''; return; }
             const isGameStarted = drawnNumbers.length > 0;
-            
-            if (players.length === 0) {
-                list.innerHTML = '';
-                return;
-            }
-
-            let tableHTML = `
-                <table class="players-table">
-                    <thead>
-                        <tr>
-                            <th style="width: 25%;">ناڤ</th>
-                            <th style="width: 55%;">ژمارە</th>
-                            ${!isGameStarted ? `<th style="width: 20%;">دەستکاری</th>` : ''}
-                        </tr>
-                    </thead>
-                    <tbody>
-            `;
-
+            let tableHTML = `<table class="players-table"><thead><tr><th style="width: 25%;">ناڤ</th><th style="width: 55%;">ژمارە</th>${!isGameStarted ? `<th style="width: 20%;">دەستکاری</th>` : ''}</tr></thead><tbody>`;
             players.forEach(p => {
-                let numsHtml = p.numbers.map(n => {
-                    let isMatched = drawnNumbers.includes(n) ? 'matched' : '';
-                    return `<span class="number-circle ${isMatched}">${n}</span>`;
-                }).join('');
-
+                let numsHtml = p.numbers.map(n => `<span class="number-circle ${drawnNumbers.includes(n) ? 'matched' : ''}">${n}</span>`).join('');
                 let rowClass = p.isSafe ? 'safe' : (p.isLoser ? 'loser' : '');
                 let safeText = p.isSafe ? '<br><span class="safe-badge">(قورتال بوو)</span>' : (p.isLoser ? '<br><span class="loser-badge">(خوسارەت)</span>' : '');
-                
-                let actionColumnHtml = '';
-                if (!isGameStarted) {
-                    actionColumnHtml = `<td><div style="display:flex; gap:4px; justify-content:center; align-items:center;">`;
-                    actionColumnHtml += `<button class="btn-edit-table" onclick="editPlayer(${p.id})">دەستکاری</button>`;
-                    actionColumnHtml += `<button class="btn-delete-table" onclick="deletePlayer(${p.id})">🗑️</button>`;
-                    actionColumnHtml += `</div></td>`;
-                }
-
-                tableHTML += `
-                    <tr class="${rowClass}" ontouchstart="handleTouchStart(event)" ontouchend="handleTouchEnd(event, ${p.id})">
-                        <td><strong>${p.name}</strong>${safeText}</td>
-                        <td>${numsHtml}</td>
-                        ${actionColumnHtml}
-                    </tr>
-                `;
+                let actionHtml = !isGameStarted ? `<td><div style="display:flex; gap:4px; justify-content:center;"><button class="btn-edit-table" onclick="editPlayer(${p.id})">دەستکاری</button><button class="btn-delete-table" onclick="deletePlayer(${p.id})">🗑️</button></div></td>` : '';
+                tableHTML += `<tr class="${rowClass}" ontouchstart="handleTouchStart(event)" ontouchend="handleTouchEnd(event, ${p.id})"><td><strong>${p.name}</strong>${safeText}</td><td>${numsHtml}</td>${actionHtml}</tr>`;
             });
-
-            tableHTML += `</tbody></table>`;
-            list.innerHTML = tableHTML;
+            list.innerHTML = tableHTML + `</tbody></table>`;
         }
 
         function manualDraw() {
-            if (players.length < 2) { 
-                alert('ب لایەنی ڤە پێدڤییە ٢ یاریزان بهێنە تۆمارکرن بۆ دەستپێکرنا یاریێ!'); 
-                return; 
-            }
+            if (players.length < 2) { alert('پێدڤییە ٢ یاریزان بهێنە تۆمارکرن!'); return; }
+            if (pendingAlertTimeout) return; 
             drawNumber();
         }
 
         function toggleAutoDraw() {
-            if (players.length < 2) { 
-                alert('ب لایەنی ڤە پێدڤییە ٢ یاریزان بهێنە تۆمارکرن بۆ دەستپێکرنا یاریێ!'); 
-                return; 
-            }
+            if (players.length < 2) { alert('پێدڤییە ٢ یاریزان بهێنە تۆمارکرن!'); return; }
+            if (pendingAlertTimeout) return;
             if (!audioCtx && soundMode !== 0) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-
             const btn = document.getElementById('autoBtn');
             const speedInput = document.getElementById('speedInput');
             
             if (isAutoPlaying) {
                 stopAutoMode();
             } else {
-                let speedSeconds = parseInt(speedInput.value);
-                if (isNaN(speedSeconds) || speedSeconds < 1) speedSeconds = 1;
-                if (speedSeconds > 30) speedSeconds = 30;
-                speedInput.value = speedSeconds; 
-                
-                isAutoPlaying = true;
-                btn.innerText = "پاوس (Pause)";
-                btn.classList.add('stop-mode');
-                
-                drawNumber(); 
-                autoInterval = setInterval(drawNumber, speedSeconds * 1000); 
+                let speedSecs = parseInt(speedInput.value);
+                if (isNaN(speedSecs) || speedSecs < 1) speedSecs = 1; if (speedSecs > 30) speedSecs = 30; speedInput.value = speedSecs; 
+                isAutoPlaying = true; btn.innerText = "پاوس (Pause)"; btn.classList.add('stop-mode');
+                drawNumber(); autoInterval = setInterval(drawNumber, speedSecs * 1000); 
             }
         }
 
-        function stopAutoMode() {
-            isAutoPlaying = false;
-            clearInterval(autoInterval);
-            const btn = document.getElementById('autoBtn');
-            btn.innerText = "ستارت (Start)";
-            btn.classList.remove('stop-mode');
-        }
+        function stopAutoMode() { isAutoPlaying = false; clearInterval(autoInterval); const btn = document.getElementById('autoBtn'); btn.innerText = "ستارت (Start)"; btn.classList.remove('stop-mode'); }
 
         function showCelebration(namesArray) {
             if (!alertsEnabled.win) return;
-            
             const toast = document.getElementById('celebrationToast');
-            toast.innerHTML = `🎉 پیرۆزە 🎉<br><span class="winner-name">${namesArray.join(' و ')}</span>تو بسەرکەفتی!`;
-            toast.classList.add('show');
-            
+            toast.innerHTML = `🎉 پیرۆزە 🎉<br><span class="winner-name">${namesArray.join(' و ')}</span>تو بسەرکەفتی!`; toast.classList.add('show');
             confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 }, zIndex: 3000 });
-            
-            clearTimeout(celebrationTimeout);
-            celebrationTimeout = setTimeout(() => { toast.classList.remove('show'); }, 3500); 
+            clearTimeout(celebrationTimeout); celebrationTimeout = setTimeout(() => { toast.classList.remove('show'); }, 3500); 
         }
 
         function drawNumber() {
-            if (drawnNumbers.length >= 99) { stopAutoMode(); alert('هەمی ژمارە دەرکەفتن!'); return; }
-
-            let drawn;
-            do { 
-                drawn = Math.floor(Math.random() * 99) + 1; 
-            } while (drawnNumbers.includes(drawn));
-            
-            drawnNumbers.push(drawn);
-            
-            playSound('draw');
-            speakNumber(drawn); 
-            
-            saveGameState(); 
+            if (drawnNumbers.length >= maxGameNumbers) { stopAutoMode(); alert('هەمی ژمارە دەرکەفتن!'); return; }
+            let drawn; do { drawn = Math.floor(Math.random() * maxGameNumbers) + 1; } while (drawnNumbers.includes(drawn));
+            drawnNumbers.push(drawn); playSound('draw'); speakNumber(drawn); saveGameState(); 
 
             const display = document.getElementById('drawnNumberDisplay');
             display.innerText = drawn < 10 ? '0' + drawn : drawn; 
-            display.classList.remove('pop-animation');
-            void display.offsetWidth; 
-            display.classList.add('pop-animation');
-            
-            updateRemainingCount(); // نوی کرن بۆ کێمکرنا ژمارێ
+            display.classList.remove('pop-animation'); void display.offsetWidth; display.classList.add('pop-animation');
+            updateRemainingCount(); 
 
-            document.getElementById('cell-' + drawn).classList.add('drawn');
-            
-            let hitPlayers = [];
-            players.forEach(p => { if (p.numbers.includes(drawn)) { hitPlayers.push(p.name); } });
+            const cell = document.getElementById('cell-' + drawn); if(cell) cell.classList.add('drawn');
+            let hitPlayers = []; players.forEach(p => { if (p.numbers.includes(drawn)) { hitPlayers.push(p.name); } });
 
             if (alertsEnabled.draw) {
                 const matchText = document.getElementById('matchText');
-                if (hitPlayers.length > 0) {
-                    matchText.innerHTML = `ژمارە <span class="highlight-num">${drawn}</span> بۆ: ${hitPlayers.join(' و ')}`;
-                    matchText.classList.add('hit');
-                    setTimeout(() => { matchText.classList.remove('hit'); }, 1000);
-                } else {
-                    matchText.innerHTML = `ژمارە <span class="highlight-num">${drawn}</span> دەرکەفت!<br><span style="font-size: 0.75em; color: #ccc; font-weight: normal;">(یا چ کەسان نینە)</span>`;
-                    matchText.classList.remove('hit');
-                }
+                if (hitPlayers.length > 0) { matchText.innerHTML = `ژمارە <span class="highlight-num">${drawn}</span> بۆ: ${hitPlayers.join(' و ')}`; matchText.classList.add('hit'); setTimeout(() => { matchText.classList.remove('hit'); }, 1000); } 
+                else { matchText.innerHTML = `ژمارە <span class="highlight-num">${drawn}</span> دەرکەفت!<br><span style="font-size: 0.75em; color: #ccc; font-weight: normal;">(یا چ کەسان نینە)</span>`; matchText.classList.remove('hit'); }
             }
-            
-            checkWinner();
-            renderPlayers(); 
+            renderPlayers(); evaluateGameState();
         }
 
-        function checkWinner() {
+        function evaluateGameState() {
             if(players.length < 2) return;
-            
             let newlySafePlayers = [];
-
             players.forEach(p => {
                 if (!p.isSafe) {
-                    let allMatched = p.numbers.every(n => drawnNumbers.includes(n));
-                    if (allMatched) { 
-                        p.isSafe = true; 
-                        p.isLoser = false; 
-                        newlySafePlayers.push(p.name); 
-                    }
+                    if (p.numbers.every(n => drawnNumbers.includes(n))) { p.isSafe = true; p.isLoser = false; newlySafePlayers.push(p.name); }
                 }
             });
 
-            if (newlySafePlayers.length > 0) {
-                playSound('safe'); 
-                showCelebration(newlySafePlayers); 
-                saveGameState(); 
-            }
-
             let remainingPlayers = players.filter(p => !p.isSafe);
+            let hasLoser = false; let hasGameEnd = false; let loserObj = null;
 
-            if (remainingPlayers.length === 1 && players.length > 1) {
-                stopAutoMode(); 
-                playSound('lose'); 
-                const loser = remainingPlayers[0];
-                loser.isLoser = true; // دەستنیشانکرنا خوسارەتی بۆ ڕەنگێ سۆر
-                saveGameState();
-                
-                if (alertsEnabled.lose) {
-                    document.getElementById('loserText').innerHTML = `خوسارەت!<br><span>${loser.name}</span>`;
-                    document.getElementById('winnerModal').style.display = 'flex';
-                }
-            } else if (remainingPlayers.length === 0 && players.length > 1) {
-                stopAutoMode();
-                if (alertsEnabled.lose) {
-                    document.getElementById('loserText').innerHTML = `یاری ب دوماهیک هات!<br><span style="color:var(--col-b); font-size: 0.5em; -webkit-text-stroke: 0; text-shadow:none;">چ خوسارەت نینن</span>`;
-                    document.getElementById('winnerModal').style.display = 'flex';
-                }
+            if (remainingPlayers.length === 1 && players.length > 1 && players.some(p => p.isSafe)) {
+                if (!remainingPlayers[0].isLoser) { hasLoser = true; loserObj = remainingPlayers[0]; }
+            } else if (remainingPlayers.length === 0 && players.length > 1) { hasGameEnd = true; }
+
+            if (newlySafePlayers.length > 0 || hasLoser || hasGameEnd) {
+                if (isAutoPlaying) stopAutoMode();
+                pendingAlertTimeout = setTimeout(() => {
+                    saveGameState(); renderPlayers();
+                    if (newlySafePlayers.length > 0) { playSound('safe'); showCelebration(newlySafePlayers); }
+                    if (hasLoser) {
+                        loserObj.isLoser = true; saveGameState(); renderPlayers();
+                        let delay = newlySafePlayers.length > 0 ? 3500 : 0; 
+                        pendingModalTimeout = setTimeout(() => {
+                            playSound('lose');
+                            if (alertsEnabled.lose) { document.getElementById('loserText').innerHTML = `خوسارەت!<br><span>${loserObj.name}</span>`; document.getElementById('winnerModal').style.display = 'flex'; }
+                        }, delay);
+                    } else if (hasGameEnd && !hasLoser) {
+                        let delay = newlySafePlayers.length > 0 ? 3500 : 0;
+                        pendingModalTimeout = setTimeout(() => {
+                            if (document.getElementById('winnerModal').style.display !== 'flex' && alertsEnabled.lose) { document.getElementById('loserText').innerHTML = `یاری ب دوماهیک هات!<br><span style="color:var(--col-b); font-size: 0.5em; text-shadow:none;">چ خوسارەت نینن</span>`; document.getElementById('winnerModal').style.display = 'flex'; }
+                        }, delay);
+                    }
+                    pendingAlertTimeout = null;
+                }, 2000); 
             }
         }
 
         function resetGame() {
-            if (drawnNumbers.length === 0) {
-                document.getElementById('winnerModal').style.display = 'none';
-                return;
-            }
-            
+            if (drawnNumbers.length === 0) { document.getElementById('winnerModal').style.display = 'none'; return; }
             if (confirm("ئایا تو دڤێتی یاریێ ژ نوی دەستپێبکەی؟\n(ژمارەیێن دەرکەفتی دێ هێنە ڕەشکرن، بەلێ یاریزان دێ مینن)")) {
                 stopAutoMode();
-                drawnNumbers = []; 
-                players.forEach(p => { 
-                    p.isSafe = false; 
-                    p.isLoser = false; // پاقژکرنا ڕەنگێ سۆر
-                }); 
-                saveGameState(); 
-
-                clearTimeout(celebrationTimeout);
-                document.getElementById('celebrationToast').classList.remove('show');
-                document.getElementById('drawnNumberDisplay').innerText = '--';
-                updateRemainingCount(); // نوی کرن بۆ (99/99) ماینە
+                if (pendingAlertTimeout) clearTimeout(pendingAlertTimeout); if (pendingModalTimeout) clearTimeout(pendingModalTimeout);
+                pendingAlertTimeout = null; pendingModalTimeout = null;
                 
-                if (alertsEnabled.draw) {
-                    document.getElementById('matchText').innerHTML = 'چاڤەڕێی ڕاکێشانێ یە...';
-                    document.getElementById('matchText').classList.remove('hit');
-                }
+                drawnNumbers = []; players.forEach(p => { p.isSafe = false; p.isLoser = false; }); saveGameState(); 
+                clearTimeout(celebrationTimeout); document.getElementById('celebrationToast').classList.remove('show');
+                document.getElementById('drawnNumberDisplay').innerText = '--'; updateRemainingCount(); 
+                if (alertsEnabled.draw) { document.getElementById('matchText').innerHTML = 'چاڤەڕێی ڕاکێشانێ یە...'; document.getElementById('matchText').classList.remove('hit'); }
                 document.getElementById('winnerModal').style.display = 'none';
-                
-                initBoard(); 
-                
-                renderPlayers();
+                initBoard(); renderPlayers();
             }
         }
     </script>
