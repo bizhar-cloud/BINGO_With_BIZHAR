@@ -26,13 +26,18 @@
         }
         input, select { -webkit-user-select: auto; user-select: auto; outline: none; }
 
+        /* Spinner for loading */
+        .spinner { border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid #fff; border-radius: 50%; width: 18px; height: 18px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-left: 8px;}
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
         .lobby-screen {
             background: var(--bg-dark-red); padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
             width: 100%; max-width: 400px; color: white; border: 4px solid var(--bg-right-gold); animation: popIn 0.4s ease;
         }
         .lobby-screen h1 { margin-top: 0; color: #ffd700; text-shadow: 2px 2px 4px #000; font-size: 28px; }
         .lobby-box { background: #fff; padding: 20px; border-radius: 10px; color: #000; box-shadow: inset 0 0 10px rgba(0,0,0,0.2); }
-        .room-code-display { font-size: 40px; font-weight: 900; letter-spacing: 5px; color: #9e0b0f; margin: 10px 0; background: #fce883; padding: 10px; border-radius: 8px; border: 2px dashed #9e0b0f;}
+        .room-code-display { font-size: 40px; font-weight: 900; letter-spacing: 5px; color: #9e0b0f; margin: 10px 0; background: transparent; padding: 0; border: none;}
+        .room-code-container { display: flex; justify-content: center; align-items: center; gap: 10px; background: #fce883; padding: 5px 15px; border-radius: 8px; border: 2px dashed #9e0b0f; width: fit-content; margin: 10px auto; }
         
         .container {
             width: 100%; max-width: 900px; background-color: var(--bg-dark-red); padding: 10px;
@@ -72,6 +77,7 @@
         .btn-modern { padding: 12px 5px; font-size: 14px; font-weight: bold; font-family: inherit; border: 2px solid #555; border-radius: 8px; cursor: pointer; color: white; background: linear-gradient(to bottom, #d4d4d4, #7a7a7a); text-shadow: 1px 1px 2px #000; box-shadow: 0 4px 6px rgba(0,0,0,0.4); text-align: center; transition: transform 0.1s;}
         .btn-modern.full-width { grid-column: span 2; background: linear-gradient(to bottom, #87CEEB, #4682B4); }
         .btn-modern:active { transform: translateY(2px); box-shadow: 0 2px 3px rgba(0,0,0,0.4); }
+        .btn-modern:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
         .btn-auto.stop-mode { background: linear-gradient(to bottom, #ff5252, #d32f2f) !important; border-color: #b71c1c !important; }
 
         .players-section { width: 100%; background: #fff; border: 4px solid var(--bg-dark-red); border-radius: 6px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.3); display: flex; flex-direction: column; transition: all 0.3s; z-index: 10; position: relative;}
@@ -180,7 +186,7 @@
 
         @media (min-width: 900px) { .container { max-width: 1200px; padding: 20px; } .layout-wrapper { flex-direction: row; align-items: stretch; gap: 20px; } .left-panel { flex: 1; } .right-panel { flex: 1.5; align-items: center; } .bingo-board { max-width: 75vh; margin: auto; } }
         
-        /* دۆخێ لاندسکەیپ - ڕێکخستنا فۆنتان ب قەبارەیێ جێگیر (px) */
+        /* دۆخێ لاندسکەیپ */
         @media (orientation: landscape) and (max-height: 600px) {
             body { padding: 0; margin: 0; height: 100vh; overflow: hidden; }
             .container { padding: 6px; max-width: 100%; height: 100vh; border-radius: 0; margin: 0; }
@@ -206,7 +212,7 @@
             .buttons-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; width: 100%; margin-bottom: 0; flex-shrink: 0;}
             .btn-modern { padding: 8px 4px; font-size: 2.2vh; min-height: unset; white-space: nowrap; }
             
-            /* جێگیرکرنا فۆنتێن مینیۆیێ د لاندسکەیپێ دا ب قەبارەیێ ڕاستەقینە */
+            /* جێگیرکرنا فۆنتێن مینیۆیێ د لاندسکەیپێ دا */
             .players-header { font-size: 14px; padding: 6px; }
             .btn-menu-toggle { font-size: 12px; padding: 4px; }
             .menu-btn-item { padding: 6px 8px; font-size: 12px; margin-bottom: 5px;}
@@ -242,10 +248,10 @@
         <h1>یارییا ئۆنلاین</h1>
         <p style="font-size: 14px; margin-bottom: 20px;">یاریێ ل گەل هەڤالان بکە!</p>
         <div class="lobby-box">
-            <button class="btn-modern full-width" style="font-size: 18px; padding: 15px;" onclick="createRoom()">👑 دروستکرنا ژوورێ (Host)</button>
+            <button id="btnCreateRoom" class="btn-modern full-width" style="font-size: 18px; padding: 15px;" onclick="createRoom()">👑 دروستکرنا ژوورێ (Host)</button>
             <div style="margin: 20px 0; border-top: 2px dashed #ccc; padding-top: 20px;">
                 <input type="text" id="joinRoomInput" class="custom-input" placeholder="کۆدێ ژوورێ (٤ پیت) بنڤیسە..." style="text-transform: uppercase;">
-                <button class="btn-modern full-width" style="background: linear-gradient(to bottom, #4caf50, #2e7d32); font-size: 18px; padding: 15px;" onclick="joinRoom()">چوونە ژوورێ (Join)</button>
+                <button id="btnJoinRoom" class="btn-modern full-width" style="background: linear-gradient(to bottom, #4caf50, #2e7d32); font-size: 18px; padding: 15px;" onclick="joinRoom()">چوونە ژوورێ (Join)</button>
             </div>
             <button class="btn-modern" style="background: #f44336; border-color: #d32f2f; margin-top: 10px; width: 100%;" onclick="location.reload()">⬅️ ڤەگەڕیان</button>
         </div>
@@ -255,22 +261,36 @@
         <h1>ژوورا چاڤەڕێکرنێ</h1>
         <div class="lobby-box">
             <div style="font-size: 14px; font-weight: bold; color: #555;">کۆدێ ژوورا تە:</div>
-            <div id="displayRoomCode" class="room-code-display">----</div>
+            
+            <div class="room-code-container">
+                <div id="displayRoomCode" class="room-code-display">----</div>
+                <button class="btn-modern" style="padding: 10px 15px; font-size: 18px; background: linear-gradient(to bottom, #fff, #ddd); color: #333; box-shadow: 0 2px 4px rgba(0,0,0,0.3);" onclick="copyRoomCode()" title="کۆپیکرنا کۆدی">📋</button>
+            </div>
+            
             <p style="font-size: 13px; color: #666;">ڤی کۆدی بدە هەڤالێن خۆ دا کو بێنە ژوورێ</p>
             <hr style="margin: 15px 0;">
             <div id="playerSetupSection">
                 <input type="text" id="setupPlayerName" class="custom-input" placeholder="ناڤێ خۆ بنڤیسە">
-                <div style="font-size: 13px; font-weight: bold; text-align: center; margin-bottom: 5px;">ژمارەیێن خۆ هەلبژێرە:</div>
+                <div style="font-size: 13px; font-weight: bold; text-align: center; margin-bottom: 5px;" id="onlineNumberTitle">ژمارەیێن خۆ هەلبژێرە:</div>
                 <div id="onlineNumberInputs" class="dynamic-inputs-container">
-                    <input type="number" class="num-input-box"><input type="number" class="num-input-box"><input type="number" class="num-input-box">
-                </div>
+                    </div>
                 <button class="btn-add-box" id="btnAddOnlineNumber" onclick="addNumberBox('onlineNumberInputs')">➕ خانەیەکا دی زێدەبکە</button>
                 <button class="btn-add" id="btnReady" onclick="setPlayerReady()">ئامادەمە (Ready)</button>
             </div>
             <div id="hostSettingsSection" style="display: none; margin-top: 15px; padding-top: 15px; border-top: 2px solid #ccc;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <strong style="color: #8b0000;">ژمارا کۆتایی یاریێ:</strong>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <strong style="color: #8b0000; font-size: 14px;">ژمارا کۆتایی یاریێ:</strong>
                     <input type="number" id="hostMaxNumInput" class="speed-input-menu" value="99" onchange="updateHostSettings()">
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <strong style="color: #8b0000; font-size: 14px;">ژمارا پێدڤی یا هەلبژارتنێ:</strong>
+                    <select id="hostReqNumInput" class="speed-input-menu" onchange="updateHostSettings()">
+                        <option value="1">١ ژمارە</option>
+                        <option value="2">٢ ژمارە</option>
+                        <option value="3" selected>٣ ژمارە</option>
+                        <option value="4">٤ ژمارە</option>
+                        <option value="5">٥ ژمارە</option>
+                    </select>
                 </div>
                 <button class="btn-modern full-width" style="background: linear-gradient(to bottom, #2196F3, #0b7dda); font-size: 18px; padding: 15px;" id="btnStartGame" onclick="startGameHost()" disabled>دەستپێکرنا یاریێ 🚀</button>
             </div>
@@ -438,6 +458,7 @@
         // --- گۆڕاوێن گشتی ---
         window.gameMode = null; 
         window.maxGameNumbers = 99; 
+        window.requiredNumbers = 3; // ژمارا پێدڤی بۆ هەلبژارتنێ
         window.players = {}; 
         window.drawnNumbers = [];
         window.autoInterval = null; window.isAutoPlaying = false; window.audioCtx = null;
@@ -448,6 +469,7 @@
 
         // --- گۆڕاوێن ئۆنلاین و ئۆفللاین ---
         window.roomCode = null; window.isHost = false;
+        window.hasJoined = false; // بزانین ئایا یاریزان ئامادە بوویە
         window.playerId = "player_" + Math.random().toString(36).substr(2, 9);
         window.myPlayerName = "یاریزان";
         window.currentEditIdOffline = null; 
@@ -457,7 +479,6 @@
             window.loadGlobalSettings();
             window.applyTheme();
             
-            // لۆدکرنا دەنگان بۆ دڵنیابوون
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
             }
@@ -479,14 +500,13 @@
             document.getElementById('modeSelectionScreen').style.display = 'none';
             if (mode === 'offline') {
                 document.getElementById('gameContainer').style.display = 'block';
-                document.getElementById('hostGameControls').style.display = 'grid'; // دۆخێ ئۆفللاین بەشێ دوگمەیان
+                document.getElementById('hostGameControls').style.display = 'grid'; 
                 document.getElementById('btnLeaveRoom').style.display = 'none';
                 document.getElementById('addPlayerMenuBtn').style.display = 'block';
                 document.getElementById('settingMaxNumRow').style.display = 'flex';
                 document.getElementById('waitResetMessage').style.display = 'none';
                 document.getElementById('onlineFloatingControls').style.display = 'none';
                 
-                // دۆخێ ئۆفللاین، دوگمەیا ڕێسێتێ نیشان بدە
                 document.getElementById('btnResetLocal').style.display = 'block'; 
                 
                 window.loadOfflineGameState();
@@ -501,53 +521,86 @@
             }
         };
 
+        // فەنکشنی هاریکار بۆ ئەنیمەیشنا دوگمەی
+        function setBtnLoading(btnId, isLoading, originalText) {
+            const btn = document.getElementById(btnId);
+            if (!btn) return;
+            if(isLoading) {
+                btn.disabled = true;
+                btn.innerHTML = `<div class="spinner"></div> چاڤەڕێ بە...`;
+            } else {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        }
+
         // ==========================================
         //         لۆژیکا ئۆنلاین (Multiplayer)
         // ==========================================
         window.createRoom = async function() {
-            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; window.roomCode = '';
-            for (let i = 0; i < 4; i++) window.roomCode += chars.charAt(Math.floor(Math.random() * chars.length));
-            window.isHost = true;
-            
-            window.saveOnlineSession();
-            const roomRef = ref(db, 'rooms/' + window.roomCode);
-            await set(roomRef, { status: 'waiting', hostId: window.playerId, maxNumbers: 99, drawnNumbers: [], players: {} });
-            onDisconnect(roomRef).remove();
-            window.setupRoomListener(); window.showWaitingScreen();
+            setBtnLoading('btnCreateRoom', true, '👑 دروستکرنا ژوورێ (Host)');
+            try {
+                const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; window.roomCode = '';
+                for (let i = 0; i < 4; i++) window.roomCode += chars.charAt(Math.floor(Math.random() * chars.length));
+                window.isHost = true;
+                
+                window.saveOnlineSession();
+                const roomRef = ref(db, 'rooms/' + window.roomCode);
+                await set(roomRef, { status: 'waiting', hostId: window.playerId, maxNumbers: 99, requiredNumbers: 3, drawnNumbers: [], players: {} });
+                onDisconnect(roomRef).remove();
+                window.setupRoomListener(); window.showWaitingScreen();
+            } catch(e) {
+                alert("خەلەتیەک چێبوو د دروستکرنا ژوورێ دا، تکایە ئینتەرنێتا خۆ کۆنترۆل بکە.");
+            }
+            setBtnLoading('btnCreateRoom', false, '👑 دروستکرنا ژوورێ (Host)');
         };
 
         window.joinRoom = async function() {
-            const inputCode = document.getElementById('joinRoomInput').value.trim().toUpperCase();
-            if (inputCode.length !== 4) { alert("کۆدێ دروست یێ ٤ پیتی بنڤیسە!"); return; }
-            const snapshot = await get(ref(db, 'rooms/' + inputCode));
-            if (!snapshot.exists()) { alert("ئەڤ ژوورە نینە!"); return; }
-            
-            window.roomCode = inputCode; window.isHost = false;
-            window.saveOnlineSession();
-            onDisconnect(ref(db, `rooms/${window.roomCode}/players/${window.playerId}`)).remove();
-            window.setupRoomListener(); window.showWaitingScreen();
+            setBtnLoading('btnJoinRoom', true, 'چوونە ژوورێ (Join)');
+            try {
+                const inputCode = document.getElementById('joinRoomInput').value.trim().toUpperCase();
+                if (inputCode.length !== 4) { alert("کۆدێ دروست یێ ٤ پیتی بنڤیسە!"); setBtnLoading('btnJoinRoom', false, 'چوونە ژوورێ (Join)'); return; }
+                const snapshot = await get(ref(db, 'rooms/' + inputCode));
+                if (!snapshot.exists()) { alert("ئەڤ ژوورە نینە!"); setBtnLoading('btnJoinRoom', false, 'چوونە ژوورێ (Join)'); return; }
+                
+                window.roomCode = inputCode; window.isHost = false; window.hasJoined = false;
+                window.saveOnlineSession();
+                onDisconnect(ref(db, `rooms/${window.roomCode}/players/${window.playerId}`)).remove();
+                window.setupRoomListener(); window.showWaitingScreen();
+            } catch(e) {
+                alert("خەلەتیەک چێبوو!");
+            }
+            setBtnLoading('btnJoinRoom', false, 'چوونە ژوورێ (Join)');
         };
 
         window.rejoinOnlineRoom = async function() {
-            const snapshot = await get(ref(db, 'rooms/' + window.roomCode));
-            if (!snapshot.exists()) { 
-                alert("ژوور هاتییە گرتن یان نەمايە!"); 
-                sessionStorage.removeItem('bingoOnlineSession');
-                window.location.reload();
-                return; 
-            }
-            window.gameMode = 'online';
-            document.getElementById('modeSelectionScreen').style.display = 'none';
-            document.getElementById('addPlayerMenuBtn').style.display = 'none';
-            document.getElementById('settingMaxNumRow').style.display = 'none';
-            document.getElementById('btnLeaveRoom').style.display = 'block';
-            document.getElementById('btnResetLocal').style.display = 'none'; 
-            
-            const data = snapshot.val();
-            if (data.hostId === window.playerId) { window.isHost = true; onDisconnect(ref(db, 'rooms/' + window.roomCode)).remove(); }
-            else { window.isHost = false; onDisconnect(ref(db, `rooms/${window.roomCode}/players/${window.playerId}`)).remove(); }
-            
-            window.setupRoomListener(); window.showWaitingScreen();
+            setBtnLoading('btnRejoin', true, '🔄 ڤەگەڕیان بۆ ژوورا بەرێ (Rejoin)');
+            try {
+                const snapshot = await get(ref(db, 'rooms/' + window.roomCode));
+                if (!snapshot.exists()) { 
+                    alert("ژوور هاتییە گرتن یان نەمايە!"); 
+                    sessionStorage.removeItem('bingoOnlineSession');
+                    window.location.reload();
+                    return; 
+                }
+                window.gameMode = 'online';
+                document.getElementById('modeSelectionScreen').style.display = 'none';
+                document.getElementById('addPlayerMenuBtn').style.display = 'none';
+                document.getElementById('settingMaxNumRow').style.display = 'none';
+                document.getElementById('btnLeaveRoom').style.display = 'block';
+                document.getElementById('btnResetLocal').style.display = 'none'; 
+                
+                const data = snapshot.val();
+                if (data.hostId === window.playerId) { window.isHost = true; onDisconnect(ref(db, 'rooms/' + window.roomCode)).remove(); }
+                else { window.isHost = false; onDisconnect(ref(db, `rooms/${window.roomCode}/players/${window.playerId}`)).remove(); }
+                
+                if (data.players && data.players[window.playerId] && data.players[window.playerId].isReady) {
+                    window.hasJoined = true;
+                }
+                
+                window.setupRoomListener(); window.showWaitingScreen();
+            } catch(e) {}
+            setBtnLoading('btnRejoin', false, '🔄 ڤەگەڕیان بۆ ژوورا بەرێ (Rejoin)');
         };
 
         window.leaveRoom = async function() {
@@ -563,6 +616,14 @@
             sessionStorage.setItem('bingoOnlineSession', JSON.stringify({ roomCode: window.roomCode, playerId: window.playerId, myPlayerName: window.myPlayerName }));
         }
 
+        window.copyRoomCode = function() {
+            if(window.roomCode) {
+                navigator.clipboard.writeText(window.roomCode).then(() => {
+                    alert("کۆدێ ژوورێ هاتە کۆپیکرن: " + window.roomCode);
+                });
+            }
+        }
+
         window.showWaitingScreen = function() {
             document.getElementById('lobbyScreen').style.display = 'none'; document.getElementById('gameContainer').style.display = 'none';
             document.getElementById('waitingScreen').style.display = 'block'; document.getElementById('displayRoomCode').innerText = window.roomCode;
@@ -572,26 +633,50 @@
             if (window.isHost) { document.getElementById('hostSettingsSection').style.display = 'block'; document.getElementById('speedSettingRow').style.display = 'flex'; }
         }
 
+        window.renderOnlineInputs = function(count) {
+            const container = document.getElementById('onlineNumberInputs');
+            container.innerHTML = '';
+            for(let i = 0; i < count; i++) {
+                const inp = document.createElement('input');
+                inp.type = 'number';
+                inp.className = 'num-input-box';
+                container.appendChild(inp);
+            }
+            document.getElementById('btnAddOnlineNumber').style.display = 'none'; // ڤەشارنا زێدەکرنا خانەیێ چونکە اجبارییە
+            document.getElementById('onlineNumberTitle').innerText = `پێدڤییە ${count} ژمارەیان هەلبژێری:`;
+        }
+
         window.updateHostSettings = function() {
             if(!window.isHost) return;
             let val = parseInt(document.getElementById('hostMaxNumInput').value); if(isNaN(val) || val < 10) val = 10;
-            update(ref(db, 'rooms/' + window.roomCode), { maxNumbers: val });
+            let reqNum = parseInt(document.getElementById('hostReqNumInput').value) || 3;
+            update(ref(db, 'rooms/' + window.roomCode), { maxNumbers: val, requiredNumbers: reqNum });
+        }
+
+        window.kickPlayer = async function(id) {
+            if(!window.isHost) return;
+            if(confirm("دڤێت ڤی یاریزانی دەرکەی ژ یاریێ؟")) {
+                await remove(ref(db, `rooms/${window.roomCode}/players/${id}`));
+            }
         }
 
         window.setPlayerReady = async function() {
             const name = document.getElementById('setupPlayerName').value.trim();
             const inputs = document.querySelectorAll('#onlineNumberInputs .num-input-box');
             let numbers = []; inputs.forEach(inp => { let val = parseInt(inp.value); if (!isNaN(val) && val >= 1 && val <= window.maxGameNumbers) numbers.push(val); });
-            if(!name || numbers.length === 0) { alert(`ناڤێ خۆ و لایەنی کێم ژمارەیەکێ بنڤیسە!`); return; }
+            
+            if(!name || numbers.length === 0) { alert(`ناڤێ خۆ بنڤیسە!`); return; }
+            if(numbers.length !== window.requiredNumbers) { alert(`تکایە هەمی خانەیان تژی بکە! پێدڤییە ${window.requiredNumbers} ژمارەیان بنڤیسی.`); return; }
             if ([...new Set(numbers)].length !== numbers.length) { alert('ژمارە دووبارە کرینە!'); return; }
 
             let allUsed = []; Object.values(window.players).forEach(p => { if(p.id !== window.playerId) allUsed = allUsed.concat(p.numbers || []); });
             let dup = numbers.find(n => allUsed.includes(n)); if (dup !== undefined) { alert(`ژمارە (${dup}) پێشتر هاتییە هەلبژارتن!`); return; }
 
             window.myPlayerName = name; 
+            window.hasJoined = true;
             window.saveOnlineSession();
             document.getElementById('btnReady').innerText = "چاڤەڕێ بە..."; document.getElementById('btnReady').disabled = true;
-            document.getElementById('setupPlayerName').disabled = true; inputs.forEach(i => i.disabled = true); document.getElementById('btnAddOnlineNumber').disabled = true;
+            document.getElementById('setupPlayerName').disabled = true; inputs.forEach(i => i.disabled = true);
 
             await set(ref(db, `rooms/${window.roomCode}/players/${window.playerId}`), { id: window.playerId, name: name, numbers: numbers, isSafe: false, isLoser: false, isReady: true });
         }
@@ -608,7 +693,39 @@
             onValue(ref(db, 'rooms/' + window.roomCode), (snapshot) => {
                 const data = snapshot.val();
                 if (!data) { alert("ژوور هاتە گرتن!"); sessionStorage.removeItem('bingoOnlineSession'); window.location.reload(); return; }
-                window.maxGameNumbers = data.maxNumbers || 99; window.players = data.players || {};
+                
+                window.maxGameNumbers = data.maxNumbers || 99; 
+                window.players = data.players || {};
+                
+                // پشکنین بۆ دەرکرن (Kick)
+                if (window.hasJoined && !window.players[window.playerId]) {
+                    alert("تو هاتە دەرکرن ژ لایێ خودانێ ژوورێ ڤە!");
+                    window.leaveRoom();
+                    return;
+                }
+
+                // پشکنین بۆ گهۆڕینا ژمارەیا پێدڤی (Mode) ژلایێ Host
+                let newReqNum = data.requiredNumbers || 3;
+                if(window.requiredNumbers !== newReqNum) {
+                    window.requiredNumbers = newReqNum;
+                    
+                    if(document.getElementById('waitingScreen').style.display !== 'none' && !window.hasJoined) {
+                        window.renderOnlineInputs(window.requiredNumbers);
+                    } else if (window.hasJoined && document.getElementById('waitingScreen').style.display !== 'none') {
+                        let myPlayerData = window.players[window.playerId];
+                        if(myPlayerData && myPlayerData.numbers && myPlayerData.numbers.length !== window.requiredNumbers) {
+                            alert("خودانێ ژوورێ شێوازێ یاریێ گهۆڕی، پێدڤییە دوبارە ژمارەیان بنڤیسی!");
+                            window.hasJoined = false;
+                            document.getElementById('btnReady').innerText = "ئامادەمە (Ready)";
+                            document.getElementById('btnReady').disabled = false;
+                            document.getElementById('setupPlayerName').disabled = false;
+                            window.renderOnlineInputs(window.requiredNumbers);
+                            update(ref(db, `rooms/${window.roomCode}/players/${window.playerId}`), {isReady: false, numbers: []});
+                        }
+                    }
+                } else if(document.getElementById('waitingScreen').style.display !== 'none' && !window.hasJoined && document.getElementById('onlineNumberInputs').children.length === 0) {
+                    window.renderOnlineInputs(window.requiredNumbers);
+                }
                 
                 window.updateWaitingRoomUI(); window.renderPlayersTable();
 
@@ -630,7 +747,15 @@
         window.updateWaitingRoomUI = function() {
             const list = document.getElementById('waitingPlayersList'); list.innerHTML = '';
             const pArr = Object.values(window.players);
-            pArr.forEach(p => { const li = document.createElement('li'); li.innerHTML = `${p.name} ${p.isReady ? '✅' : '⏳'}`; list.appendChild(li); });
+            pArr.forEach(p => { 
+                const li = document.createElement('li'); 
+                li.style.display = 'flex'; li.style.justifyContent = 'space-between'; li.style.alignItems = 'center'; li.style.marginBottom = '6px'; li.style.background = '#f9f9f9'; li.style.padding = '5px 10px'; li.style.borderRadius = '6px'; li.style.border = '1px solid #ddd';
+                
+                let kickBtnHtml = (window.isHost && p.id !== window.playerId) ? `<button style="background:#f44336; color:white; border:none; border-radius:4px; padding:4px 8px; cursor:pointer; font-weight:bold; font-size:12px;" onclick="kickPlayer('${p.id}')">❌ دەرکرن</button>` : '';
+                
+                li.innerHTML = `<span>${p.name} ${p.isReady ? '✅' : '⏳'}</span> ${kickBtnHtml}`; 
+                list.appendChild(li); 
+            });
             if (window.isHost) document.getElementById('btnStartGame').disabled = !(pArr.length >= 2 && pArr.every(p => p.isReady));
         }
 
@@ -805,7 +930,6 @@
         window.closeHistory = function() { document.getElementById('historyModal').style.display = 'none'; }
         window.showAboutDeveloper = function() { document.getElementById('aboutModal').style.display = 'flex'; document.getElementById('playerMenuContent').style.display = 'none'; }
         window.closeAboutDeveloper = function() { document.getElementById('aboutModal').style.display = 'none'; }
-        window.shareGame = function() { const sd = { title: 'یارییا بینگۆ', text: 'وەرە دگەل من یارییا بینگۆ بکە:', url: window.location.href }; if (navigator.share) navigator.share(sd).catch(()=>{}); else navigator.clipboard.writeText(sd.url).then(() => alert("کۆپی بوو:\n" + sd.url)); document.getElementById('playerMenuContent').style.display = 'none'; }
 
         window.updateAutoButtonUI = function() {
             const btn = document.getElementById('autoBtn');
@@ -820,18 +944,14 @@
             }
         }
 
-        // کۆنترۆلکرنا زمانێ خواندنێ ب دروستی بێی کێماسی
         window.speakNumber = function(num) { 
             if (window.soundMode !== 2) return; 
             if ('speechSynthesis' in window) { 
                 window.speechSynthesis.cancel(); 
                 const msg = new SpeechSynthesisUtterance(num.toString()); 
                 
-                // زۆری کرن ل سیستەمی کو ب ڤی زمانی بخوێنیت
                 let langCode = window.selectedLang;
-                // ئەگەر کوردی بوو، باشترە ب عەرەبی بخوێنیت ژبەرکو زۆربەیا مۆبایلان دەنگێ کوردی نینە و دێ بێدەنگ بیت
                 if (langCode === 'ku') langCode = 'ar'; 
-                
                 msg.lang = langCode;
 
                 const voices = window.speechSynthesis.getVoices(); 
@@ -1001,6 +1121,7 @@
                     if (!window.isHost) return;
                     let updates = { drawnNumbers: [], status: 'waiting' };
                     Object.values(window.players).forEach(p => { updates[`players/${p.id}/isSafe`] = false; updates[`players/${p.id}/isLoser`] = false; updates[`players/${p.id}/isReady`] = false; });
+                    window.hasJoined = false;
                     await update(ref(db, 'rooms/' + window.roomCode), updates);
                 } else {
                     window.drawnNumbers = []; Object.values(window.players).forEach(p => { p.isSafe = false; p.isLoser = false; }); 
@@ -1018,8 +1139,10 @@
             document.getElementById('winnerModal').style.display = 'none';
             
             if(window.gameMode === 'online') { 
+                window.hasJoined = false;
                 document.getElementById('btnReady').innerText = "ئامادەمە (Ready)"; document.getElementById('btnReady').disabled = false; 
-                document.getElementById('setupPlayerName').disabled = false; document.querySelectorAll('#onlineNumberInputs .num-input-box').forEach(i => i.disabled = false); document.getElementById('btnAddOnlineNumber').disabled = false;
+                document.getElementById('setupPlayerName').disabled = false; document.querySelectorAll('#onlineNumberInputs .num-input-box').forEach(i => i.disabled = false); 
+                window.renderOnlineInputs(window.requiredNumbers);
                 window.showWaitingScreen(); 
             }
         }
