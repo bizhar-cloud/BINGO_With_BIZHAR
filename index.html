@@ -74,44 +74,39 @@
         .btn-modern:active { transform: translateY(2px); box-shadow: 0 2px 3px rgba(0,0,0,0.4); }
         .btn-auto.stop-mode { background: linear-gradient(to bottom, #ff5252, #d32f2f) !important; border-color: #b71c1c !important; }
 
-        /* جوانکاری و بچویککرنا فۆنتێن مینیۆیێ و لیستێ */
         .players-section { width: 100%; background: #fff; border: 4px solid var(--bg-dark-red); border-radius: 6px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.3); display: flex; flex-direction: column; transition: all 0.3s; z-index: 10; position: relative;}
-        .players-header { background: var(--bg-dark-red); color: white; padding: 6px 10px; font-weight: bold; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
-        .btn-menu-toggle { background: #ffd700; border: 1px solid #b8860b; color: #5a0000; border-radius: 4px; padding: 4px 8px; font-weight: bold; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 4px; font-family: inherit; }
-        .players-body { padding: 8px; display: flex; flex-direction: column; gap: 6px; flex: 1; overflow: hidden; }
+        .players-header { background: var(--bg-dark-red); color: white; padding: 8px 12px; font-weight: bold; font-size: 16px; display: flex; justify-content: space-between; align-items: center; }
+        .btn-menu-toggle { background: #ffd700; border: 1px solid #b8860b; color: #5a0000; border-radius: 4px; padding: 4px 10px; font-weight: bold; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; font-family: inherit; }
+        .players-body { padding: 10px; display: flex; flex-direction: column; gap: 8px; flex: 1; overflow: hidden; }
         
-        .player-menu-content { display: none; background: var(--bg-left-yellow); border: 2px solid var(--border-main); padding: 8px; border-radius: 6px; margin-bottom: 8px; max-height: 55vh; overflow-y: auto; flex-shrink: 0; }
-        
-        /* بچویککرنا دوگمەیێن مینیۆیێ */
-        .menu-btn-item { background: #e6c200; border: 1px solid #b8860b; color: #5a0000; padding: 8px 10px; width: 100%; text-align: right; font-weight: bold; font-size: 13px; border-radius: 4px; cursor: pointer; margin-bottom: 6px; font-family: inherit; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
-        .menu-panel { display: none; background: #fff; padding: 8px; border: 1px solid #ccc; border-radius: 4px; margin-bottom: 8px; }
-        
-        .settings-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; color: #5a0000; }
-        .settings-label { font-size: 12px; font-weight: bold; }
-        .speed-input-menu { width: 60px; padding: 4px; text-align: center; border: 1px solid #8b0000; border-radius: 4px; font-weight: bold; font-family: inherit; font-size: 12px;}
-        .btn-sound { background: #fff; border: 1px solid #8b0000; border-radius: 4px; padding: 6px; cursor: pointer; font-weight: bold; font-family: inherit; color: #8b0000; width: 100%; font-size: 13px;}
-        .toggle-btn { background: #4caf50; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: bold; font-family: inherit; width: 70px; font-size: 12px;}
+        .player-menu-content { display: none; background: var(--bg-left-yellow); border: 2px solid var(--border-main); padding: 10px; border-radius: 6px; margin-bottom: 10px; max-height: 55vh; overflow-y: auto; flex-shrink: 0; }
+        .menu-btn-item { background: #e6c200; border: 2px solid #b8860b; color: #5a0000; padding: 10px; width: 100%; text-align: right; font-weight: bold; font-size: 15px; border-radius: 4px; cursor: pointer; margin-bottom: 8px; font-family: inherit; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .menu-panel { display: none; background: #fff; padding: 10px; border: 1px solid #ccc; border-radius: 4px; margin-bottom: 10px; }
+        .settings-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; color: #5a0000; }
+        .settings-label { font-size: 14px; font-weight: bold; }
+        .speed-input-menu { width: 70px; padding: 5px; text-align: center; border: 2px solid #8b0000; border-radius: 5px; font-weight: bold; font-family: inherit; }
+        .btn-sound { background: #fff; border: 2px solid #8b0000; border-radius: 5px; padding: 8px; cursor: pointer; font-weight: bold; font-family: inherit; color: #8b0000; width: 100%; }
+        .toggle-btn { background: #4caf50; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; font-family: inherit; width: 80px; }
         .toggle-btn.off { background: #f44336; }
 
-        .custom-input { padding: 8px; font-size: 13px; border: 1px solid #ccc; border-radius: 4px; text-align: center; font-family: inherit; width: 90%; margin-bottom: 8px; font-weight: bold; box-sizing: border-box;}
-        .btn-add { background: linear-gradient(to bottom, #4caf50, #2e7d32); color: white; padding: 10px; font-size: 14px; font-weight: bold; border: 1px solid #1b5e20; border-radius: 4px; cursor: pointer; text-shadow: 1px 1px 2px #000; width: 100%; margin-top: 8px;}
-        .dynamic-inputs-container { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; background: #f9f9f9; padding: 8px; border-radius: 4px; border: 1px solid #ddd; }
-        .num-input-box { width: 40px; height: 40px; text-align: center; font-size: 14px; font-weight: bold; border: 2px solid #cba85a; border-radius: 4px; outline: none; }
-        .btn-add-box { background: #ff9800; color: white; border: none; padding: 6px; border-radius: 4px; cursor: pointer; font-weight: bold; font-family: inherit; margin-bottom: 4px; font-size: 12px;}
+        .custom-input { padding: 10px; font-size: 16px; border: 2px solid #ccc; border-radius: 6px; text-align: center; font-family: inherit; width: 90%; margin-bottom: 10px; font-weight: bold; box-sizing: border-box;}
+        .btn-add { background: linear-gradient(to bottom, #4caf50, #2e7d32); color: white; padding: 12px; font-size: 16px; font-weight: bold; border: 2px solid #1b5e20; border-radius: 6px; cursor: pointer; text-shadow: 1px 1px 2px #000; width: 100%; margin-top: 10px;}
+        .dynamic-inputs-container { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; background: #f9f9f9; padding: 10px; border-radius: 4px; border: 1px solid #ddd; }
+        .num-input-box { width: 45px; height: 45px; text-align: center; font-size: 16px; font-weight: bold; border: 2px solid #cba85a; border-radius: 6px; outline: none; }
+        .btn-add-box { background: #ff9800; color: white; border: none; padding: 8px; border-radius: 4px; cursor: pointer; font-weight: bold; font-family: inherit; margin-bottom: 5px; }
 
-        /* بچویککرن و ڕێکخستنا لیستا ناڤان */
         .players-list { text-align: right; overflow-y: auto; padding-right: 5px; flex: 1;}
-        .players-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 4px; overflow: hidden; margin-top: 4px; }
+        .players-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 4px; overflow: hidden; margin-top: 5px; }
         .players-table th, .players-table td { border: 1px solid #ddd; padding: 6px 4px; text-align: center; vertical-align: middle; }
-        .players-table th { background: var(--bg-left-yellow); color: var(--border-main); font-weight: bold; font-size: 12px; }
-        .players-table td { font-size: 12px; color: #000; }
+        .players-table th { background: var(--bg-left-yellow); color: var(--border-main); font-weight: bold; font-size: 13px; }
+        .players-table td { font-size: 13px; color: #000; }
         .players-table tr.safe { background-color: #90ee90 !important; }
         .players-table tr.loser { background-color: #ff4d4d !important; }
         .players-table tr.loser td { color: #fff !important; }
-        .btn-edit-table { background: #ffd700; color: #000; border: 1px solid #b8860b; padding: 3px 6px; border-radius: 3px; font-size: 11px; cursor: pointer; font-weight: bold; }
-        .btn-delete-table { background: #f44336; color: #fff; border: 1px solid #d32f2f; padding: 3px 6px; border-radius: 3px; font-size: 11px; cursor: pointer; font-weight: bold; }
-        .safe-badge { color: #006400; font-size: 10px; font-weight: bold;}
-        .loser-badge { color: #ffcccc; font-size: 10px; font-weight: bold;}
+        .btn-edit-table { background: #ffd700; color: #000; border: 1px solid #b8860b; padding: 4px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: bold; }
+        .btn-delete-table { background: #f44336; color: #fff; border: 1px solid #d32f2f; padding: 4px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: bold; }
+        .safe-badge { color: #006400; font-size: 11px; font-weight: bold;}
+        .loser-badge { color: #ffcccc; font-size: 11px; font-weight: bold;}
         
         .bingo-board { 
             display: grid; gap: 4px; flex: 1; margin-top: 5px; width: 100%; height: 100%;
@@ -134,7 +129,7 @@
         .board-cell:nth-child(10n + 9), .board-cell:nth-child(10n + 10) { border-color: var(--col-o); }
 
         .board-cell.drawn { background: radial-gradient(circle at 30% 30%, #da70d6, #800080); color: white; border-color: #4b0082; transform: scale(1.15); }
-        .number-circle { display: inline-block; width: 24px; height: 24px; line-height: 24px; text-align: center; background: #fff; border-radius: 50%; margin: 2px; font-weight: bold; color: #333; font-size: 12px; border: 2px solid #ccc; font-family: Arial; }
+        .number-circle { display: inline-block; width: 26px; height: 26px; line-height: 26px; text-align: center; background: #fff; border-radius: 50%; margin: 2px; font-weight: bold; color: #333; font-size: 13px; border: 2px solid #ccc; font-family: Arial; }
         .number-circle.matched { background: radial-gradient(circle at 30% 30%, #da70d6, #800080); color: white; border-color: #4b0082; }
 
         .celebration-toast { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); background: rgba(255, 215, 0, 0.95); backdrop-filter: blur(10px); color: #8b0000; padding: 30px 50px; border-radius: 20px; font-size: 2em; font-weight: 900; text-align: center; box-shadow: 0 0 30px rgba(0,0,0,0.5); border: 4px solid #8b0000; z-index: 5000; opacity: 0; transition: all 0.4s; pointer-events: none; }
@@ -307,7 +302,7 @@
     <div class="winner-modal" id="winnerModal">
         <div class="loser-text" id="loserText"></div>
         <button class="btn-restart" id="btnResetGameHost" onclick="resetGameDispatcher()">🔄 یارییەکا نوی دەستپێبکە</button>
-        <div id="waitResetMessage" style="color: white; font-size: 18px; display: none;">چاڤەڕێی خانەخوێ (Host) بە بۆ یارییەکا نوی...</div>
+        <div id="waitResetMessage" style="color: white; font-size: 18px; display: none;">چاڤەڕێی خودانێ رۆمێ (Host) بە بۆ یارییەکا نوی...</div>
         <button class="btn-restart" style="background: linear-gradient(to bottom, #777, #444); margin-top: 15px; padding: 10px 30px; font-size: 18px;" onclick="document.getElementById('winnerModal').style.display = 'none';">👀 دیتنا ئەنجامی</button>
     </div>
 
@@ -324,7 +319,7 @@
                     <button class="btn-modern full-width" id="btnResetLocal" onclick="window.resetGameDispatcher()" style="display: none;">🔄 نوی کرن (Restart)</button>
                 </div>
                 <div id="playerWaitMessage" style="color: #8b0000; font-weight: bold; margin-bottom: 15px; display: none;">
-                    چاڤەڕێی خانەخوێ بە بۆ ڕاکێشانا ژمارەیان...
+                    چاڤەڕێی خودانێ رۆمێ بە بۆ ڕاکێشانا ژمارەیان...
                 </div>
             </div>
 
@@ -461,6 +456,11 @@
         window.onload = function() {
             window.loadGlobalSettings();
             window.applyTheme();
+            
+            // لۆدکرنا دەنگان بۆ دڵنیابوون
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
+            }
             
             let savedSession = sessionStorage.getItem('bingoOnlineSession');
             if (savedSession) {
@@ -820,9 +820,35 @@
             }
         }
 
-        window.speakNumber = function(num) { if (window.soundMode !== 2) return; if ('speechSynthesis' in window) { window.speechSynthesis.cancel(); const msg = new SpeechSynthesisUtterance(num.toString()); const voices = window.speechSynthesis.getVoices(); let target = voices.find(v => v.lang.startsWith(window.selectedLang)); if (!target && window.selectedLang === 'ku') target = voices.find(v => v.lang.startsWith('ar')) || voices.find(v => v.lang.startsWith('en')); if (target) msg.voice = target; window.speechSynthesis.speak(msg); } }
+        // کۆنترۆلکرنا زمانێ خواندنێ ب دروستی بێی کێماسی
+        window.speakNumber = function(num) { 
+            if (window.soundMode !== 2) return; 
+            if ('speechSynthesis' in window) { 
+                window.speechSynthesis.cancel(); 
+                const msg = new SpeechSynthesisUtterance(num.toString()); 
+                
+                // زۆری کرن ل سیستەمی کو ب ڤی زمانی بخوێنیت
+                let langCode = window.selectedLang;
+                // ئەگەر کوردی بوو، باشترە ب عەرەبی بخوێنیت ژبەرکو زۆربەیا مۆبایلان دەنگێ کوردی نینە و دێ بێدەنگ بیت
+                if (langCode === 'ku') langCode = 'ar'; 
+                
+                msg.lang = langCode;
+
+                const voices = window.speechSynthesis.getVoices(); 
+                if (voices.length > 0) {
+                    let target = voices.find(v => v.lang.startsWith(window.selectedLang)); 
+                    if (!target && window.selectedLang === 'ku') {
+                        target = voices.find(v => v.lang.startsWith('ar')) || voices.find(v => v.lang.startsWith('en')); 
+                    }
+                    if (target) msg.voice = target; 
+                }
+                
+                window.speechSynthesis.speak(msg); 
+            } 
+        }
+
         window.playSound = function(type) { if (window.soundMode === 0) return; if (!window.audioCtx) window.audioCtx = new (window.AudioContext || window.webkitAudioContext)(); if (window.audioCtx.state === 'suspended') window.audioCtx.resume(); const osc = window.audioCtx.createOscillator(); const gain = window.audioCtx.createGain(); osc.connect(gain); gain.connect(window.audioCtx.destination); if (type === 'draw') { osc.type = 'sine'; osc.frequency.setValueAtTime(800, window.audioCtx.currentTime); gain.gain.setValueAtTime(0.05, window.audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, window.audioCtx.currentTime + 0.1); osc.start(); osc.stop(window.audioCtx.currentTime + 0.1); } else if (type === 'safe') { osc.type = 'triangle'; osc.frequency.setValueAtTime(400, window.audioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(800, window.audioCtx.currentTime + 0.2); gain.gain.setValueAtTime(0.1, window.audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, window.audioCtx.currentTime + 0.3); osc.start(); osc.stop(window.audioCtx.currentTime + 0.3); } else if (type === 'lose') { osc.type = 'sawtooth'; osc.frequency.setValueAtTime(300, window.audioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(50, window.audioCtx.currentTime + 1.5); gain.gain.setValueAtTime(0.2, window.audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, window.audioCtx.currentTime + 1.5); osc.start(); osc.stop(window.audioCtx.currentTime + 1.5); } }
-        window.showCelebration = function(names) { if (!window.alertsEnabled.win) return; const t = document.getElementById('celebrationToast'); t.innerHTML = `🎉 پیرۆزە 🎉<br><span class="winner-name">${names.join(' و ')}</span>ب سەرکەفت!`; t.classList.add('show'); confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 }, zIndex: 5000 }); clearTimeout(window.celebrationTimeout); window.celebrationTimeout = setTimeout(() => t.classList.remove('show'), 3500); }
+        window.showCelebration = function(names) { if (!window.alertsEnabled.win) return; const t = document.getElementById('celebrationToast'); t.innerHTML = `🎉 پیرۆزە 🎉<br><span class="winner-name">${names.join(' و ')}</span>تو ب سەرکەفتی!`; t.classList.add('show'); confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 }, zIndex: 5000 }); clearTimeout(window.celebrationTimeout); window.celebrationTimeout = setTimeout(() => t.classList.remove('show'), 3500); }
         
         window.initBoard = function() {
             const b = document.getElementById('bingoBoard'); b.innerHTML = ''; let cols = 10; if(window.maxGameNumbers <= 50) cols = 5; if(window.maxGameNumbers > 100) cols = 15; if(window.innerWidth < 900) cols = 10; b.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
