@@ -30,18 +30,73 @@
         .spinner { border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid #fff; border-radius: 50%; width: 18px; height: 18px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-left: 8px;}
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .lobby-screen {
-            background: var(--bg-dark-red); padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-            width: 100%; max-width: 400px; color: white; border: 4px solid var(--bg-right-gold); animation: popIn 0.4s ease;
+        /* --- دیزاینا نوی یا شاشەیا دەستپێکێ --- */
+        .floating-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 1; overflow: hidden;
+            background: radial-gradient(circle at center, #7a0000 0%, #200000 100%);
         }
-        .lobby-screen h1 { margin-top: 0; color: #ffd700; text-shadow: 2px 2px 4px #000; font-size: 28px; }
-        .lobby-box { background: #fff; padding: 20px; border-radius: 10px; color: #000; box-shadow: inset 0 0 10px rgba(0,0,0,0.2); }
+
+        .bingo-ball-anim {
+            position: absolute; border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            font-weight: 900; font-family: Arial, sans-serif;
+            box-shadow: inset -10px -10px 20px rgba(0,0,0,0.5), inset 5px 5px 10px rgba(255,255,255,0.8), 0 10px 20px rgba(0,0,0,0.4);
+            animation: floatUp linear infinite; opacity: 0.9;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(110vh) rotate(0deg) scale(0.8); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-20vh) rotate(360deg) scale(1.2); opacity: 0; }
+        }
+
+        .lobby-screen {
+            background: linear-gradient(135deg, rgba(158, 11, 15, 0.85), rgba(90, 0, 0, 0.95));
+            backdrop-filter: blur(8px); padding: 40px 30px; border-radius: 25px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 0 20px rgba(255, 215, 0, 0.2);
+            width: 100%; max-width: 420px; color: white; border: 3px solid #cba85a; 
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 10; position: relative;
+        }
+        
+        .lobby-screen h1 { 
+            margin-top: 0; color: #ffd700; 
+            text-shadow: 0 4px 15px rgba(255, 215, 0, 0.6), 0 2px 4px rgba(0,0,0,0.9); 
+            font-size: 45px; font-weight: 900; letter-spacing: 1px; margin-bottom: 10px;
+        }
+
+        .btn-lobby-mode {
+            font-size: 22px; padding: 20px; margin-bottom: 20px; width: 100%;
+            border-radius: 16px; border: 2px solid rgba(255,255,255,0.3); color: white;
+            font-weight: 900; cursor: pointer; transition: all 0.2s; display: flex;
+            align-items: center; justify-content: center; gap: 12px; font-family: inherit;
+            position: relative; overflow: hidden; text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
+        }
+        .btn-lobby-mode::after {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
+            transform: skewX(-25deg); animation: shine 3s infinite;
+        }
+        @keyframes shine { 0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; } }
+
+        .btn-local { background: linear-gradient(145deg, #4caf50, #2e7d32); box-shadow: 0 8px 0 #1b5e20, 0 15px 20px rgba(0,0,0,0.4); }
+        .btn-local:active { transform: translateY(8px); box-shadow: 0 0 0 #1b5e20, 0 5px 10px rgba(0,0,0,0.4); }
+
+        .btn-online { background: linear-gradient(145deg, #2196F3, #0b7dda); box-shadow: 0 8px 0 #005b9f, 0 15px 20px rgba(0,0,0,0.4); }
+        .btn-online:active { transform: translateY(8px); box-shadow: 0 0 0 #005b9f, 0 5px 10px rgba(0,0,0,0.4); }
+
+        .btn-rejoin { background: linear-gradient(145deg, #ff9800, #e65100); box-shadow: 0 8px 0 #bf360c, 0 15px 20px rgba(0,0,0,0.4); }
+        .btn-rejoin:active { transform: translateY(8px); box-shadow: 0 0 0 #bf360c, 0 5px 10px rgba(0,0,0,0.4); }
+
+        .lobby-box { background: rgba(255,255,255,0.95); padding: 20px; border-radius: 15px; color: #000; box-shadow: 0 10px 20px rgba(0,0,0,0.3); margin-top: 15px; }
         .room-code-display { font-size: 40px; font-weight: 900; letter-spacing: 5px; color: #9e0b0f; margin: 10px 0; background: transparent; padding: 0; border: none;}
         .room-code-container { display: flex; justify-content: center; align-items: center; gap: 10px; background: #fce883; padding: 5px 15px; border-radius: 8px; border: 2px dashed #9e0b0f; width: fit-content; margin: 10px auto; }
-        
+        /* --- دوماهیا دیزاینا نوی --- */
+
         .container {
             width: 100%; max-width: 900px; background-color: var(--bg-dark-red); padding: 10px;
-            border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); margin: auto; transition: background-color 0.3s; display: none;
+            border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); margin: auto; transition: background-color 0.3s; display: none; z-index: 10; position: relative;
         }
 
         .layout-wrapper { display: flex; flex-direction: row; gap: 10px; }
@@ -170,19 +225,26 @@
         .chat-msg.mine { align-self: flex-end; background: #dcedc8; border-bottom-left-radius: 2px; }
         .chat-sender { font-size: 11px; color: #777; font-weight: bold; margin-bottom: 3px; }
 
-        .floating-emoji { position: fixed; bottom: 80px; left: 30px; font-size: 40px; animation: floatUp 2s forwards ease-out; pointer-events: none; z-index: 9999; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        @keyframes floatUp { 0% { transform: translateY(0) scale(0.5); opacity: 1; } 100% { transform: translateY(-300px) scale(1.5); opacity: 0; } }
+        .floating-emoji { position: fixed; bottom: 80px; left: 30px; font-size: 40px; animation: floatUpEmoji 2s forwards ease-out; pointer-events: none; z-index: 9999; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        @keyframes floatUpEmoji { 0% { transform: translateY(0) scale(0.5); opacity: 1; } 100% { transform: translateY(-300px) scale(1.5); opacity: 0; } }
 
-        /* Themes */
+        /* Themes - ١٠ ڕەنگێن تەمام */
         body.theme-dark { --bg-body: #121212; --bg-dark-red: #1e1e1e; --bg-left-yellow: #2d2d2d; --bg-right-gold: #383838; --border-main: #555; --text-main: #fff; }
-        body.theme-dark .container, body.theme-dark .lobby-screen, body.theme-dark .lobby-box { background: #2d2d2d; color: #fff; border-color: #555; }
+        body.theme-dark .container, body.theme-dark .lobby-box { background: #2d2d2d; color: #fff; border-color: #555; }
         body.theme-dark .players-section, body.theme-dark .menu-panel { background: #2d2d2d; color: #fff; border-color: #555; }
         body.theme-dark .settings-row { color: #fff; }
         body.theme-dark .players-table, body.theme-dark .players-table th, body.theme-dark .players-table td { background: #333; color: #fff; border-color: #555; }
         body.theme-dark .board-cell { background: #444; color: #fff; border-color: #666; }
         body.theme-dark .number-circle { background: #555; color: #fff; border-color: #777; }
+        
         body.theme-blue { --bg-body: #001f3f; --bg-dark-red: #003366; --bg-left-yellow: #b3e0ff; --bg-right-gold: #4682B4; --border-main: #001f3f; }
         body.theme-green { --bg-body: #002200; --bg-dark-red: #004d00; --bg-left-yellow: #c1f0c1; --bg-right-gold: #2e8b57; --border-main: #002200; }
+        body.theme-purple { --bg-body: #1a0033; --bg-dark-red: #4b0082; --bg-left-yellow: #e6ccff; --bg-right-gold: #9370db; --border-main: #2a004d; }
+        body.theme-orange { --bg-body: #331400; --bg-dark-red: #d84315; --bg-left-yellow: #ffe0b2; --bg-right-gold: #ff8f00; --border-main: #bf360c; }
+        body.theme-pink { --bg-body: #33001b; --bg-dark-red: #c2185b; --bg-left-yellow: #f8bbd0; --bg-right-gold: #e91e63; --border-main: #880e4f; }
+        body.theme-coffee { --bg-body: #1e140f; --bg-dark-red: #5d4037; --bg-left-yellow: #d7ccc8; --bg-right-gold: #8d6e63; --border-main: #3e2723; }
+        body.theme-neon { --bg-body: #000000; --bg-dark-red: #1a1a1a; --bg-left-yellow: #00ffff; --bg-right-gold: #ff00ff; --border-main: #39ff14; }
+        body.theme-ocean { --bg-body: #001a24; --bg-dark-red: #006064; --bg-left-yellow: #b2ebf2; --bg-right-gold: #00acc1; --border-main: #00363a; }
 
         @media (min-width: 900px) { .container { max-width: 1200px; padding: 20px; } .layout-wrapper { flex-direction: row; align-items: stretch; gap: 20px; } .left-panel { flex: 1; } .right-panel { flex: 1.5; align-items: center; } .bingo-board { max-width: 75vh; margin: auto; } }
         
@@ -212,7 +274,6 @@
             .buttons-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; width: 100%; margin-bottom: 0; flex-shrink: 0;}
             .btn-modern { padding: 8px 4px; font-size: 2.2vh; min-height: unset; white-space: nowrap; }
             
-            /* جێگیرکرنا فۆنتێن مینیۆیێ د لاندسکەیپێ دا */
             .players-header { font-size: 14px; padding: 6px; }
             .btn-menu-toggle { font-size: 12px; padding: 4px; }
             .menu-btn-item { padding: 6px 8px; font-size: 12px; margin-bottom: 5px;}
@@ -232,28 +293,28 @@
 </head>
 <body class="theme-classic" id="mainBody">
 
+    <div id="floatingBg" class="floating-bg"></div>
+
     <div id="modeSelectionScreen" class="lobby-screen">
         <h1>یارییا بینگۆ</h1>
-        <p style="font-size: 16px; margin-bottom: 25px; color: #eee;">هیڤییە شێوازێ یاریێ هەلبژێرە:</p>
+        <p style="font-size: 18px; margin-bottom: 30px; color: #fff; font-weight: bold; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">هیڤییە شێوازێ یاریێ هەلبژێرە:</p>
         
-        <button id="btnRejoin" class="btn-modern full-width" style="display: none; font-size: 20px; padding: 20px; margin-bottom: 15px; background: linear-gradient(to bottom, #ff9800, #e65100); width: 100%; animation: popIn 0.5s;" onclick="rejoinOnlineRoom()">🔄 ڤەگەڕیان بۆ ژوورا بەرێ (Rejoin)</button>
+        <button id="btnRejoin" class="btn-lobby-mode btn-rejoin" style="display: none;" onclick="rejoinOnlineRoom()">🔄 ڤەگەڕیان بۆ ژوورا بەرێ</button>
 
-        <div class="lobby-box" style="background: transparent; box-shadow: none; border: none; padding: 0;">
-            <button class="btn-modern full-width" style="font-size: 20px; padding: 20px; margin-bottom: 15px; background: linear-gradient(to bottom, #4caf50, #2e7d32); width: 100%;" onclick="selectMode('offline')">📱 یارییا ئۆفللاین (Local)</button>
-            <button class="btn-modern full-width" style="font-size: 20px; padding: 20px; background: linear-gradient(to bottom, #2196F3, #0b7dda); width: 100%;" onclick="selectMode('online')">🌐 یارییا ئۆنلاین (Multiplayer)</button>
-        </div>
+        <button class="btn-lobby-mode btn-local" onclick="selectMode('offline')">📱 یارییا ئۆفللاین (Local)</button>
+        <button class="btn-lobby-mode btn-online" onclick="selectMode('online')">🌐 یارییا ئۆنلاین (Multiplayer)</button>
     </div>
 
     <div id="lobbyScreen" class="lobby-screen" style="display: none;">
         <h1>یارییا ئۆنلاین</h1>
-        <p style="font-size: 14px; margin-bottom: 20px;">یاریێ ل گەل هەڤالان بکە!</p>
+        <p style="font-size: 16px; margin-bottom: 20px; font-weight: bold; text-shadow: 1px 1px 2px #000;">یاریێ ل گەل هەڤالان بکە!</p>
         <div class="lobby-box">
-            <button id="btnCreateRoom" class="btn-modern full-width" style="font-size: 18px; padding: 15px;" onclick="createRoom()">👑 دروستکرنا ژوورێ (Host)</button>
+            <button id="btnCreateRoom" class="btn-lobby-mode btn-online" style="padding: 15px; font-size: 18px;" onclick="createRoom()">👑 دروستکرنا ژوورێ (Host)</button>
             <div style="margin: 20px 0; border-top: 2px dashed #ccc; padding-top: 20px;">
-                <input type="text" id="joinRoomInput" class="custom-input" placeholder="کۆدێ ژوورێ (٤ پیت) بنڤیسە..." style="text-transform: uppercase;">
-                <button id="btnJoinRoom" class="btn-modern full-width" style="background: linear-gradient(to bottom, #4caf50, #2e7d32); font-size: 18px; padding: 15px;" onclick="joinRoom()">چوونە ژوورێ (Join)</button>
+                <input type="text" id="joinRoomInput" class="custom-input" placeholder="کۆدێ ژوورێ (٤ پیت)..." style="text-transform: uppercase;">
+                <button id="btnJoinRoom" class="btn-lobby-mode btn-local" style="padding: 15px; font-size: 18px;" onclick="joinRoom()">چوونە ژوورێ (Join)</button>
             </div>
-            <button class="btn-modern" style="background: #f44336; border-color: #d32f2f; margin-top: 10px; width: 100%;" onclick="location.reload()">⬅️ ڤەگەڕیان</button>
+            <button class="btn-modern" style="background: #f44336; border-color: #d32f2f; margin-top: 5px; width: 100%; padding: 12px;" onclick="location.reload()">⬅️ ڤەگەڕیان</button>
         </div>
     </div>
 
@@ -272,8 +333,7 @@
             <div id="playerSetupSection">
                 <input type="text" id="setupPlayerName" class="custom-input" placeholder="ناڤێ خۆ بنڤیسە">
                 <div style="font-size: 13px; font-weight: bold; text-align: center; margin-bottom: 5px;" id="onlineNumberTitle">ژمارەیێن خۆ هەلبژێرە:</div>
-                <div id="onlineNumberInputs" class="dynamic-inputs-container">
-                    </div>
+                <div id="onlineNumberInputs" class="dynamic-inputs-container"></div>
                 <button class="btn-add-box" id="btnAddOnlineNumber" onclick="addNumberBox('onlineNumberInputs')">➕ خانەیەکا دی زێدەبکە</button>
                 <button class="btn-add" id="btnReady" onclick="setPlayerReady()">ئامادەمە (Ready)</button>
             </div>
@@ -371,6 +431,12 @@
                                     <option value="dark">تاری</option>
                                     <option value="blue">شین</option>
                                     <option value="green">کەسک</option>
+                                    <option value="purple">مۆر</option>
+                                    <option value="orange">پرتەقاڵی</option>
+                                    <option value="pink">پەمبەیی</option>
+                                    <option value="coffee">قاوەیی</option>
+                                    <option value="neon">نیۆن</option>
+                                    <option value="ocean">ئۆقیانووس</option>
                                 </select>
                             </div>
                             <button class="btn-sound" id="soundBtn" onclick="toggleSoundMode()" style="margin-bottom: 8px;">🔊 دەنگ + خواندن</button>
@@ -409,6 +475,7 @@
                         <button class="menu-btn-item" style="background:#34495e; color:#fff;" onclick="toggleFullscreen()">🔲 شاشەیا تەمام</button>
                         <button class="menu-btn-item" id="btnLeaveRoom" style="background:#f44336; color:#fff; display:none;" onclick="leaveRoom()">🚪 دەرکەفتن ژ یاریێ</button>
                         <button class="menu-btn-item" style="background:#e0e0e0; color:#333;" onclick="showAboutDeveloper()">ℹ️ دەربارەی گەشەپێدەر</button>
+                        <button class="menu-btn-item" style="background:#4caf50; color:#fff;" onclick="shareGame()">📤 بەلاڤکرنا یاریێ</button>
                     </div>
 
                     <div class="players-list" id="playersList"></div>
@@ -458,7 +525,7 @@
         // --- گۆڕاوێن گشتی ---
         window.gameMode = null; 
         window.maxGameNumbers = 99; 
-        window.requiredNumbers = 3; // ژمارا پێدڤی بۆ هەلبژارتنێ
+        window.requiredNumbers = 3;
         window.players = {}; 
         window.drawnNumbers = [];
         window.autoInterval = null; window.isAutoPlaying = false; window.audioCtx = null;
@@ -469,15 +536,43 @@
 
         // --- گۆڕاوێن ئۆنلاین و ئۆفللاین ---
         window.roomCode = null; window.isHost = false;
-        window.hasJoined = false; // بزانین ئایا یاریزان ئامادە بوویە
+        window.hasJoined = false;
         window.playerId = "player_" + Math.random().toString(36).substr(2, 9);
         window.myPlayerName = "یاریزان";
         window.currentEditIdOffline = null; 
 
-        // --- دەستپێک (Init) و پاراستنا ئەنتەرنێتێ ---
+        // --- دروستکرنا ئەنیمەیشنا تۆپێن بینگۆیێ بۆ باگگراوەندێ ---
+        window.createFloatingBalls = function() {
+            const container = document.getElementById('floatingBg');
+            if(!container) return;
+            container.innerHTML = '';
+            const colors = ['#00bfff', '#dc143c', '#a9a9a9', '#32cd32', '#ffd700', '#ff69b4', '#8a2be2'];
+            for(let i = 0; i < 20; i++) {
+                const ball = document.createElement('div');
+                ball.className = 'bingo-ball-anim';
+                const size = Math.floor(Math.random() * 50) + 40; 
+                ball.style.width = size + 'px';
+                ball.style.height = size + 'px';
+                ball.style.left = Math.floor(Math.random() * 95) + 'vw';
+                ball.style.animationDuration = (Math.random() * 10 + 12) + 's'; 
+                ball.style.animationDelay = (Math.random() * 10) + 's';
+                
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                ball.style.background = `radial-gradient(circle at 30% 30%, #ffffff, ${color})`;
+                ball.style.border = `2px solid ${color}`;
+                ball.style.color = '#333';
+                ball.style.fontSize = (size / 2.5) + 'px';
+                
+                ball.innerText = Math.floor(Math.random() * 99) + 1;
+                container.appendChild(ball);
+            }
+        }
+
+        // --- دەستپێک (Init) ---
         window.onload = function() {
             window.loadGlobalSettings();
             window.applyTheme();
+            window.createFloatingBalls(); 
             
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
@@ -489,7 +584,7 @@
                 window.roomCode = session.roomCode;
                 window.playerId = session.playerId;
                 window.myPlayerName = session.myPlayerName;
-                document.getElementById('btnRejoin').style.display = 'block';
+                document.getElementById('btnRejoin').style.display = 'flex';
             }
             
             document.getElementById('modeSelectionScreen').style.display = 'block';
@@ -499,6 +594,7 @@
             window.gameMode = mode;
             document.getElementById('modeSelectionScreen').style.display = 'none';
             if (mode === 'offline') {
+                document.getElementById('floatingBg').style.display = 'none'; 
                 document.getElementById('gameContainer').style.display = 'block';
                 document.getElementById('hostGameControls').style.display = 'grid'; 
                 document.getElementById('btnLeaveRoom').style.display = 'none';
@@ -521,7 +617,6 @@
             }
         };
 
-        // فەنکشنی هاریکار بۆ ئەنیمەیشنا دوگمەی
         function setBtnLoading(btnId, isLoading, originalText) {
             const btn = document.getElementById(btnId);
             if (!btn) return;
@@ -534,9 +629,6 @@
             }
         }
 
-        // ==========================================
-        //         لۆژیکا ئۆنلاین (Multiplayer)
-        // ==========================================
         window.createRoom = async function() {
             setBtnLoading('btnCreateRoom', true, '👑 دروستکرنا ژوورێ (Host)');
             try {
@@ -574,7 +666,7 @@
         };
 
         window.rejoinOnlineRoom = async function() {
-            setBtnLoading('btnRejoin', true, '🔄 ڤەگەڕیان بۆ ژوورا بەرێ (Rejoin)');
+            setBtnLoading('btnRejoin', true, '🔄 ڤەگەڕیان بۆ ژوورا بەرێ');
             try {
                 const snapshot = await get(ref(db, 'rooms/' + window.roomCode));
                 if (!snapshot.exists()) { 
@@ -600,7 +692,7 @@
                 
                 window.setupRoomListener(); window.showWaitingScreen();
             } catch(e) {}
-            setBtnLoading('btnRejoin', false, '🔄 ڤەگەڕیان بۆ ژوورا بەرێ (Rejoin)');
+            setBtnLoading('btnRejoin', false, '🔄 ڤەگەڕیان بۆ ژوورا بەرێ');
         };
 
         window.leaveRoom = async function() {
@@ -642,7 +734,7 @@
                 inp.className = 'num-input-box';
                 container.appendChild(inp);
             }
-            document.getElementById('btnAddOnlineNumber').style.display = 'none'; // ڤەشارنا زێدەکرنا خانەیێ چونکە اجبارییە
+            document.getElementById('btnAddOnlineNumber').style.display = 'none';
             document.getElementById('onlineNumberTitle').innerText = `پێدڤییە ${count} ژمارەیان هەلبژێری:`;
         }
 
@@ -697,14 +789,12 @@
                 window.maxGameNumbers = data.maxNumbers || 99; 
                 window.players = data.players || {};
                 
-                // پشکنین بۆ دەرکرن (Kick)
                 if (window.hasJoined && !window.players[window.playerId]) {
                     alert("تو هاتە دەرکرن ژ لایێ خودانێ ژوورێ ڤە!");
                     window.leaveRoom();
                     return;
                 }
 
-                // پشکنین بۆ گهۆڕینا ژمارەیا پێدڤی (Mode) ژلایێ Host
                 let newReqNum = data.requiredNumbers || 3;
                 if(window.requiredNumbers !== newReqNum) {
                     window.requiredNumbers = newReqNum;
@@ -760,13 +850,13 @@
         }
 
         window.switchToGameScreen = function() {
+            document.getElementById('floatingBg').style.display = 'none'; 
             document.getElementById('waitingScreen').style.display = 'none'; document.getElementById('gameContainer').style.display = 'block';
             window.initBoard(); window.updateRemainingCount();
             if (window.isHost) { document.getElementById('hostGameControls').style.display = 'grid'; document.getElementById('btnResetGameHost').style.display = 'block'; } 
             else { document.getElementById('playerWaitMessage').style.display = 'block'; document.getElementById('waitResetMessage').style.display = 'block'; }
         }
 
-        // --- چات و ئیمۆجی ئۆنلاین ---
         let chatListenerSetup = false;
         window.setupChatAndReactions = function() {
             if(chatListenerSetup) return;
@@ -815,9 +905,6 @@
             setTimeout(() => { emoji.remove(); }, 2000);
         }
 
-        // ==========================================
-        //         لۆژیکا ئۆفللاین (Local)
-        // ==========================================
         window.loadOfflineGameState = function() {
             const savedMax = localStorage.getItem('bingoOfflineMaxNum'); if (savedMax) { window.maxGameNumbers = parseInt(savedMax); document.getElementById('offlineMaxNumInput').value = window.maxGameNumbers; }
             const savedPlayers = localStorage.getItem('bingoOfflinePlayers'); if (savedPlayers) window.players = JSON.parse(savedPlayers);
@@ -910,9 +997,6 @@
             }
         }
 
-        // ==========================================
-        //         لۆژیکا هەڤپشک (Shared UI & Draw)
-        // ==========================================
         window.loadGlobalSettings = function() {
             const savedTheme = localStorage.getItem('bingoCustomTheme'); if (savedTheme) { window.currentTheme = savedTheme; document.getElementById('themeSelect').value = window.currentTheme; }
             const savedLang = localStorage.getItem('bingoCustomLang'); if (savedLang) { window.selectedLang = savedLang; document.getElementById('langSelect').value = window.selectedLang; }
@@ -930,6 +1014,31 @@
         window.closeHistory = function() { document.getElementById('historyModal').style.display = 'none'; }
         window.showAboutDeveloper = function() { document.getElementById('aboutModal').style.display = 'flex'; document.getElementById('playerMenuContent').style.display = 'none'; }
         window.closeAboutDeveloper = function() { document.getElementById('aboutModal').style.display = 'none'; }
+        
+        // فەنکشنی شاشەیا تەمام
+        window.toggleFullscreen = function() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log(`Error attempting to enable fullscreen: ${err.message}`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+            document.getElementById('playerMenuContent').style.display = 'none';
+        }
+
+        // فەنکشنی بەلاڤکرنا یاریێ
+        window.shareGame = function() { 
+            const sd = { title: 'یارییا بینگۆ', text: 'وەرە دگەل من یارییا بینگۆ بکە:', url: window.location.href }; 
+            if (navigator.share) {
+                navigator.share(sd).catch(()=>{}); 
+            } else {
+                navigator.clipboard.writeText(sd.url).then(() => alert("لینکا یاریێ هاتە کۆپیکرن:\n" + sd.url)); 
+            }
+            document.getElementById('playerMenuContent').style.display = 'none'; 
+        }
 
         window.updateAutoButtonUI = function() {
             const btn = document.getElementById('autoBtn');
