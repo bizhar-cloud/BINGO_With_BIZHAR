@@ -18,6 +18,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
+    <script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.20.2.js"></script>
+    
     <style>
         :root {
             --bg-body: #000000; --bg-dark-red: #9e0b0f; --bg-left-yellow: #fce883; --bg-right-gold: #cba85a;
@@ -108,7 +110,6 @@
         .left-panel { flex: 1.2; background-color: var(--bg-left-yellow); border-radius: 8px; border: 2px solid var(--border-main); padding: 15px; display: flex; flex-direction: column; align-items: center; }
         .right-panel { flex: 1.5; background-color: var(--bg-right-gold); border-radius: 8px; border: 2px solid var(--border-main); padding: 8px; display: flex; flex-direction: column; }
 
-        /* قەبارەیێ شاشەیا ژمارەیان وەک داخوازیا تە: 140px */
         .monitor-box { 
             background: #ffffff; border: 12px solid #f2c94c; border-radius: 50% !important; 
             width: 140px; height: 140px; min-width: 140px; min-height: 140px; max-width: 140px; max-height: 140px; 
@@ -117,7 +118,6 @@
         }
         #drawnNumberDisplay { font-size: 5em; font-weight: bold; color: #666; font-family: Arial, sans-serif; line-height: 1; white-space: nowrap;}
         
-        /* ستایلا تە بۆ بۆکسێ ژمارەیا ماینە */
         .remaining-count { 
             display: inline-block; background: linear-gradient(to bottom, #ffffff, #f0f0f0); 
             border: 2px solid var(--bg-right-gold); color: #8b0000; 
@@ -520,6 +520,8 @@
             <button onclick="sendReaction('💔')">💔</button>
         </div>
         <button class="chat-toggle-btn" onclick="toggleChat()">💬 چاتکەرێ</button>
+        <button id="micToggleBtn" class="chat-toggle-btn" style="background: #f44336; border-color: #d32f2f;" onclick="window.toggleMyMic()">🎤 مایکی من (گرتییە)</button>
+        <button id="muteAllBtn" class="chat-toggle-btn" style="background: #ff9800; border-color: #e65100; display: none;" onclick="window.toggleMuteAll()">🔇 هەمیا بێدەنگ بکە</button>
     </div>
 
     <div id="chatOverlay" class="chat-overlay" style="display:none;">
@@ -568,6 +570,17 @@
         window.playerId = "player_" + Math.random().toString(36).substr(2, 9);
         window.myPlayerName = "یاریزان";
         window.currentEditIdOffline = null; 
+
+        // --- گۆڕاوێن تایبەت ب چاتا دەنگی (Agora) ---
+        // ⚠️ تکایە ئەڤێ ل خوارێ ب App ID یێ خۆ بگەهۆڕە ⚠️
+        window.agoraAppId = "3a993f3595994020b47f876125a14471";
+        
+        window.agoraClient = null;
+        window.localAudioTrack = null;
+        window.isMicMuted = true;
+        window.remoteUsers = {};
+        window.mutedPlayers = {};
+        window.isAllMuted = false;
 
         // --- دروستکرنا ئەنیمەیشنا تۆپێن بینگۆیێ بۆ باگگراوەندێ ---
         window.createFloatingBalls = function() {
@@ -630,7 +643,6 @@
                 document.getElementById('settingMaxNumRow').style.display = 'flex';
                 document.getElementById('waitResetMessage').style.display = 'none';
                 document.getElementById('onlineFloatingControls').style.display = 'none';
-                
                 document.getElementById('btnResetLocal').style.display = 'block'; 
                 
                 window.loadOfflineGameState();
@@ -668,7 +680,10 @@
                 const roomRef = ref(db, 'rooms/' + window.roomCode);
                 await set(roomRef, { status: 'waiting', hostId: window.playerId, maxNumbers: 99, requiredNumbers: 3, drawnNumbers: [], players: {} });
                 onDisconnect(roomRef).remove();
-                window.setupRoomListener(); window.showWaitingScreen();
+                
+                await window.joinAgoraChannel(); // دەستپێکرنا چاتا دەنگی
+                window.setupRoomListener(); 
+                window.showWaitingScreen();
             } catch(e) {
                 alert("خەلەتیەک چێبوو د دروستکرنا ژوورێ دا، تکایە ئینتەرنێتا خۆ کۆنترۆل بکە.");
             }
@@ -686,7 +701,10 @@
                 window.roomCode = inputCode; window.isHost = false; window.hasJoined = false;
                 window.saveOnlineSession();
                 onDisconnect(ref(db, `rooms/${window.roomCode}/players/${window.playerId}`)).remove();
-                window.setupRoomListener(); window.showWaitingScreen();
+                
+                await window.joinAgoraChannel(); // دەستپێکرنا چاتا دەنگی
+                window.setupRoomListener(); 
+                window.showWaitingScreen();
             } catch(e) {
                 alert("خەلەتیەک چێبوو!");
             }
@@ -718,7 +736,9 @@
                     window.hasJoined = true;
                 }
                 
-                window.setupRoomListener(); window.showWaitingScreen();
+                await window.joinAgoraChannel(); // دەستپێکرنا چاتا دەنگی
+                window.setupRoomListener(); 
+                window.showWaitingScreen();
             } catch(e) {}
             setBtnLoading('btnRejoin', false, '🔄 ڤەگەڕیان بۆ ژوورا بەرێ');
         };
@@ -728,6 +748,7 @@
                 if(window.isHost) await remove(ref(db, 'rooms/' + window.roomCode));
                 else await remove(ref(db, `rooms/${window.roomCode}/players/${window.playerId}`));
             }
+            await window.leaveAgoraChannel(); // دەرکەفتن ژ چاتا دەنگی
             sessionStorage.removeItem('bingoOnlineSession');
             window.location.reload();
         }
@@ -1127,15 +1148,25 @@
         window.handleTouchStart = function(e) { if(window.gameMode==='online' || window.drawnNumbers.length>0) return; window.touchstartX = e.changedTouches[0].screenX; window.touchstartY = e.changedTouches[0].screenY; }
         window.handleTouchEnd = function(e, id) { if(window.gameMode==='online' || window.drawnNumbers.length>0) return; let dx = Math.abs(e.changedTouches[0].screenX - window.touchstartX), dy = Math.abs(e.changedTouches[0].screenY - window.touchstartY); if (dx > 50 && dx > dy) window.deletePlayerOffline(id); }
         
+        // نویکرنەڤەیا لیستا یاریزانان دگەل دوگمەیێن دەنگی
         window.renderPlayersTable = function() {
             const list = document.getElementById('playersList'); const pArr = Object.values(window.players); if (pArr.length === 0) { list.innerHTML = ''; return; }
             const isStarted = window.drawnNumbers.length > 0;
-            let tableHTML = `<table class="players-table"><thead><tr><th style="width: 30%;">ناڤ</th><th style="width: ${window.gameMode==='offline'&&!isStarted?'50%':'70%'};">ژمارە</th>${window.gameMode==='offline'&&!isStarted?'<th style="width: 20%;">دەستکاری</th>':''}</tr></thead><tbody>`;
+            
+            let tableHTML = `<table class="players-table"><thead><tr><th style="width: 30%;">ناڤ</th><th style="width: ${window.gameMode==='offline'&&!isStarted?'50%':'40%'};">ژمارە</th><th style="width: 30%;">کردار</th></tr></thead><tbody>`;
+            
             pArr.forEach(p => {
                 let numsHtml = (p.numbers||[]).map(n => `<span class="number-circle ${window.drawnNumbers.includes(n) ? 'matched' : ''}">${n}</span>`).join('');
                 let rowClass = p.isSafe ? 'safe' : (p.isLoser ? 'loser' : '');
                 let safeText = p.isSafe ? '<br><span class="safe-badge">(قورتال بوو)</span>' : (p.isLoser ? '<br><span class="loser-badge">(خوسارەت)</span>' : '');
-                let actionHtml = (window.gameMode==='offline'&&!isStarted) ? `<td><div style="display:flex; gap:4px; justify-content:center;"><button class="btn-edit-table" onclick="editPlayerOffline('${p.id}')">دەستکاری</button><button class="btn-delete-table" onclick="deletePlayerOffline('${p.id}')">🗑️</button></div></td>` : '';
+                
+                let muteBtnHtml = (window.gameMode === 'online' && p.id !== window.playerId) ? 
+                    `<button style="background: ${window.mutedPlayers[p.id] ? '#f44336' : '#4caf50'}; color: white; border: none; padding: 4px; border-radius: 4px; font-size: 11px; cursor: pointer;" onclick="window.toggleMutePlayer('${p.id}')">
+                        ${window.mutedPlayers[p.id] ? '🔇 بێدەنگکری' : '🔊 دەنگ ڤەکری'}
+                    </button>` : '';
+
+                let actionHtml = (window.gameMode==='offline'&&!isStarted) ? `<td><div style="display:flex; gap:4px; justify-content:center;"><button class="btn-edit-table" onclick="editPlayerOffline('${p.id}')">دەستکاری</button><button class="btn-delete-table" onclick="deletePlayerOffline('${p.id}')">🗑️</button></div></td>` : (window.gameMode === 'online' ? `<td>${muteBtnHtml}</td>` : '<td>-</td>');
+                
                 tableHTML += `<tr class="${rowClass}" ${window.gameMode==='offline'?`ontouchstart="handleTouchStart(event)" ontouchend="handleTouchEnd(event, '${p.id}')"`:''}><td><strong>${(window.gameMode==='online'&&p.id===window.playerId)?'🟢 ':''}${p.name}</strong>${safeText}</td><td>${numsHtml}</td>${actionHtml}</tr>`;
             });
             list.innerHTML = tableHTML + `</tbody></table>`;
@@ -1295,6 +1326,132 @@
                 window.showWaitingScreen(); 
             }
         }
+
+        // --- لۆژیکا تایبەت ب Agora (چاتا دەنگی) ---
+
+        window.joinAgoraChannel = async function() {
+            if (!window.agoraAppId || window.agoraAppId === "YOUR_AGORA_APP_ID_HERE") {
+                console.warn("تکایە Agora App ID دابنێ د ناڤ کۆدی دا!");
+                return;
+            }
+            try {
+                window.agoraClient = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
+                
+                // یاریزانان دێ ل سەر ناڤێ ژوورێ کۆک بن، و هەریەکێ ژمارەیەکا خۆ یا هەی
+                await window.agoraClient.join(window.agoraAppId, window.roomCode, null, window.playerId);
+                
+                // دەمێ کەسەکێ دی مایکی ڤەدکەت
+                window.agoraClient.on("user-published", async (user, mediaType) => {
+                    await window.agoraClient.subscribe(user, mediaType);
+                    if (mediaType === "audio") {
+                        window.remoteUsers[user.uid] = user;
+                        // ئەگەر مە ئەو یاریزانە بێدەنگ نەکر بیت، دەنگێ وی لێدە
+                        if (!window.mutedPlayers[user.uid] && !window.isAllMuted) {
+                            user.audioTrack.play();
+                        }
+                    }
+                });
+                
+                // دەمێ کەسەک مایکی دگریت
+                window.agoraClient.on("user-unpublished", user => {
+                    if (window.remoteUsers[user.uid]) {
+                        delete window.remoteUsers[user.uid];
+                    }
+                });
+                
+            } catch (error) {
+                console.error("شاشی د گرێدانا Agora دا:", error);
+            }
+        };
+
+        window.leaveAgoraChannel = async function() {
+            if (window.localAudioTrack) {
+                window.localAudioTrack.stop();
+                window.localAudioTrack.close();
+                window.localAudioTrack = null;
+            }
+            if (window.agoraClient) {
+                await window.agoraClient.leave();
+            }
+        };
+
+        // ڤەکرن و گرتنا مایکرۆفۆنێ تە
+        window.toggleMyMic = async function() {
+            if (!window.agoraClient) return; // ئەگەر چاتا دەنگی نەهاتیتە چالاککرن
+            
+            const micBtn = document.getElementById('micToggleBtn');
+            const muteAllBtn = document.getElementById('muteAllBtn');
+            
+            if (window.isMicMuted) {
+                try {
+                    if (!window.localAudioTrack) {
+                        window.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
+                        await window.agoraClient.publish([window.localAudioTrack]);
+                    } else {
+                        await window.localAudioTrack.setMuted(false);
+                    }
+                    window.isMicMuted = false;
+                    micBtn.innerText = "🎤 مایکی من (ڤەکرییە)";
+                    micBtn.style.background = "#4caf50";
+                    muteAllBtn.style.display = "block"; 
+                } catch (err) {
+                    alert("لێبۆڕینێ دخوازم، نەشیا مایکی ڤەکەت. پێدڤییە دەستویریێ (Allow) بدەیێ.");
+                }
+            } else {
+                if (window.localAudioTrack) {
+                    await window.localAudioTrack.setMuted(true);
+                }
+                window.isMicMuted = true;
+                micBtn.innerText = "🎤 مایکی من (گرتییە)";
+                micBtn.style.background = "#f44336";
+                muteAllBtn.style.display = "none";
+            }
+        };
+
+        // گرتن یان ڤەکرنا دەنگێ یاریزانیەکێ دیارکری
+        window.toggleMutePlayer = function(targetPlayerId) {
+            window.mutedPlayers[targetPlayerId] = !window.mutedPlayers[targetPlayerId];
+            
+            const remoteUser = window.remoteUsers[targetPlayerId];
+            if (remoteUser && remoteUser.audioTrack) {
+                if (window.mutedPlayers[targetPlayerId]) {
+                    remoteUser.audioTrack.stop();
+                } else {
+                    remoteUser.audioTrack.play();
+                }
+            }
+            window.renderPlayersTable(); 
+        };
+
+        // بێدەنگکرنا هەمی یاریزانان پێکڤە
+        window.toggleMuteAll = function() {
+            const muteAllBtn = document.getElementById('muteAllBtn');
+            window.isAllMuted = !window.isAllMuted;
+            
+            Object.values(window.players).forEach(p => {
+                if (p.id !== window.playerId) {
+                    window.mutedPlayers[p.id] = window.isAllMuted;
+                    const remoteUser = window.remoteUsers[p.id];
+                    if (remoteUser && remoteUser.audioTrack) {
+                        if (window.isAllMuted) {
+                            remoteUser.audioTrack.stop();
+                        } else {
+                            remoteUser.audioTrack.play();
+                        }
+                    }
+                }
+            });
+            
+            if (window.isAllMuted) {
+                muteAllBtn.innerText = "🔊 دەنگێ هەمیا ڤەکە";
+                muteAllBtn.style.background = "#4caf50";
+            } else {
+                muteAllBtn.innerText = "🔇 هەمیا بێدەنگ بکە";
+                muteAllBtn.style.background = "#ff9800";
+            }
+            window.renderPlayersTable();
+        };
+
     </script>
 </body>
 </html>
