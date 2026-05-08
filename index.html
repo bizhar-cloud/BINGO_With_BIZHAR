@@ -15,569 +15,12 @@
     <link rel="icon" type="image/png" href="https://i.postimg.cc/zvmXKRKR/5B6603C5-50DF-4389-88A5-8919A0E4317C.png">
     
     <title>یارییا بینگۆ (1 - 99)</title>
+    
+    <link rel="stylesheet" href="style.css">
+    
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-   
     <script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.20.2.js"></script>
-    
-    <style>
-        :root {
-            --bg-body: #000000;
-            --bg-dark-red: #9e0b0f; --bg-left-yellow: #fce883; --bg-right-gold: #cba85a;
-            --text-main: #333333; --border-main: #5a0000;
-            --col-b: #00bfff; --col-i: #dc143c; --col-n: #a9a9a9; --col-g: #32cd32; --col-o: #ffd700;
-        }
-
-        body {
-            font-family: 'Noto Sans Arabic', Tahoma, Arial, sans-serif;
-            background-color: var(--bg-body); color: var(--text-main);
-            text-align: center; margin: 0; padding: 10px; min-height: 100vh; display: flex; justify-content: center; align-items: center;
-            box-sizing: border-box;
-            touch-action: manipulation; -webkit-user-select: none; user-select: none; transition: background-color 0.3s;
-        }
-        input, select { -webkit-user-select: auto;
-            user-select: auto; outline: none; }
-
-        .spinner { border: 3px solid rgba(255,255,255,0.3);
-            border-top: 3px solid #fff; border-radius: 50%; width: 18px; height: 18px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle;
-            margin-left: 8px;}
-        @keyframes spin { 0% { transform: rotate(0deg);
-        } 100% { transform: rotate(360deg); } }
-
-        /* --- دیزاینا 3D یا شاشەیا دەستپێکێ --- */
-        .floating-bg {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 1; overflow: hidden;
-            background: radial-gradient(circle at center, #7a0000 0%, #200000 100%);
-        }
-
-        .bingo-ball-anim {
-            position: absolute;
-            border-radius: 50%; display: flex; justify-content: center; align-items: center;
-            font-weight: 900; font-family: Arial, sans-serif;
-            box-shadow: inset -10px -10px 20px rgba(0,0,0,0.5), inset 5px 5px 10px rgba(255,255,255,0.8), 0 10px 20px rgba(0,0,0,0.4);
-            animation: floatUp linear infinite;
-            opacity: 0.9;
-        }
-
-        @keyframes floatUp {
-            0% { transform: translateY(110vh) rotate(0deg) scale(0.8);
-            opacity: 0; }
-            10% { opacity: 1;
-            }
-            90% { opacity: 1;
-            }
-            100% { transform: translateY(-20vh) rotate(360deg) scale(1.2); opacity: 0;
-            }
-        }
-
-        .lobby-screen {
-            background: linear-gradient(135deg, rgba(158, 11, 15, 0.85), rgba(90, 0, 0, 0.95));
-            backdrop-filter: blur(8px); padding: 40px 30px; border-radius: 25px; 
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 0 20px rgba(255, 215, 0, 0.2);
-            width: 100%; max-width: 420px; color: white; border: 3px solid #cba85a; 
-            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 10;
-            position: relative;
-        }
-        
-        .lobby-screen h1 { 
-            margin-top: 0;
-            color: #ffd700; 
-            text-shadow: 0 4px 15px rgba(255, 215, 0, 0.6), 0 2px 4px rgba(0,0,0,0.9); 
-            font-size: 45px; font-weight: 900; letter-spacing: 1px;
-            margin-bottom: 10px;
-        }
-
-        .btn-lobby-mode {
-            font-size: 22px;
-            padding: 20px; margin-bottom: 20px; width: 100%;
-            border-radius: 16px; border: 2px solid rgba(255,255,255,0.3); color: white;
-            font-weight: 900; cursor: pointer;
-            transition: all 0.2s; display: flex;
-            align-items: center; justify-content: center; gap: 12px; font-family: inherit;
-            position: relative; overflow: hidden;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
-        }
-        .btn-lobby-mode::after {
-            content: '';
-            position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
-            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
-            transform: skewX(-25deg); animation: shine 3s infinite;
-        }
-        @keyframes shine { 0% { left: -100%;
-        } 20% { left: 200%; } 100% { left: 200%;
-        } }
-
-        .btn-local { background: linear-gradient(145deg, #4caf50, #2e7d32);
-            box-shadow: 0 8px 0 #1b5e20, 0 15px 20px rgba(0,0,0,0.4); }
-        .btn-local:active { transform: translateY(8px);
-            box-shadow: 0 0 0 #1b5e20, 0 5px 10px rgba(0,0,0,0.4); }
-
-        .btn-online { background: linear-gradient(145deg, #2196F3, #0b7dda);
-            box-shadow: 0 8px 0 #005b9f, 0 15px 20px rgba(0,0,0,0.4); }
-        .btn-online:active { transform: translateY(8px);
-            box-shadow: 0 0 0 #005b9f, 0 5px 10px rgba(0,0,0,0.4); }
-
-        .btn-rejoin { background: linear-gradient(145deg, #ff9800, #e65100);
-            box-shadow: 0 8px 0 #bf360c, 0 15px 20px rgba(0,0,0,0.4); }
-        .btn-rejoin:active { transform: translateY(8px);
-            box-shadow: 0 0 0 #bf360c, 0 5px 10px rgba(0,0,0,0.4); }
-
-        .lobby-box { background: rgba(255,255,255,0.95);
-            padding: 20px; border-radius: 15px; color: #000; box-shadow: 0 10px 20px rgba(0,0,0,0.3); margin-top: 15px;
-        }
-        .room-code-display { font-size: 40px; font-weight: 900; letter-spacing: 5px; color: #9e0b0f;
-            margin: 10px 0; background: transparent; padding: 0; border: none;}
-        .room-code-container { display: flex;
-            justify-content: center; align-items: center; gap: 10px; background: #fce883; padding: 5px 15px; border-radius: 8px; border: 2px dashed #9e0b0f; width: fit-content;
-            margin: 10px auto; }
-        
-        /* --- دیزاینا سەرەکییا یاریێ --- */
-        .container {
-            width: 100%;
-            max-width: 900px; background-color: var(--bg-dark-red); padding: 10px;
-            border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); margin: auto; transition: background-color 0.3s; display: none;
-            z-index: 10; position: relative;
-        }
-
-        .layout-wrapper { display: flex; flex-direction: row; gap: 10px;
-        }
-        .left-panel { flex: 1.2; background-color: var(--bg-left-yellow); border-radius: 8px; border: 2px solid var(--border-main);
-            padding: 15px; display: flex; flex-direction: column; align-items: center; }
-        .right-panel { flex: 1.5;
-            background-color: var(--bg-right-gold); border-radius: 8px; border: 2px solid var(--border-main); padding: 8px; display: flex; flex-direction: column;
-        }
-
-        .monitor-box { 
-            background: #ffffff;
-            border: 12px solid #f2c94c; border-radius: 50% !important; 
-            width: 140px; height: 140px; min-width: 140px; min-height: 140px; max-width: 140px; max-height: 140px;
-            display: flex; align-items: center; justify-content: center; margin: 10px auto 10px; 
-            box-shadow: 0 6px 12px rgba(0,0,0,0.4), inset 0 -6px 10px rgba(0,0,0,0.1);
-            flex-shrink: 0; aspect-ratio: 1 / 1; 
-        }
-        #drawnNumberDisplay { font-size: 5em; font-weight: bold;
-            color: #666; font-family: Arial, sans-serif; line-height: 1; white-space: nowrap;}
-        
-        .remaining-count { 
-            display: inline-block;
-            background: linear-gradient(to bottom, #ffffff, #f0f0f0); 
-            border: 2px solid var(--bg-right-gold); color: #8b0000; 
-            font-size: 16px; font-weight: bold;
-            font-family: 'Noto Sans Arabic', Arial, sans-serif; 
-            padding: 6px 20px; border-radius: 20px; margin-bottom: 20px; 
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3); text-align: center;
-            flex-shrink: 0; min-width: 140px;
-        }
-
-        .pop-animation { animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        @keyframes popIn { 0% { transform: scale(0.5); opacity: 0;
-        } 50% { transform: scale(1.1); } 100% { transform: scale(1); opacity: 1;
-        } }
-
-        .match-display { background: var(--bg-dark-red); width: 100%; padding: 10px; border-radius: 8px;
-            margin-bottom: 20px; border: 2px solid var(--border-main); box-shadow: inset 0 0 10px rgba(0,0,0,0.5); min-height: 50px; height: auto; display: flex; align-items: center;
-            justify-content: center; transition: all 0.3s ease; box-sizing: border-box; flex-shrink: 0;
-        }
-        .match-text { color: #fff; font-size: 18px; font-weight: bold; text-align: center; line-height: 1.5;
-        } 
-        .match-text.hit { color: #00ffcc; transform: scale(1.05);
-        }
-        .match-text .highlight-num { color: #ffd700; font-size: 1.3em; font-family: Arial, sans-serif;
-            margin: 0 5px; }
-
-        .buttons-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
-            width: 100%; margin-bottom: 20px; flex-shrink: 0;}
-        .btn-modern { padding: 12px 5px; font-size: 14px;
-            font-weight: bold; font-family: inherit; border: 2px solid #555; border-radius: 8px; cursor: pointer; color: white; background: linear-gradient(to bottom, #d4d4d4, #7a7a7a);
-            text-shadow: 1px 1px 2px #000; box-shadow: 0 4px 6px rgba(0,0,0,0.4); text-align: center;
-            transition: transform 0.1s;}
-        .btn-modern.full-width { grid-column: span 2; background: linear-gradient(to bottom, #87CEEB, #4682B4);
-        }
-        .btn-modern:active { transform: translateY(2px); box-shadow: 0 2px 3px rgba(0,0,0,0.4);
-        }
-        .btn-modern:disabled { opacity: 0.7; cursor: not-allowed; transform: none;
-        }
-        .btn-auto.stop-mode { background: linear-gradient(to bottom, #ff6b6b, #c00) !important; border-color: #b71c1c !important;
-        }
-
-        .players-section { width: 100%; background: #fff; border: 4px solid var(--bg-dark-red); border-radius: 6px;
-            overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.3); display: flex; flex-direction: column; transition: all 0.3s; z-index: 10;
-            position: relative;}
-        .players-header { background: var(--bg-dark-red); color: white; padding: 8px 12px; font-weight: bold;
-            font-size: 16px; display: flex; justify-content: space-between; align-items: center; }
-        .btn-menu-toggle { background: #ffd700;
-            border: 2px solid #b8860b; color: #5a0000; border-radius: 4px; padding: 4px 10px; font-weight: bold; cursor: pointer; font-size: 14px; display: flex;
-            align-items: center; gap: 5px; font-family: inherit; }
-        .players-body { padding: 10px; display: flex;
-            flex-direction: column; gap: 8px; flex: 1; overflow: hidden; }
-        
-        .player-menu-content { display: none;
-            background: var(--bg-left-yellow); border: 2px solid var(--border-main); padding: 10px; border-radius: 6px; margin-bottom: 10px; max-height: 55vh; overflow-y: auto; flex-shrink: 0;
-            box-shadow: inset 0 0 5px rgba(0,0,0,0.1); }
-        .menu-btn-item { background: #e6c200;
-            border: 2px solid #b8860b; color: #5a0000; padding: 10px; width: 100%; text-align: right; font-weight: bold; font-size: 15px; border-radius: 4px; cursor: pointer;
-            margin-bottom: 8px; font-family: inherit; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        .btn-share { background: #ff9800;
-            border-color: #e65100; color: #fff; }
-        .btn-about { background: #e0e0e0; border-color: #999; color: #333;
-        }
-        .btn-disabled { opacity: 0.5; cursor: not-allowed !important; pointer-events: none;
-        }
-
-        .menu-panel { display: none; background: #fff; padding: 10px; border: 1px solid #ccc;
-            border-radius: 4px; margin-bottom: 10px; }
-        .settings-row { display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 10px; color: #5a0000; }
-        .settings-label { font-size: 14px; font-weight: bold;
-        }
-        .speed-input-menu { width: 50px; padding: 5px; text-align: center; border: 2px solid #8b0000;
-            border-radius: 5px; font-weight: bold; font-family: inherit; }
-        .btn-sound { background: #fff;
-            border: 2px solid #8b0000; border-radius: 5px; padding: 8px; cursor: pointer; font-weight: bold; font-family: inherit; color: #8b0000; width: 100%;
-        }
-        .toggle-btn { background: #4caf50; color: white; border: none; padding: 5px 10px;
-            border-radius: 4px; cursor: pointer; font-weight: bold; font-family: inherit; width: 80px; text-align: center;
-        }
-        .toggle-btn.off { background: #f44336;
-        }
-
-        .input-group { display: flex; flex-direction: column; gap: 8px;
-        }
-        .custom-input { padding: 8px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;
-            text-align: center; font-family: inherit; width: 100%; box-sizing: border-box;}
-        .btn-add { background: linear-gradient(to bottom, #b5b5b5, #7a7a7a);
-            color: white; padding: 10px; font-size: 16px; font-weight: bold; border: 2px solid #555; border-radius: 6px; cursor: pointer;
-            text-shadow: 1px 1px 2px #000; width: 100%; margin-top: 5px;}
-        .btn-clear-all { background: linear-gradient(to bottom, #ff9999, #cc0000);
-            color: white; padding: 10px; width: 100%; font-size: 14px; font-weight: bold; border: 2px solid #555; border-radius: 6px; cursor: pointer;
-            text-shadow: 1px 1px 2px #000; margin-top: 8px; }
-        .dynamic-inputs-container { display: flex;
-            flex-wrap: wrap; gap: 5px; justify-content: center; background: #f9f9f9; padding: 10px; border-radius: 4px; border: 1px solid #ddd;
-        }
-        .num-input-box { width: 45px; height: 45px; text-align: center; font-size: 16px; font-weight: bold;
-            border: 2px solid #cba85a; border-radius: 6px; outline: none; }
-        .btn-add-box { background: #ff9800;
-            color: white; border: none; padding: 8px; border-radius: 4px; cursor: pointer; font-weight: bold; font-family: inherit; margin-bottom: 5px;
-        }
-
-        .players-list { text-align: right; overflow-y: auto; padding-right: 5px;
-            flex: 1;}
-        .players-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 4px;
-            overflow: hidden; margin-top: 5px; }
-        .players-table th, .players-table td { border: 1px solid #ddd;
-            padding: 6px 4px; text-align: center; vertical-align: middle; }
-        .players-table th { background: var(--bg-left-yellow);
-            color: var(--border-main); font-weight: bold; font-size: 13px; }
-        .players-table td { font-size: 13px;
-            color: #000; }
-        .players-table tr { transition: background-color 0.2s;
-        }
-        .players-table tr:nth-child(even) { background-color: #f9f9f9;
-        }
-        .players-table tr.safe { background-color: #90ee90 !important;
-        }
-        .players-table tr.loser { background-color: #ff4d4d !important;
-        }
-        .players-table tr.loser td, .players-table tr.loser strong { color: #fff !important;
-        }
-        .btn-edit-table { background: #ffd700; color: #000; border: 1px solid #b8860b;
-            padding: 4px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: bold;
-        }
-        .btn-delete-table { background: #f44336; color: #fff; border: 1px solid #d32f2f;
-            padding: 4px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: bold;
-        }
-        .safe-badge { color: #006400; font-size: 11px;
-            font-weight: bold;}
-        .loser-badge { color: #ffcccc; font-size: 11px;
-            font-weight: bold;}
-        
-        .bingo-board { 
-            display: grid;
-            gap: 4px; flex: 1; margin-top: 5px; width: 100%; height: 100%;
-            max-height: 100%; overflow-y: auto; align-content: start; padding: 5px; box-sizing: border-box;
-        }
-        .bingo-board::-webkit-scrollbar { width: 6px;
-        }
-        .bingo-board::-webkit-scrollbar-track { background: transparent;
-        }
-        .bingo-board::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 10px;
-        }
-
-        .board-cell { 
-            background: #fff;
-            color: #000; font-weight: bold; font-size: 14px; font-family: Arial, sans-serif; 
-            border-radius: 50% !important; display: flex; align-items: center; justify-content: center;
-            aspect-ratio: 1 / 1 !important; width: 100%; height: auto;
-            border: 3px solid #ccc;
-            box-shadow: inset -2px -2px 4px rgba(0,0,0,0.2), 1px 2px 3px rgba(0,0,0,0.3); transition: all 0.2s;
-        }
-        .board-cell:nth-child(10n + 1), .board-cell:nth-child(10n + 2) { border-color: var(--col-b);
-        }
-        .board-cell:nth-child(10n + 3), .board-cell:nth-child(10n + 4) { border-color: var(--col-i);
-        }
-        .board-cell:nth-child(10n + 5), .board-cell:nth-child(10n + 6) { border-color: var(--col-n);
-        }
-        .board-cell:nth-child(10n + 7), .board-cell:nth-child(10n + 8) { border-color: var(--col-g);
-        }
-        .board-cell:nth-child(10n + 9), .board-cell:nth-child(10n + 10) { border-color: var(--col-o);
-        }
-
-        .board-cell.drawn { background: radial-gradient(circle at 30% 30%, #da70d6, #800080); color: white;
-            border-color: #4b0082; transform: scale(1.15); }
-        .number-circle { display: inline-block; width: 26px; height: 26px;
-            line-height: 26px; text-align: center; background: #fff; border-radius: 50%; margin: 2px; font-weight: bold; color: #333; font-size: 13px; border: 2px solid #ccc;
-            font-family: Arial; }
-        .number-circle.matched { background: radial-gradient(circle at 30% 30%, #da70d6, #800080);
-            color: white; border-color: #4b0082; }
-
-        .celebration-toast { position: fixed; top: 50%; left: 50%;
-            transform: translate(-50%, -50%) scale(0); background: rgba(255, 215, 0, 0.95); backdrop-filter: blur(10px); color: #8b0000; padding: 30px 50px; border-radius: 20px; font-size: 2em;
-            font-weight: 900; text-align: center; box-shadow: 0 0 30px rgba(0,0,0,0.5); border: 4px solid #8b0000; z-index: 5000; opacity: 0; transition: all 0.4s;
-            pointer-events: none; }
-        .celebration-toast.show { transform: translate(-50%, -50%) scale(1); opacity: 1;
-        }
-        .celebration-toast span.winner-name { color: #000; font-size: 1.2em; display: block; margin: 10px 0;
-        }
-        
-        .winner-modal { display: none;
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); flex-direction: column; justify-content: center;
-            align-items: center; z-index: 4500; }
-        .loser-text { font-size: 3em; font-weight: 900; color: #ffd700;
-            text-align: center; margin-bottom: 20px; text-shadow: 2px 2px 4px #000; }
-        .loser-text span { color: #fff;
-            font-size: 1.2em; }
-        .btn-restart { background: linear-gradient(to bottom, #d4d4d4, #7a7a7a); color: white;
-            padding: 15px 40px; font-size: 20px; font-weight: 900; border: 2px solid #555; border-radius: 10px; cursor: pointer; text-shadow: 1px 1px 2px #000;
-        }
-
-        @keyframes fadeInBackground { from { opacity: 0; } to { opacity: 1;
-        } }
-        @keyframes popUpBox { from { transform: scale(0.8); opacity: 0;
-        } to { transform: scale(1); opacity: 1; } }
-
-        .about-modal { display: none;
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
-            justify-content: center; align-items: center; z-index: 5000; padding: 20px; box-sizing: border-box;
-            animation: fadeInBackground 0.3s ease forwards;}
-        .about-box { background: #fff; border: 3px solid #8b0000;
-            padding: 25px 20px; border-radius: 16px; max-width: 350px; width: 100%; text-align: center; color: #333; box-shadow: 0 15px 35px rgba(0,0,0,0.4);
-            animation: popUpBox 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-        .about-box h3 { color: #5a0000;
-            margin-top: 0; margin-bottom: 15px; font-size: 18px; border-bottom: 2px dashed #ccc;
-            padding-bottom: 10px;}
-        .about-box p { margin: 12px 0; font-size: 15px; line-height: 1.6;
-            color: #444; }
-        .about-link { display: inline-block; background: linear-gradient(to right, #fce883, #cba85a);
-            color: #5a0000 !important; padding: 10px 25px; border-radius: 30px; text-decoration: none; font-size: 18px; font-weight: 900; margin: 10px 0;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2); border: 2px solid #b8860b; transition: all 0.2s;}
-        .about-link:active { transform: scale(0.95);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-        .btn-close-about { background: #f44336; color: white;
-            border: none; padding: 10px 35px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 15px; font-family: inherit;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.2); transition: transform 0.2s;}
-        .btn-close-about:active { transform: scale(0.95);
-        }
-        
-        /* چات و ئیمۆجی */
-        .floating-controls { position: fixed;
-            bottom: 15px; left: 15px; z-index: 3500; display: flex; flex-direction: column; gap: 10px; align-items: flex-start;
-        }
-        .emoji-bar { display: flex; gap: 5px; background: rgba(255,255,255,0.9); padding: 5px 10px;
-            border-radius: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); border: 2px solid var(--border-main);}
-        .emoji-bar button { font-size: 22px;
-            background: none; border: none; cursor: pointer; transition: transform 0.1s; padding: 0 5px;
-        }
-        .emoji-bar button:active { transform: scale(1.5);
-        }
-
-        /* دوگمەیێن FAB تایبەت ب چات و مایکێ */
-        .fab-btn {
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
-            border: 2px solid rgba(255, 255, 255, 0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 26px;
-            cursor: pointer;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.4);
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            color: white;
-            padding: 0;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-        .fab-btn:active {
-            transform: scale(0.8);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.4);
-        }
-        .chat-fab { background: linear-gradient(135deg, #2196F3, #0b7dda); }
-        .mic-fab { background: #f44336; }
-        .mute-all-fab { background: #ff9800; }
-        
-        .chat-overlay { position: fixed;
-            bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 400px; background: #fff; border: 2px solid var(--border-main);
-            border-radius: 15px 15px 0 0; z-index: 4000; display: flex; flex-direction: column; height: 350px; box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
-        }
-        .chat-header { background: var(--bg-dark-red); color: white; padding: 12px; display: flex; justify-content: space-between;
-            align-items: center; border-radius: 12px 12px 0 0; font-weight: bold; }
-        .chat-header button { background: #f44336;
-            color: #fff; border: none; border-radius: 50%; width: 25px; height: 25px; font-weight: bold; cursor: pointer;
-        }
-        .chat-messages { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column;
-            gap: 8px; background: #f9f9f9; }
-        .chat-input-area { display: flex; padding: 10px; background: #eee;
-            border-top: 1px solid #ddd; }
-        .chat-input-area input { flex: 1; padding: 10px;
-            border: 1px solid #ccc; border-radius: 20px; font-family: inherit; font-size: 14px; outline: none;
-        }
-        .chat-input-area button { background: #4caf50; color: white; border: none; padding: 10px 15px;
-            border-radius: 20px; margin-right: 8px; font-family: inherit; font-weight: bold; cursor: pointer;
-        }
-        
-        .chat-msg-wrapper { display: flex;
-            flex-direction: column; width: 100%; }
-        .chat-msg { max-width: 75%; padding: 8px 12px;
-            border-radius: 15px; font-size: 14px; word-wrap: break-word; color: #000; box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        .chat-msg.others { align-self: flex-start; background: #e0f7fa; border-bottom-right-radius: 2px;
-        }
-        .chat-msg.mine { align-self: flex-end; background: #dcedc8; border-bottom-left-radius: 2px;
-        }
-        .chat-sender { font-size: 11px; color: #777; font-weight: bold; margin-bottom: 3px;
-        }
-
-        .floating-emoji { position: fixed; bottom: 80px; left: 30px; font-size: 40px;
-            animation: floatUpEmoji 2s forwards ease-out; pointer-events: none; z-index: 9999; text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-        @keyframes floatUpEmoji { 0% { transform: translateY(0) scale(0.5); opacity: 1;
-        } 100% { transform: translateY(-300px) scale(1.5); opacity: 0; } }
-
-        /* Themes - ١٠ ڕەنگێن تەمام */
-        body.theme-dark { --bg-body: #121212;
-            --bg-dark-red: #1e1e1e; --bg-left-yellow: #2d2d2d; --bg-right-gold: #383838; --border-main: #555; --text-main: #fff;
-        }
-        body.theme-dark .container, body.theme-dark .lobby-box { background: #2d2d2d; color: #fff; border-color: #555;
-        }
-        body.theme-dark .players-section, body.theme-dark .menu-panel { background: #2d2d2d; color: #fff; border-color: #555;
-        }
-        body.theme-dark .settings-row { color: #fff;
-        }
-        body.theme-dark .players-table, body.theme-dark .players-table th, body.theme-dark .players-table td { background: #333;
-            color: #fff; border-color: #555; }
-        body.theme-dark .board-cell { background: #444; color: #fff;
-            border-color: #666; }
-        body.theme-dark .number-circle { background: #555; color: #fff; border-color: #777;
-        }
-        body.theme-dark .players-table tr:nth-child(even) { background-color: #3a3a3a;
-        }
-        
-        body.theme-blue { --bg-body: #001f3f;
-            --bg-dark-red: #003366; --bg-left-yellow: #b3e0ff; --bg-right-gold: #4682B4; --border-main: #001f3f; }
-        body.theme-green { --bg-body: #002200;
-            --bg-dark-red: #004d00; --bg-left-yellow: #c1f0c1; --bg-right-gold: #2e8b57; --border-main: #002200; }
-        body.theme-purple { --bg-body: #1a0033;
-            --bg-dark-red: #4b0082; --bg-left-yellow: #e6ccff; --bg-right-gold: #9370db; --border-main: #2a004d; }
-        body.theme-orange { --bg-body: #331400;
-            --bg-dark-red: #d84315; --bg-left-yellow: #ffe0b2; --bg-right-gold: #ff8f00; --border-main: #bf360c; }
-        body.theme-pink { --bg-body: #33001b;
-            --bg-dark-red: #c2185b; --bg-left-yellow: #f8bbd0; --bg-right-gold: #e91e63; --border-main: #880e4f; }
-        body.theme-coffee { --bg-body: #1e140f;
-            --bg-dark-red: #5d4037; --bg-left-yellow: #d7ccc8; --bg-right-gold: #8d6e63; --border-main: #3e2723; }
-        body.theme-neon { --bg-body: #000000;
-            --bg-dark-red: #1a1a1a; --bg-left-yellow: #00ffff; --bg-right-gold: #ff00ff; --border-main: #39ff14; }
-        body.theme-ocean { --bg-body: #001a24;
-            --bg-dark-red: #006064; --bg-left-yellow: #b2ebf2; --bg-right-gold: #00acc1; --border-main: #00363a; }
-
-        @media (min-width: 900px) { .container { max-width: 1200px;
-            padding: 20px; } .layout-wrapper { flex-direction: row; align-items: stretch; gap: 20px; } .left-panel { flex: 1;
-        } .right-panel { flex: 1.5; align-items: center; } .bingo-board { max-width: 75vh; margin: auto;
-        } }
-        
-        /* دۆخێ لاندسکەیپ */
-        @media (orientation: landscape) and (max-height: 600px) {
-            body { padding: 0;
-            margin: 0; height: 100vh; overflow: hidden; }
-            .container { padding: 6px;
-            max-width: 100%; height: 100vh; border-radius: 0; margin: 0; }
-            .layout-wrapper { flex-direction: row;
-            align-items: stretch; justify-content: center; gap: 6px; height: 100%; }
-            
-            .left-panel { flex: 1;
-            max-width: 32%; height: 96vh; overflow-y: auto; padding: 10px; margin: auto 0; display: flex; flex-direction: column; justify-content: center; align-items: center;
-            }
-            
-            .right-panel { flex: 1.5;
-            height: 96vh; padding: 5px; display: flex; flex-direction: column; justify-content: center; align-items: center; background: none; border: none; box-sizing: border-box;
-            }
-            .players-section { flex: 1; max-width: 35%; height: 96vh;
-            margin: auto 0; }
-            
-            .bingo-board { width: 100%;
-            max-width: 90vh; height: 94vh; background: var(--bg-right-gold); border: 3px solid var(--border-main); border-radius: 12px; padding: 10px; gap: 4px;
-            }
-            .board-cell { font-size: min(3.5vh, 2.5vw); border-width: 2px;
-            }
-            
-            .monitor-box { width: 26vh;
-            height: 26vh; min-width: 26vh; min-height: 26vh; max-width: 26vh; max-height: 26vh; border-width: 8px; margin: 0 auto 8px; flex-shrink: 0;
-            border-radius: 50% !important; }
-            #drawnNumberDisplay { font-size: 11vh;
-            line-height: 1; } 
-            
-            .remaining-count { font-size: 2.2vh;
-            padding: 4px 12px; margin-bottom: 12px; flex-shrink: 0; min-width: unset;} 
-            
-            .match-display { min-height: 40px;
-            height: auto; padding: 10px; margin-bottom: 10px; width: 100%; box-sizing: border-box;
-            flex-shrink: 0;}
-            .match-text { font-size: 2.6vh; line-height: 1.4;
-            }
-            .match-text .highlight-num { font-size: 3vh;
-            }
-            
-            .buttons-row { display: grid;
-            grid-template-columns: 1fr 1fr; gap: 6px; width: 100%; margin-bottom: 0; flex-shrink: 0;}
-            .btn-modern { padding: 8px 4px;
-            font-size: 2.2vh; min-height: unset; white-space: nowrap; }
-            
-            .players-header { font-size: 14px;
-            padding: 6px; }
-            .btn-menu-toggle { font-size: 12px; padding: 4px;
-            }
-            .menu-btn-item { padding: 6px 8px; font-size: 12px;
-            margin-bottom: 5px;}
-            .custom-input { font-size: 12px; padding: 6px;
-            }
-            .speed-input-menu { font-size: 12px; padding: 4px;
-            }
-            .btn-sound { font-size: 12px; padding: 4px;
-            }
-            .btn-add { font-size: 13px; padding: 6px;
-            }
-            .btn-clear-all { font-size: 12px; padding: 6px;
-            }
-            .players-table th, .players-table td { font-size: 11px;
-            padding: 4px; }
-            .number-circle { width: 22px; height: 22px;
-            line-height: 22px; font-size: 11px; margin: 1px; }
-            
-            .floating-controls { bottom: 5px;
-            left: 5px; flex-direction: row; align-items: center;}
-            .chat-overlay { max-width: 300px;
-            height: 100vh; right: 0; left: auto; transform: none; border-radius: 10px 0 0 10px;
-            }
-            
-            .fab-btn { width: 45px; height: 45px; font-size: 20px; }
-        }
-        @media (max-width: 700px) and (orientation: portrait) { .layout-wrapper { flex-direction: column;
-        } .bingo-board { max-width: 100%; padding: 10px;} .board-cell { font-size: 13px;
-        border-width: 2px;} }
-    </style>
 </head>
 <body class="theme-classic" id="mainBody">
 
@@ -598,8 +41,7 @@
         <h1>یارییا ئۆنلاین</h1>
         <p style="font-size: 16px; margin-bottom: 20px; font-weight: bold; text-shadow: 1px 1px 2px #000;">یاریێ ل گەل هەڤالان بکە!</p>
         <div class="lobby-box">
-            <button id="btnCreateRoom" class="btn-lobby-mode 
-            btn-online" style="padding: 15px; font-size: 18px;" onclick="createRoom()">👑 دروستکرنا ژوورێ (Host)</button>
+            <button id="btnCreateRoom" class="btn-lobby-mode btn-online" style="padding: 15px; font-size: 18px;" onclick="createRoom()">👑 دروستکرنا ژوورێ (Host)</button>
             <div style="margin: 20px 0; border-top: 2px dashed #ccc; padding-top: 20px;">
                 <input type="text" id="joinRoomInput" class="custom-input" placeholder="کۆدێ ژوورێ (٤ پیت)..." style="text-transform: uppercase;">
                 <button id="btnJoinRoom" class="btn-lobby-mode btn-local" style="padding: 15px; font-size: 18px;"
@@ -616,7 +58,6 @@
             <div style="font-size: 14px; font-weight: bold; color: #555;">کۆدێ ژوورا تە:</div>
             
             <div class="room-code-container">
-                
                 <div id="displayRoomCode" class="room-code-display">----</div>
                 <button class="btn-modern" style="padding: 10px 15px; font-size: 18px; background: linear-gradient(to bottom, #fff, #ddd); color: #333; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"
             onclick="copyRoomCode()" title="کۆپیکرنا کۆدی">📋</button>
@@ -625,58 +66,43 @@
             <p style="font-size: 13px; color: #666;">ڤی کۆدی بدە هەڤالێن خۆ دا کو بێنە ژوورێ</p>
             <hr style="margin: 15px 0;">
             <div id="playerSetupSection">
-                <input type="text" id="setupPlayerName" class="custom-input" placeholder="ناڤێ یاریزانی 
-            (نموونە: بـــژار)">
-                <div style="font-size: 13px; font-weight: bold; text-align: center; margin-bottom: 5px;"
-            id="onlineNumberTitle">ژمارەیێن خۆ هەلبژێرە:</div>
+                <input type="text" id="setupPlayerName" class="custom-input" placeholder="ناڤێ یاریزانی (نموونە: بـــژار)">
+                <div style="font-size: 13px; font-weight: bold; text-align: center; margin-bottom: 5px;" id="onlineNumberTitle">ژمارەیێن خۆ هەلبژێرە:</div>
                 <div id="onlineNumberInputs" class="dynamic-inputs-container"></div>
-                <button class="btn-add-box" id="btnAddOnlineNumber" style="display:none;"
-            onclick="addNumberBox('onlineNumberInputs')">➕ خانەیەکا دی زێدەبکە</button>
+                <button class="btn-add-box" id="btnAddOnlineNumber" style="display:none;" onclick="addNumberBox('onlineNumberInputs')">➕ خانەیەکا دی زێدەبکە</button>
                 <button class="btn-add" id="btnReady" onclick="setPlayerReady()">ئامادەمە (Ready)</button>
             </div>
             <div id="hostSettingsSection" style="display: none; margin-top: 15px; padding-top: 15px; border-top: 2px solid #ccc;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                  
                     <strong style="color: #8b0000; font-size: 14px;">ژمارا کۆتایی یاریێ:</strong>
                     <input type="number" id="hostMaxNumInput" class="speed-input-menu" value="99" onchange="updateHostSettings()">
                 </div>
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <strong style="color: #8b0000; font-size: 14px;">ژمارا پێدڤی یا 
-            هەلبژارتنێ:</strong>
+                    <strong style="color: #8b0000; font-size: 14px;">ژمارا پێدڤی یا هەلبژارتنێ:</strong>
                     <select id="hostReqNumInput" class="speed-input-menu" onchange="updateHostSettings()">
                         <option value="1">١ ژمارە</option>
                         <option value="2">٢ ژمارە</option>
-                        <option 
-            value="3" selected>٣ ژمارە</option>
+                        <option value="3" selected>٣ ژمارە</option>
                         <option value="4">٤ ژمارە</option>
                         <option value="5">٥ ژمارە</option>
                     </select>
                 </div>
-          
-                <button class="btn-modern full-width" style="background: linear-gradient(to bottom, #2196F3, #0b7dda); font-size: 18px;
-            padding: 15px;" id="btnStartGame" onclick="startGameHost()" disabled>دەستپێکرنا یاریێ 🚀</button>
+                <button class="btn-modern full-width" style="background: linear-gradient(to bottom, #2196F3, #0b7dda); font-size: 18px; padding: 15px;" id="btnStartGame" onclick="startGameHost()" disabled>دەستپێکرنا یاریێ 🚀</button>
             </div>
-            <div style="margin-top: 20px;
-            text-align: right;">
+            <div style="margin-top: 20px; text-align: right;">
                 <strong style="color: #333;">یاریزانێن د ژوورێ دا:</strong>
-                <ul id="waitingPlayersList" style="list-style: none;
-            padding: 0; margin: 10px 0; font-size: 14px; font-weight: bold; color: #000;"></ul>
+                <ul id="waitingPlayersList" style="list-style: none; padding: 0; margin: 10px 0; font-size: 14px; font-weight: bold; color: #000;"></ul>
             </div>
-            <button class="btn-modern" style="background: #f44336;
-            border-color: #d32f2f; margin-top: 10px; width: 100%;" onclick="leaveRoom()">🚪 دەرکەفتن ژ ژوورێ</button>
+            <button class="btn-modern" style="background: #f44336; border-color: #d32f2f; margin-top: 10px; width: 100%;" onclick="leaveRoom()">🚪 دەرکەفتن ژ ژوورێ</button>
         </div>
     </div>
 
     <div class="celebration-toast" id="celebrationToast"></div>
     <div class="about-modal" id="historyModal">
-        <div class="about-box" style="max-width: 90%;
-            width: 450px; padding: 15px;">
-            <h3 style="font-size: 16px;
-            margin-bottom: 10px;">مێژوویا ژمارەیێن دەرکەفتی</h3>
-            <div id="historyList" style="display:flex; flex-wrap:wrap; gap:6px;
-            max-height: 200px; overflow-y:auto; justify-content:center; padding:5px;"></div>
-            <button class="btn-close-about" style="padding: 8px 30px;
-            font-size: 14px; margin-top: 10px;" onclick="closeHistory()">گرتن</button>
+        <div class="about-box" style="max-width: 90%; width: 450px; padding: 15px;">
+            <h3 style="font-size: 16px; margin-bottom: 10px;">مێژوویا ژمارەیێن دەرکەفتی</h3>
+            <div id="historyList" style="display:flex; flex-wrap:wrap; gap:6px; max-height: 200px; overflow-y:auto; justify-content:center; padding:5px;"></div>
+            <button class="btn-close-about" style="padding: 8px 30px; font-size: 14px; margin-top: 10px;" onclick="closeHistory()">گرتن</button>
         </div>
     </div>
     
@@ -685,10 +111,8 @@
             <h3>دەربارەی گەشەپێدەر</h3>
             <p>ئەڤ یارییە هاتییە دروستکرن ژ لایێ پروگرامساز:</p>
             <a href="https://bizhar-cloud.github.io/BizharRasheed/" target="_blank" class="about-link">BIZHAR RASHEED</a>
-            <p>هیڤیە ڤێ یاریێ بۆ چ کارێن 
-            خراپ و حەرام بکارنەئینن، بتنێ بۆ زەوق و دەمبۆراندنێ بکاربینن گونەها هەوە د ستۆیێ هەوە دابیت 😂</p>
-            <p style="color: #8b0000;
-            font-size: 16px;">هیڤیا دەمێن خۆش بۆ هەوە. ❤️</p>
+            <p>هیڤیە ڤێ یاریێ بۆ چ کارێن خراپ و حەرام بکارنەئینن، بتنێ بۆ زەوق و دەمبۆراندنێ بکاربینن گونەها هەوە د ستۆیێ هەوە دابیت 😂</p>
+            <p style="color: #8b0000; font-size: 16px;">هیڤیا دەمێن خۆش بۆ هەوە. ❤️</p>
             <button class="btn-close-about" onclick="closeAboutDeveloper()">گرتن</button>
         </div>
     </div>
@@ -696,10 +120,8 @@
     <div class="winner-modal" id="winnerModal">
         <div class="loser-text" id="loserText"></div>
         <button class="btn-restart" id="btnResetGameHost" onclick="resetGameDispatcher()">🔄 یارییەکا نوی دەستپێبکە</button>
-        <div id="waitResetMessage" style="color: white;
-            font-size: 18px; display: none;">چاڤەڕێی خودانێ رۆمێ (Host) بە بۆ یارییەکا نوی...</div>
-        <button class="btn-restart" style="background: linear-gradient(to bottom, #777, #444);
-            margin-top: 15px; padding: 10px 30px; font-size: 18px;" onclick="document.getElementById('winnerModal').style.display = 'none';">👀 دیتنا ئەنجامی</button>
+        <div id="waitResetMessage" style="color: white; font-size: 18px; display: none;">چاڤەڕێی خودانێ رۆمێ (Host) بە بۆ یارییەکا نوی...</div>
+        <button class="btn-restart" style="background: linear-gradient(to bottom, #777, #444); margin-top: 15px; padding: 10px 30px; font-size: 18px;" onclick="document.getElementById('winnerModal').style.display = 'none';">👀 دیتنا ئەنجامی</button>
     </div>
 
     <div class="container" id="gameContainer">
@@ -707,24 +129,20 @@
             <div class="left-panel">
                 <div class="monitor-box"><div id="drawnNumberDisplay">--</div></div>
                 <div id="remainingCountDisplay" class="remaining-count">(99/99) ماینە</div>
-                <div class="match-display" id="matchDisplay"><div class="match-text" 
-            id="matchText">چاڤەڕێی ڕاکێشانێ یە...</div></div>
+                <div class="match-display" id="matchDisplay"><div class="match-text" id="matchText">چاڤەڕێی ڕاکێشانێ یە...</div></div>
                 
                 <div class="buttons-row" id="hostGameControls">
                     <button class="btn-modern btn-draw" onclick="window.manualDraw()">ڕاکێشان (١ جار)</button>
                     <button class="btn-modern btn-auto" id="autoBtn" onclick="window.toggleAutoDraw()">ستارت (Start)</button>
-              
                     <button class="btn-modern full-width" id="btnResetLocal" onclick="window.resetGameDispatcher()" style="display: none;">🔄 نوی کرن (دەستپێکرنا یاریەکا نوی)</button>
                 </div>
-                <div id="playerWaitMessage" style="color: #8b0000;
-            font-weight: bold; margin-bottom: 15px; display: none;">
+                <div id="playerWaitMessage" style="color: #8b0000; font-weight: bold; margin-bottom: 15px; display: none;">
                     چاڤەڕێی خودانێ رۆمێ بە بۆ ڕاکێشانا ژمارەیان...
                 </div>
             </div>
 
             <div class="right-panel">
                 <div class="bingo-board" id="bingoBoard"></div>
-          
             </div>
 
             <div class="players-section">
@@ -737,92 +155,73 @@
                     <div id="playerMenuContent" class="player-menu-content">
                         <button class="menu-btn-item" onclick="toggleSubMenu('settingsPanel')">⚙️ ڕێکخستن</button>
                         <div id="settingsPanel" class="menu-panel">
-                
                             <div class="settings-row" id="settingMaxNumRow">
                                 <span class="settings-label">ژمارا کۆتایی:</span>
                                 <input type="number" id="offlineMaxNumInput" class="speed-input-menu" min="10" max="500" value="99" onchange="changeMaxNumberOffline()">
-             
                             </div>
                             <div class="settings-row" id="speedSettingRow">
                                 <span class="settings-label">لەزاتی (چرکە):</span>
-                     
                                 <input type="number" id="speedInput" class="speed-input-menu" min="1" max="30" value="3">
                             </div>
                             <div class="settings-row">
-                          
                                 <span class="settings-label">ڕەنگێ یاریێ:</span>
                                 <select id="themeSelect" class="speed-input-menu" style="width: 100px;" onchange="changeTheme()">
                                     <option value="classic">کلاسیک</option>
-                  
                                     <option value="dark">تاری</option>
                                     <option value="blue">شین</option>
                                     <option value="green">کەسک</option>
-       
                                     <option value="purple">مۆر</option>
                                     <option value="orange">پرتەقاڵی</option>
-                                 
                                     <option value="pink">پەمبەیی</option>
                                     <option value="coffee">قاوەیی</option>
                                     <option value="neon">نیۆن</option>
-                      
                                     <option value="ocean">ئۆقیانووس</option>
                                 </select>
                             </div>
-                         
                             <button class="btn-sound" id="soundBtn" onclick="toggleSoundMode()" style="margin-bottom: 8px;">🔊 دەنگ + خواندن</button>
                         </div>
 
                         <button class="menu-btn-item" onclick="toggleSubMenu('langPanel')">🗣️ زمانێ خواندنێ</button>
                         <div id="langPanel" class="menu-panel">
-           
-                            <select id="langSelect" class="custom-input" style="width: 100%;
-            font-weight: bold;" onchange="changeLanguage()">
-                                <option value="en">English (ئینگلیزی)</option><option value="ar">العربية (عەرەبی)</option>
-                                <option value="fa">فارسی (فارسی)</option><option value="tr">Türkçe (تورکی)</option><option value="ku">Kurdî (کوردی)</option>
-                        
+                            <select id="langSelect" class="custom-input" style="width: 100%; font-weight: bold;" onchange="changeLanguage()">
+                                <option value="en">English (ئینگلیزی)</option>
+                                <option value="ar">العربية (عەرەبی)</option>
+                                <option value="fa">فارسی (فارسی)</option>
+                                <option value="tr">Türkçe (تورکی)</option>
+                                <option value="ku">Kurdî (کوردی)</option>
                             </select>
                         </div>
 
                         <button class="menu-btn-item" id="addPlayerMenuBtn" onclick="toggleSubMenu('addPlayerPanel')">➕ زێدەکرنا یاریزانان</button>
                         <div id="addPlayerPanel" class="menu-panel">
-                 
                             <div class="input-group">
                                 <input type="text" id="offlinePlayerName" class="custom-input" placeholder="ناڤێ یاریزانی (نموونە: بـــژار)">
-                                <div style="font-size: 13px;
-            font-weight: bold; text-align: center; margin-bottom: 5px;">ژمارەیێن وی (1 تا 99):</div>
+                                <div style="font-size: 13px; font-weight: bold; text-align: center; margin-bottom: 5px;">ژمارەیێن وی (1 تا 99):</div>
                                 <div id="offlineNumberInputs" class="dynamic-inputs-container">
-                                    <input type="number" class="num-input-box"><input type="number" class="num-input-box"><input type="number" class="num-input-box">
-               
+                                    <input type="number" class="num-input-box">
+                                    <input type="number" class="num-input-box">
+                                    <input type="number" class="num-input-box">
                                 </div>
                                 <button class="btn-add-box" onclick="addNumberBox('offlineNumberInputs')">➕ خانەیەکا دی زێدەبکە</button>
                                 <button class="btn-add" id="btnAddPlayerOffline" onclick="addPlayerOffline()">Change (زێدەبکە)</button>
-          
                             </div>
                             <button class="btn-clear-all" id="btnClearAllOffline" onclick="clearAllPlayersOffline()">🗑 ڕەشکرنا هەمی یاریزانان</button>
                         </div>
 
-                        
                         <button class="menu-btn-item" onclick="toggleSubMenu('alertsPanel')">🔔 کۆنترۆلا نامەیان (ئەلێرت)</button>
                         <div id="alertsPanel" class="menu-panel">
-                            <div class="settings-row"><span style="font-size: 13px;
-            font-weight: bold; color: #5a0000;">نامەیا ڕاکێشانا ژمارەیان:</span><button id="alertDrawBtn" class="toggle-btn" onclick="toggleAlert('draw')">هەلکرن</button></div>
-                            <div class="settings-row"><span style="font-size: 13px;
-            font-weight: bold; color: #5a0000;">نامەیا پیرۆزباهیێ:</span><button id="alertWinBtn" class="toggle-btn" onclick="toggleAlert('win')">هەلکرن</button></div>
-                            <div class="settings-row"><span style="font-size: 13px;
-            font-weight: bold; color: #5a0000;">نامەیا خوسارەتیێ:</span><button id="alertLoseBtn" class="toggle-btn" onclick="toggleAlert('lose')">هەلکرن</button></div>
+                            <div class="settings-row"><span style="font-size: 13px; font-weight: bold; color: #5a0000;">نامەیا ڕاکێشانا ژمارەیان:</span><button id="alertDrawBtn" class="toggle-btn" onclick="toggleAlert('draw')">هەلکرن</button></div>
+                            <div class="settings-row"><span style="font-size: 13px; font-weight: bold; color: #5a0000;">نامەیا پیرۆزباهیێ:</span><button id="alertWinBtn" class="toggle-btn" onclick="toggleAlert('win')">هەلکرن</button></div>
+                            <div class="settings-row"><span style="font-size: 13px; font-weight: bold; color: #5a0000;">نامەیا خوسارەتیێ:</span><button id="alertLoseBtn" class="toggle-btn" onclick="toggleAlert('lose')">هەلکرن</button></div>
                         </div>
 
-                        <button class="menu-btn-item" style="background:#8e44ad;
-            color:#fff;" onclick="showHistory()">📜 مێژوویا ڕاکێشانێ</button>
-                        <button class="menu-btn-item" style="background:#34495e;
-            color:#fff;" onclick="toggleFullscreen()">🔲 شاشەیا تەمام</button>
-                        <button class="menu-btn-item" id="btnLeaveRoom" style="background:#f44336;
-            color:#fff; display:none;" onclick="leaveRoom()">🚪 دەرکەفتن ژ یاریێ</button>
+                        <button class="menu-btn-item" style="background:#8e44ad; color:#fff;" onclick="showHistory()">📜 مێژوویا ڕاکێشانێ</button>
+                        <button class="menu-btn-item" style="background:#34495e; color:#fff;" onclick="toggleFullscreen()">🔲 شاشەیا تەمام</button>
+                        <button class="menu-btn-item" id="btnLeaveRoom" style="background:#f44336; color:#fff; display:none;" onclick="leaveRoom()">🚪 دەرکەفتن ژ یاریێ</button>
                         <button class="menu-btn-item btn-share" onclick="shareGame()">📤 بەلاڤکرنا یاریێ (Share)</button>
                         <button class="menu-btn-item btn-about" onclick="showAboutDeveloper()">ℹ️ دەربارەی گەشەپێدەر</button>
                     </div>
 
-                
                     <div class="players-list" id="playersList"></div>
                 </div>
             </div>
@@ -850,1032 +249,10 @@
         <div id="chatMessages" class="chat-messages"></div>
         <div class="chat-input-area">
             <input type="text" id="chatInput" placeholder="نامەیەکێ بنڤیسە..." onkeypress="if(event.key==='Enter') window.sendChatMessage()">
-    
             <button onclick="window.sendChatMessage()">بفرێکه</button>
         </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getDatabase, ref, set, get, onValue, update, remove, onDisconnect, push, onChildAdded } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyA4dDkYxWzJ60MHGHi_c9ORZipr-w_pRzs",
-            authDomain: "bizharbingo.firebaseapp.com",
-  
-            databaseURL: "https://bizharbingo-default-rtdb.firebaseio.com",
-            projectId: "bizharbingo",
-            storageBucket: "bizharbingo.firebasestorage.app",
-            messagingSenderId: "945947568512",
-            appId: "1:945947568512:web:289ea6660f0ba03c6af965"
-        };
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-
-        // --- گۆڕاوێن گشتی ---
-        window.gameMode = null;
-        window.maxGameNumbers = 99; 
-        window.requiredNumbers = 3;
-        window.players = {}; 
-        window.drawnNumbers = [];
-        window.autoInterval = null; window.isAutoPlaying = false;
-        window.audioCtx = null;
-        window.celebrationTimeout = null; window.pendingAlertTimeout = null; window.pendingModalTimeout = null;
-        window.soundMode = 2; window.selectedLang = 'en';
-        window.currentTheme = 'classic';
-        window.alertsEnabled = { draw: true, win: true, lose: true };
-        window.touchstartX = 0; window.touchstartY = 0;
-        // --- گۆڕاوێن ئۆنلاین و ئۆفللاین ---
-        window.roomCode = null; window.isHost = false;
-        window.hasJoined = false;
-        window.playerId = "player_" + Math.random().toString(36).substr(2, 9);
-        window.myPlayerName = "یاریزان";
-        window.currentEditIdOffline = null;
-        // --- گۆڕاوێن تایبەت ب چاتا دەنگی (Agora) ---
-        // ⚠️ تکایە ئەڤێ ل خوارێ ب App ID یێ خۆ بگەهۆڕە ⚠️
-        window.agoraAppId = "3a993f3595994020b47f876125a14471";
-        window.agoraClient = null;
-        window.localAudioTrack = null;
-        window.isMicMuted = true;
-        window.remoteUsers = {};
-        window.mutedPlayers = {};
-        window.isAllMuted = false;
-        // --- دروستکرنا ئەنیمەیشنا تۆپێن بینگۆیێ بۆ باگگراوەندێ ---
-        window.createFloatingBalls = function() {
-            const container = document.getElementById('floatingBg');
-            if(!container) return;
-            container.innerHTML = '';
-            const colors = ['#00bfff', '#dc143c', '#a9a9a9', '#32cd32', '#ffd700', '#ff69b4', '#8a2be2'];
-            for(let i = 0; i < 20; i++) {
-                const ball = document.createElement('div');
-                ball.className = 'bingo-ball-anim';
-                const size = Math.floor(Math.random() * 50) + 40; 
-                ball.style.width = size + 'px';
-                ball.style.height = size + 'px';
-                ball.style.left = Math.floor(Math.random() * 95) + 'vw';
-                ball.style.animationDuration = (Math.random() * 10 + 12) + 's'; 
-                ball.style.animationDelay = (Math.random() * 10) + 's';
-                const color = colors[Math.floor(Math.random() * colors.length)];
-                ball.style.background = `radial-gradient(circle at 30% 30%, #ffffff, ${color})`;
-                ball.style.border = `2px solid ${color}`;
-                ball.style.color = '#333';
-                ball.style.fontSize = (size / 2.5) + 'px';
-                
-                ball.innerText = Math.floor(Math.random() * 99) + 1;
-                container.appendChild(ball);
-            }
-        }
-
-        // --- دەستپێک (Init) ---
-        window.onload = function() {
-            window.loadGlobalSettings();
-            window.applyTheme();
-            window.createFloatingBalls(); 
-            
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices();
-                };
-            }
-            
-            let savedSession = sessionStorage.getItem('bingoOnlineSession');
-            if (savedSession) {
-                let session = JSON.parse(savedSession);
-                window.roomCode = session.roomCode;
-                window.playerId = session.playerId;
-                window.myPlayerName = session.myPlayerName;
-                document.getElementById('btnRejoin').style.display = 'flex';
-            }
-            
-            document.getElementById('modeSelectionScreen').style.display = 'block';
-        };
-
-        window.selectMode = function(mode) {
-            window.gameMode = mode;
-            document.getElementById('modeSelectionScreen').style.display = 'none';
-            if (mode === 'offline') {
-                document.getElementById('floatingBg').style.display = 'none';
-                document.getElementById('gameContainer').style.display = 'block';
-                document.getElementById('hostGameControls').style.display = 'grid'; 
-                document.getElementById('btnLeaveRoom').style.display = 'none';
-                document.getElementById('addPlayerMenuBtn').style.display = 'block';
-                document.getElementById('settingMaxNumRow').style.display = 'flex';
-                document.getElementById('waitResetMessage').style.display = 'none';
-                document.getElementById('onlineFloatingControls').style.display = 'none';
-                document.getElementById('btnResetLocal').style.display = 'block'; 
-                
-                window.loadOfflineGameState();
-                window.initBoard();
-                window.updateOfflineMenuState();
-            } else {
-                document.getElementById('lobbyScreen').style.display = 'block';
-                document.getElementById('addPlayerMenuBtn').style.display = 'none';
-                document.getElementById('settingMaxNumRow').style.display = 'none';
-                document.getElementById('btnLeaveRoom').style.display = 'block';
-                document.getElementById('btnResetLocal').style.display = 'none';
-            }
-        };
-
-        function setBtnLoading(btnId, isLoading, originalText) {
-            const btn = document.getElementById(btnId);
-            if (!btn) return;
-            if(isLoading) {
-                btn.disabled = true;
-                btn.innerHTML = `<div class="spinner"></div> چاڤەڕێ بە...`;
-            } else {
-                btn.disabled = false;
-                btn.innerHTML = originalText;
-            }
-        }
-
-        window.createRoom = async function() {
-            setBtnLoading('btnCreateRoom', true, '👑 دروستکرنا ژوورێ (Host)');
-            try {
-                const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-                window.roomCode = '';
-                for (let i = 0; i < 4; i++) window.roomCode += chars.charAt(Math.floor(Math.random() * chars.length));
-                window.isHost = true;
-                window.saveOnlineSession();
-                const roomRef = ref(db, 'rooms/' + window.roomCode);
-                await set(roomRef, { status: 'waiting', hostId: window.playerId, maxNumbers: 99, requiredNumbers: 3, drawnNumbers: [], players: {} });
-                onDisconnect(roomRef).remove();
-                
-                await window.joinAgoraChannel(); // دەستپێکرنا چاتا دەنگی
-                window.setupRoomListener();
-                window.showWaitingScreen();
-            } catch(e) {
-                alert("خەلەتیەک چێبوو د دروستکرنا ژوورێ دا، تکایە ئینتەرنێتا خۆ کۆنترۆل بکە.");
-            }
-            setBtnLoading('btnCreateRoom', false, '👑 دروستکرنا ژوورێ (Host)');
-        };
-        window.joinRoom = async function() {
-            setBtnLoading('btnJoinRoom', true, 'چوونە ژوورێ (Join)');
-            try {
-                const inputCode = document.getElementById('joinRoomInput').value.trim().toUpperCase();
-                if (inputCode.length !== 4) { alert("کۆدێ دروست یێ ٤ پیتی بنڤیسە!"); setBtnLoading('btnJoinRoom', false, 'چوونە ژوورێ (Join)'); return;
-                }
-                const snapshot = await get(ref(db, 'rooms/' + inputCode));
-                if (!snapshot.exists()) { alert("ئەڤ ژوورە نینە!"); setBtnLoading('btnJoinRoom', false, 'چوونە ژوورێ (Join)'); return;
-                }
-                
-                window.roomCode = inputCode;
-                window.isHost = false; window.hasJoined = false;
-                window.saveOnlineSession();
-                onDisconnect(ref(db, `rooms/${window.roomCode}/players/${window.playerId}`)).remove();
-                
-                await window.joinAgoraChannel();
-                // دەستپێکرنا چاتا دەنگی
-                window.setupRoomListener();
-                window.showWaitingScreen();
-            } catch(e) {
-                alert("خەلەتیەک چێبوو!");
-            }
-            setBtnLoading('btnJoinRoom', false, 'چوونە ژوورێ (Join)');
-        };
-        window.rejoinOnlineRoom = async function() {
-            setBtnLoading('btnRejoin', true, '🔄 ڤەگەڕیان بۆ ژوورا بەرێ');
-            try {
-                const snapshot = await get(ref(db, 'rooms/' + window.roomCode));
-                if (!snapshot.exists()) { 
-                    alert("ژوور هاتییە گرتن یان نەمايە!");
-                    sessionStorage.removeItem('bingoOnlineSession');
-                    window.location.reload();
-                    return; 
-                }
-                window.gameMode = 'online';
-                document.getElementById('modeSelectionScreen').style.display = 'none';
-                document.getElementById('addPlayerMenuBtn').style.display = 'none';
-                document.getElementById('settingMaxNumRow').style.display = 'none';
-                document.getElementById('btnLeaveRoom').style.display = 'block';
-                document.getElementById('btnResetLocal').style.display = 'none'; 
-                
-                const data = snapshot.val();
-                if (data.hostId === window.playerId) { window.isHost = true; onDisconnect(ref(db, 'rooms/' + window.roomCode)).remove();
-                }
-                else { window.isHost = false;
-                onDisconnect(ref(db, `rooms/${window.roomCode}/players/${window.playerId}`)).remove(); }
-                
-                if (data.players && data.players[window.playerId] && data.players[window.playerId].isReady) {
-                    window.hasJoined = true;
-                }
-                
-                await window.joinAgoraChannel();
-                // دەستپێکرنا چاتا دەنگی
-                window.setupRoomListener();
-                window.showWaitingScreen();
-            } catch(e) {}
-            setBtnLoading('btnRejoin', false, '🔄 ڤەگەڕیان بۆ ژوورا بەرێ');
-        };
-
-        window.leaveRoom = async function() {
-            if(window.roomCode && window.gameMode === 'online') {
-                if(window.isHost) await remove(ref(db, 'rooms/' + window.roomCode));
-                else await remove(ref(db, `rooms/${window.roomCode}/players/${window.playerId}`));
-            }
-            await window.leaveAgoraChannel();
-            // دەرکەفتن ژ چاتا دەنگی
-            sessionStorage.removeItem('bingoOnlineSession');
-            window.location.reload();
-        }
-
-        window.saveOnlineSession = function() {
-            sessionStorage.setItem('bingoOnlineSession', JSON.stringify({ roomCode: window.roomCode, playerId: window.playerId, myPlayerName: window.myPlayerName }));
-        }
-
-        window.copyRoomCode = function() {
-            if(window.roomCode) {
-                navigator.clipboard.writeText(window.roomCode).then(() => {
-                    alert("کۆدێ ژوورێ هاتە کۆپیکرن: " + window.roomCode);
-                });
-            }
-        }
-
-        window.showWaitingScreen = function() {
-            document.getElementById('lobbyScreen').style.display = 'none';
-            document.getElementById('gameContainer').style.display = 'none';
-            document.getElementById('waitingScreen').style.display = 'block'; document.getElementById('displayRoomCode').innerText = window.roomCode;
-            document.getElementById('onlineFloatingControls').style.display = 'flex'; 
-            window.setupChatAndReactions(); 
-            
-            if (window.isHost) { document.getElementById('hostSettingsSection').style.display = 'block';
-            document.getElementById('speedSettingRow').style.display = 'flex'; }
-        }
-
-        window.renderOnlineInputs = function(count) {
-            const container = document.getElementById('onlineNumberInputs');
-            container.innerHTML = '';
-            for(let i = 0; i < count; i++) {
-                const inp = document.createElement('input');
-                inp.type = 'number';
-                inp.className = 'num-input-box';
-                container.appendChild(inp);
-            }
-            document.getElementById('btnAddOnlineNumber').style.display = 'none';
-            document.getElementById('onlineNumberTitle').innerText = `پێدڤییە ${count} ژمارەیان هەلبژێری:`;
-        }
-
-        window.updateHostSettings = function() {
-            if(!window.isHost) return;
-            let val = parseInt(document.getElementById('hostMaxNumInput').value); if(isNaN(val) || val < 10) val = 10;
-            let reqNum = parseInt(document.getElementById('hostReqNumInput').value) || 3;
-            update(ref(db, 'rooms/' + window.roomCode), { maxNumbers: val, requiredNumbers: reqNum });
-        }
-
-        window.kickPlayer = async function(id) {
-            if(!window.isHost) return;
-            if(confirm("دڤێت ڤی یاریزانی دەرکەی ژ یاریێ؟")) {
-                await remove(ref(db, `rooms/${window.roomCode}/players/${id}`));
-            }
-        }
-
-        window.setPlayerReady = async function() {
-            const name = document.getElementById('setupPlayerName').value.trim();
-            const inputs = document.querySelectorAll('#onlineNumberInputs .num-input-box');
-            let numbers = []; inputs.forEach(inp => { let val = parseInt(inp.value); if (!isNaN(val) && val >= 1 && val <= window.maxGameNumbers) numbers.push(val); });
-            if(!name || numbers.length === 0) { alert(`ناڤێ خۆ بنڤیسە!`); return;
-            }
-            if(numbers.length !== window.requiredNumbers) { alert(`تکایە هەمی خانەیان تژی بکە! پێدڤییە ${window.requiredNumbers} ژمارەیان بنڤیسی.`);
-            return; }
-            if ([...new Set(numbers)].length !== numbers.length) { alert('ژمارە دووبارە کرینە!');
-            return; }
-
-            let allUsed = [];
-            Object.values(window.players).forEach(p => { if(p.id !== window.playerId) allUsed = allUsed.concat(p.numbers || []); });
-            let dup = numbers.find(n => allUsed.includes(n));
-            if (dup !== undefined) { alert(`لێبۆڕینێ دخوازم، ژمارە (${dup}) پێشتر ژ لایێ کەسەکێ دی ڤە هاتییە هەلبژارتن!\nهیڤییە ژمارەیەکا دی بنڤیسە.`);
-            return; }
-
-            window.myPlayerName = name; 
-            window.hasJoined = true;
-            window.saveOnlineSession();
-            document.getElementById('btnReady').innerText = "چاڤەڕێ بە..."; document.getElementById('btnReady').disabled = true;
-            document.getElementById('setupPlayerName').disabled = true; inputs.forEach(i => i.disabled = true);
-            await set(ref(db, `rooms/${window.roomCode}/players/${window.playerId}`), { id: window.playerId, name: name, numbers: numbers, isSafe: false, isLoser: false, isReady: true });
-        }
-
-        window.startGameHost = async function() {
-            if(!window.isHost) return;
-            const pArr = Object.values(window.players);
-            if(pArr.length < 2) { alert("ب لایەنی ڤە پێدڤییە ٢ یاریزان بهێنە تۆمارکرن بۆ دەستپێکرنا یاریێ!"); return;
-            }
-            if(pArr.filter(p => !p.isReady).length > 0) { alert("هێشتا هەمیان ئامادەیی نیشان نەدایە!");
-            return; }
-            await update(ref(db, 'rooms/' + window.roomCode), { status: 'playing' });
-        }
-
-        window.setupRoomListener = function() {
-            onValue(ref(db, 'rooms/' + window.roomCode), (snapshot) => {
-                const data = snapshot.val();
-                if (!data) { alert("ژوور هاتە گرتن!"); sessionStorage.removeItem('bingoOnlineSession'); window.location.reload(); return; }
-                
-           
-                window.maxGameNumbers = data.maxNumbers || 99; 
-                window.players = data.players || {};
-                
-                if (window.hasJoined && !window.players[window.playerId]) {
-                    alert("تو هاتە دەرکرن ژ لایێ خودانێ ژوورێ ڤە!");
-       
-                    window.leaveRoom();
-                    return;
-                }
-
-                let newReqNum = data.requiredNumbers || 3;
-                if(window.requiredNumbers !== newReqNum) {
-           
-                    window.requiredNumbers = newReqNum;
-                    
-                    if(document.getElementById('waitingScreen').style.display !== 'none' && !window.hasJoined) {
-                        window.renderOnlineInputs(window.requiredNumbers);
-                    } else if (window.hasJoined && document.getElementById('waitingScreen').style.display !== 'none') {
-                        let myPlayerData = window.players[window.playerId];
-                        if(myPlayerData && myPlayerData.numbers && myPlayerData.numbers.length !== window.requiredNumbers) {
-                            alert("خودانێ ژوورێ شێوازێ یاریێ گهۆڕی، پێدڤییە دوبارە ژمارەیان بنڤیسی!");
-                            window.hasJoined = false;
-                            document.getElementById('btnReady').innerText = "ئامادەمە (Ready)";
-                            document.getElementById('btnReady').disabled = false;
-                            document.getElementById('setupPlayerName').disabled = false;
-                            window.renderOnlineInputs(window.requiredNumbers);
-                            update(ref(db, `rooms/${window.roomCode}/players/${window.playerId}`), {isReady: false, numbers: []});
-                        }
-                    }
-                } else if(document.getElementById('waitingScreen').style.display !== 'none' && !window.hasJoined && document.getElementById('onlineNumberInputs').children.length === 0) {
-                    window.renderOnlineInputs(window.requiredNumbers);
-                }
-                
-                window.updateWaitingRoomUI();
-                window.renderPlayersTable();
-
-                if (data.status === 'playing') {
-                    if(document.getElementById('waitingScreen').style.display !== 'none') window.switchToGameScreen();
-                } else if (data.status === 'waiting' && document.getElementById('gameContainer').style.display !== 'none') {
-                    window.resetLocalGameUI();
-                }
-
-                const newDrawn = data.drawnNumbers ||
-                [];
-                if (newDrawn.length > window.drawnNumbers.length) {
-                    newDrawn.slice(window.drawnNumbers.length).forEach(n => window.processDrawUI(n, true));
-                } else if (newDrawn.length === 0 && window.drawnNumbers.length > 0) {
-                    window.drawnNumbers = [];
-                    window.resetLocalGameUI();
-                }
-            });
-        }
-
-        window.updateWaitingRoomUI = function() {
-            const list = document.getElementById('waitingPlayersList');
-            list.innerHTML = '';
-            const pArr = Object.values(window.players);
-            pArr.forEach(p => { 
-                const li = document.createElement('li'); 
-                li.style.display = 'flex'; li.style.justifyContent = 'space-between'; li.style.alignItems = 'center'; li.style.marginBottom = '6px'; li.style.background = '#f9f9f9'; li.style.padding = '5px 10px'; li.style.borderRadius = '6px'; li.style.border = '1px solid #ddd';
-                
-            
-                let kickBtnHtml = (window.isHost && p.id !== window.playerId) ? `<button style="background:#f44336; color:white; border:none; border-radius:4px; padding:4px 8px; cursor:pointer; font-weight:bold; font-size:12px;" onclick="kickPlayer('${p.id}')">❌ دەرکرن</button>` : '';
-                
-                li.innerHTML = `<span>${p.name} ${p.isReady ? '✅' : '⏳'}</span> ${kickBtnHtml}`; 
-                list.appendChild(li); 
-            });
-            if (window.isHost) document.getElementById('btnStartGame').disabled = !(pArr.length >= 2 && pArr.every(p => p.isReady));
-        }
-
-        window.switchToGameScreen = function() {
-            document.getElementById('floatingBg').style.display = 'none';
-            document.getElementById('waitingScreen').style.display = 'none'; document.getElementById('gameContainer').style.display = 'block';
-            window.initBoard(); window.updateRemainingCount();
-            if (window.isHost) { document.getElementById('hostGameControls').style.display = 'grid'; document.getElementById('btnResetGameHost').style.display = 'block';
-            } 
-            else { document.getElementById('playerWaitMessage').style.display = 'block';
-            document.getElementById('waitResetMessage').style.display = 'block'; }
-        }
-
-        let chatListenerSetup = false;
-        window.setupChatAndReactions = function() {
-            if(chatListenerSetup) return;
-            chatListenerSetup = true;
-            const chatRef = ref(db, 'rooms/' + window.roomCode + '/chat');
-            onChildAdded(chatRef, (snapshot) => {
-                const msg = snapshot.val();
-                const chatBox = document.getElementById('chatMessages');
-                const isMine = msg.senderId === window.playerId;
-                
-             
-                const wrapper = document.createElement('div'); wrapper.className = 'chat-msg-wrapper';
-                const msgDiv = document.createElement('div'); msgDiv.className = `chat-msg ${isMine ? 'mine' : 'others'}`;
-                msgDiv.innerHTML = `<div class="chat-sender">${isMine ? 'ئەز' : msg.sender}</div>${msg.text}`;
-                
-                wrapper.appendChild(msgDiv); chatBox.appendChild(wrapper);
-        
-                chatBox.scrollTop = chatBox.scrollHeight;
-            });
-            const reactionRef = ref(db, 'rooms/' + window.roomCode + '/reactions');
-            onChildAdded(reactionRef, (snapshot) => {
-                const reaction = snapshot.val();
-                window.showFloatingEmoji(reaction.emoji);
-            });
-        }
-
-        window.toggleChat = function() {
-            const chat = document.getElementById('chatOverlay');
-            chat.style.display = chat.style.display === 'none' ? 'flex' : 'none';
-        }
-
-        window.sendChatMessage = async function() {
-            const input = document.getElementById('chatInput');
-            const text = input.value.trim();
-            if(!text) return; input.value = '';
-            await push(ref(db, 'rooms/' + window.roomCode + '/chat'), { senderId: window.playerId, sender: window.myPlayerName || "یاریزان", text: text, time: Date.now() });
-        }
-
-        window.sendReaction = async function(emoji) {
-            await push(ref(db, 'rooms/' + window.roomCode + '/reactions'), { senderId: window.playerId, emoji: emoji, time: Date.now() });
-        }
-
-        window.showFloatingEmoji = function(emojiText) {
-            const emoji = document.createElement('div');
-            emoji.className = 'floating-emoji'; emoji.innerText = emojiText;
-            emoji.style.left = (Math.random() * 80 + 10) + '%'; 
-            document.body.appendChild(emoji);
-            setTimeout(() => { emoji.remove(); }, 2000);
-        }
-
-        window.loadOfflineGameState = function() {
-            const savedMax = localStorage.getItem('bingoOfflineMaxNum');
-            if (savedMax) { window.maxGameNumbers = parseInt(savedMax); document.getElementById('offlineMaxNumInput').value = window.maxGameNumbers; }
-            const savedPlayers = localStorage.getItem('bingoOfflinePlayers');
-            if (savedPlayers) window.players = JSON.parse(savedPlayers);
-            const savedDrawn = localStorage.getItem('bingoOfflineDrawn'); if (savedDrawn) window.drawnNumbers = JSON.parse(savedDrawn);
-            window.renderPlayersTable();
-            if (window.drawnNumbers.length > 0) {
-                setTimeout(() => { window.drawnNumbers.forEach(n => { const cell = document.getElementById('cell-' + n); if (cell) cell.classList.add('drawn'); }); }, 100);
-                const last = window.drawnNumbers[window.drawnNumbers.length - 1]; document.getElementById('drawnNumberDisplay').innerText = last < 10 ? '0' + last : last;
-            }
-        }
-        window.saveOfflineGameState = function() {
-            localStorage.setItem('bingoOfflinePlayers', JSON.stringify(window.players));
-            localStorage.setItem('bingoOfflineDrawn', JSON.stringify(window.drawnNumbers));
-            localStorage.setItem('bingoOfflineMaxNum', window.maxGameNumbers.toString());
-            window.updateOfflineMenuState();
-        }
-        window.changeMaxNumberOffline = function() {
-            if (window.drawnNumbers.length > 0 || Object.keys(window.players).length > 0) {
-                alert("نەشێی ژمارێ بگهۆڕی دەمێ یاریزان هەی یان یاری دەستپێکری!");
-                document.getElementById('offlineMaxNumInput').value = window.maxGameNumbers; return;
-            }
-            let newVal = parseInt(document.getElementById('offlineMaxNumInput').value);
-            if(isNaN(newVal) || newVal < 10) newVal = 10;
-            window.maxGameNumbers = newVal; document.getElementById('offlineMaxNumInput').value = window.maxGameNumbers; window.saveOfflineGameState(); window.initBoard(); window.updateRemainingCount();
-        }
-
-        window.addPlayerOffline = function() {
-            if (window.drawnNumbers.length > 0) return;
-            const name = document.getElementById('offlinePlayerName').value.trim();
-            const inputs = document.querySelectorAll('#offlineNumberInputs .num-input-box');
-            let numbers = [];
-            inputs.forEach(inp => { let val = parseInt(inp.value); if (!isNaN(val) && val >= 1 && val <= window.maxGameNumbers) numbers.push(val); });
-            if(!name || numbers.length === 0) { alert(`ناڤێ یاریزانی و ژمارەیەکێ بنڤیسە!`); return;
-            }
-            if ([...new Set(numbers)].length !== numbers.length) { alert('تە ژمارەیەک دوو جاران یا نڤیسی. هیڤییە ژمارەیێن دووبارە ڕابکە!');
-            return; }
-
-            let allUsed = [];
-            Object.values(window.players).forEach(p => { 
-                if(p.id !== window.currentEditIdOffline) allUsed = allUsed.concat(p.numbers || []); 
-            });
-            let dup = numbers.find(n => allUsed.includes(n)); if (dup !== undefined) { alert(`لێبۆڕینێ دخوازم، ژمارە (${dup}) پێشتر ژ لایێ کەسەکێ دی ڤە هاتییە هەلبژارتن!\nهیڤییە ژمارەیەکا دی بنڤیسە.`);
-            return; }
-
-            const id = window.currentEditIdOffline || Date.now().toString();
-            window.players[id] = { id: id, name: name, numbers: numbers, isSafe: false, isLoser: false };
-            
-            window.currentEditIdOffline = null;
-            document.getElementById('btnAddPlayerOffline').innerText = 'Change (زێدەبکە)';
-            document.getElementById('offlinePlayerName').value = ''; 
-            document.getElementById('offlineNumberInputs').innerHTML = '<input type="number" class="num-input-box"><input type="number" class="num-input-box"><input type="number" class="num-input-box">';
-            
-            window.saveOfflineGameState(); window.renderPlayersTable();
-            document.getElementById('playerMenuContent').style.display = 'none';
-        }
-        
-        window.editPlayerOffline = function(id) {
-            if (window.drawnNumbers.length > 0) return;
-            const p = window.players[id]; if(!p) return;
-            window.currentEditIdOffline = id;
-            document.getElementById('offlinePlayerName').value = p.name;
-            const container = document.getElementById('offlineNumberInputs'); container.innerHTML = '';
-            p.numbers.forEach(num => { const inp = document.createElement('input'); inp.type='number'; inp.className='num-input-box'; inp.value=num; container.appendChild(inp); });
-            document.getElementById('btnAddPlayerOffline').innerText = 'دەستکاری (Update)';
-            
-            document.getElementById('playerMenuContent').style.display = 'block'; document.querySelectorAll('.menu-panel').forEach(p=>p.style.display='none');
-            document.getElementById('addPlayerPanel').style.display = 'block';
-            setTimeout(() => { document.querySelector('.players-section').scrollIntoView({ behavior: 'smooth' }); }, 100);
-        }
-
-        window.deletePlayerOffline = function(id) {
-            if (window.drawnNumbers.length > 0) return;
-            if (window.players[id] && confirm(`ئایا تو یێ پشتڕاستی دڤێت یاریزان "${window.players[id].name}" ژێ ببەی؟`)) { delete window.players[id]; window.saveOfflineGameState(); window.renderPlayersTable();
-            }
-        }
-
-        window.clearAllPlayersOffline = function() {
-            if (window.drawnNumbers.length > 0 || Object.keys(window.players).length === 0) return;
-            if (confirm("ئایا تو یێ پشتڕاستی دڤێت هەمی یاریزانان ڕەش بکەی؟")) {
-                window.players = {};
-                window.drawnNumbers = []; window.saveOfflineGameState();
-                document.getElementById('drawnNumberDisplay').innerText = '--';
-                if (window.alertsEnabled.draw) { document.getElementById('matchText').innerHTML = 'چاڤەڕێی ڕاکێشانێ یە...'; document.getElementById('matchText').classList.remove('hit');
-                }
-                window.initBoard(); window.renderPlayersTable(); window.updateRemainingCount();
-                document.getElementById('playerMenuContent').style.display = 'none';
-            }
-        }
-
-        window.updateOfflineMenuState = function() {
-            if (window.gameMode !== 'offline') return;
-            const isStarted = window.drawnNumbers.length > 0;
-            const btnAdd = document.getElementById('addPlayerMenuBtn'), btnAddOff = document.getElementById('btnAddPlayerOffline'), btnClear = document.getElementById('btnClearAllOffline');
-            const inName = document.getElementById('offlinePlayerName'), inMax = document.getElementById('offlineMaxNumInput'), numInps = document.querySelectorAll('#offlineNumberInputs .num-input-box');
-            if (isStarted) {
-                btnAdd.classList.add('btn-disabled'); btnAddOff.classList.add('btn-disabled');
-                btnClear.classList.add('btn-disabled');
-                inName.disabled = true; inMax.disabled = true; numInps.forEach(i => i.disabled = true); document.getElementById('addPlayerPanel').style.display = 'none';
-            } else {
-                btnAdd.classList.remove('btn-disabled'); btnAddOff.classList.remove('btn-disabled');
-                btnClear.classList.remove('btn-disabled');
-                inName.disabled = false; inMax.disabled = (Object.keys(window.players).length > 0); numInps.forEach(i => i.disabled = false);
-            }
-        }
-
-        window.loadGlobalSettings = function() {
-            const savedTheme = localStorage.getItem('bingoCustomTheme');
-            if (savedTheme) { window.currentTheme = savedTheme; document.getElementById('themeSelect').value = window.currentTheme; }
-            const savedLang = localStorage.getItem('bingoCustomLang');
-            if (savedLang) { window.selectedLang = savedLang; document.getElementById('langSelect').value = window.selectedLang; }
-        }
-        window.changeTheme = function() { window.currentTheme = document.getElementById('themeSelect').value;
-            window.applyTheme(); localStorage.setItem('bingoCustomTheme', window.currentTheme); }
-        window.applyTheme = function() { document.getElementById('mainBody').className = window.currentTheme !== 'classic' ?
-            'theme-' + window.currentTheme : ''; }
-        window.changeLanguage = function() { window.selectedLang = document.getElementById('langSelect').value;
-            localStorage.setItem('bingoCustomLang', window.selectedLang); }
-        window.toggleSoundMode = function() { const btn = document.getElementById('soundBtn');
-            window.soundMode = (window.soundMode - 1 < 0) ? 2 : window.soundMode - 1;
-            if (window.soundMode === 2) btn.innerText = "🔊 دەنگ + خواندن"; else if (window.soundMode === 1) btn.innerText = "🎵 بتنێ موزیک";
-            else btn.innerText = "🔇 بێ دەنگ"; }
-        window.toggleAlert = function(type) { window.alertsEnabled[type] = !window.alertsEnabled[type];
-            const btn = document.getElementById(type === 'draw' ? 'alertDrawBtn' : (type === 'win' ? 'alertWinBtn' : 'alertLoseBtn'));
-            if (window.alertsEnabled[type]) { btn.innerText = "هەلکرن"; btn.classList.remove("off"); } else { btn.innerText = "گرتن"; btn.classList.add("off");
-            } if (type === 'draw') { document.getElementById('matchDisplay').style.display = window.alertsEnabled.draw ? 'flex' : 'none';
-            } }
-        
-        window.togglePlayerMenu = function() { const m = document.getElementById('playerMenuContent');
-            m.style.display = (m.style.display === 'none' || m.style.display === '') ? 'block' : 'none';
-        }
-        window.toggleSubMenu = function(id) { if (id === 'addPlayerPanel' && window.drawnNumbers.length > 0) return;
-            const p = document.getElementById(id); if (p.style.display === 'block') { p.style.display = 'none'; } else { document.querySelectorAll('.menu-panel').forEach(pan => pan.style.display='none');
-            p.style.display = 'block'; } }
-        window.addNumberBox = function(containerId) { const cont = document.getElementById(containerId);
-            const inp = document.createElement('input'); inp.type='number'; inp.className='num-input-box'; cont.appendChild(inp); }
-        window.showHistory = function() { const list = document.getElementById('historyList');
-            list.innerHTML = ''; if(window.drawnNumbers.length === 0) { list.innerHTML = '<span style="color:#888; font-size:14px;">هێشتا چ ژمارە نەدەرکەفتینە!</span>';
-            } else { window.drawnNumbers.forEach((num, idx) => { const s = document.createElement('span'); s.className = 'number-circle matched'; s.style.width = '30px'; s.style.height = '30px'; s.style.lineHeight = '30px'; s.style.fontSize = '14px'; s.innerText = num; s.title = `ڕاکێشانا ژمارە ${idx + 1}`; list.appendChild(s); });
-            } document.getElementById('historyModal').style.display = 'flex'; document.getElementById('playerMenuContent').style.display = 'none'; }
-        window.closeHistory = function() { document.getElementById('historyModal').style.display = 'none';
-        }
-        window.showAboutDeveloper = function() { document.getElementById('aboutModal').style.display = 'flex'; document.getElementById('playerMenuContent').style.display = 'none';
-        }
-        window.closeAboutDeveloper = function() { document.getElementById('aboutModal').style.display = 'none';
-        }
-        
-        window.toggleFullscreen = function() {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen().catch(err => {
-                    console.log(`Error attempting to enable fullscreen: ${err.message}`);
-                });
-            } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                }
-            }
-            document.getElementById('playerMenuContent').style.display = 'none';
-        }
-
-        window.shareGame = function() { 
-            const shareData = {
-                title: 'یارییا بینگۆ (1 - 99)',
-                text: 'گەلەک یا خۆشە! وەرە دگەل من یارییا بینگۆ بکە ب ڕێکا ڤێ لینکێ:',
-                url: 'https://bizhar-cloud.github.io/BINGO_With_BIZHAR/'
-            };
-            if (navigator.share) {
-                navigator.share(shareData).catch(()=>{});
-            } else {
-                navigator.clipboard.writeText(shareData.url).then(() => {
-                    alert("لینکا یاریێ هاتە کۆپیکرن، نوکە دشێی ل هەر جهەکێ (پەیس - Paste) بکەی:\n\n" + shareData.url);
-                });
-            }
-            document.getElementById('playerMenuContent').style.display = 'none';
-        }
-
-        window.updateAutoButtonUI = function() {
-            const btn = document.getElementById('autoBtn');
-            if (btn) {
-                if (window.isAutoPlaying) {
-                    btn.innerHTML = "پاوس (Pause)";
-                    btn.classList.add('stop-mode');
-                } else {
-                    btn.innerHTML = "ستارت (Start)";
-                    btn.classList.remove('stop-mode');
-                }
-            }
-        }
-
-        window.speakNumber = function(num) { 
-            if (window.soundMode !== 2) return;
-            if ('speechSynthesis' in window) { 
-                window.speechSynthesis.cancel();
-                const msg = new SpeechSynthesisUtterance(num.toString()); 
-                
-                let langCode = window.selectedLang;
-                if (langCode === 'ku') langCode = 'ar'; 
-                msg.lang = langCode;
-                const voices = window.speechSynthesis.getVoices(); 
-                if (voices.length > 0) {
-                    let target = voices.find(v => v.lang.startsWith(window.selectedLang));
-                    if (!target && window.selectedLang === 'ku') {
-                        target = voices.find(v => v.lang.startsWith('ar')) ||
-                        voices.find(v => v.lang.startsWith('en')); 
-                    }
-                    if (target) msg.voice = target;
-                } else {
-                    msg.rate = 1.0;
-                    msg.pitch = 1.1;
-                }
-                
-                window.speechSynthesis.speak(msg);
-            } 
-        }
-
-        window.playSound = function(type) { if (window.soundMode === 0) return;
-            if (!window.audioCtx) window.audioCtx = new (window.AudioContext || window.webkitAudioContext)(); if (window.audioCtx.state === 'suspended') window.audioCtx.resume(); const osc = window.audioCtx.createOscillator();
-            const gain = window.audioCtx.createGain(); osc.connect(gain); gain.connect(window.audioCtx.destination); if (type === 'draw') { osc.type = 'sine'; osc.frequency.setValueAtTime(800, window.audioCtx.currentTime); gain.gain.setValueAtTime(0.05, window.audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, window.audioCtx.currentTime + 0.1); osc.start(); osc.stop(window.audioCtx.currentTime + 0.1); } else if (type === 'safe') { osc.type = 'triangle'; osc.frequency.setValueAtTime(400, window.audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(800, window.audioCtx.currentTime + 0.2); gain.gain.setValueAtTime(0.1, window.audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, window.audioCtx.currentTime + 0.3); osc.start(); osc.stop(window.audioCtx.currentTime + 0.3);
-            } else if (type === 'lose') { osc.type = 'sawtooth'; osc.frequency.setValueAtTime(300, window.audioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(50, window.audioCtx.currentTime + 1.5); gain.gain.setValueAtTime(0.2, window.audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, window.audioCtx.currentTime + 1.5); osc.start(); osc.stop(window.audioCtx.currentTime + 1.5); } }
-        window.showCelebration = function(names) { if (!window.alertsEnabled.win) return;
-            const t = document.getElementById('celebrationToast'); t.innerHTML = `🎉 پیرۆزە 🎉<br><span class="winner-name">${names.join(' و ')}</span>تو بسەرکەفتی!`; t.classList.add('show');
-            confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 }, zIndex: 5000 }); clearTimeout(window.celebrationTimeout); window.celebrationTimeout = setTimeout(() => t.classList.remove('show'), 3500);
-        }
-        
-        window.initBoard = function() {
-            const b = document.getElementById('bingoBoard');
-            b.innerHTML = ''; let cols = 10; if(window.maxGameNumbers <= 50) cols = 5; if(window.maxGameNumbers > 100) cols = 15;
-            if(window.innerWidth < 900) cols = 10; b.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
-            for(let i = 1; i <= window.maxGameNumbers; i++) { let c = document.createElement('div'); c.className = 'board-cell';
-            c.id = 'cell-' + i; c.innerText = i; if(window.drawnNumbers.includes(i)) c.classList.add('drawn'); b.appendChild(c);
-            }
-        }
-        
-        window.updateRemainingCount = function() { 
-            document.getElementById('remainingCountDisplay').innerText = `(${window.maxGameNumbers - window.drawnNumbers.length}/${window.maxGameNumbers}) ماینە`;
-        }
-        
-        window.handleTouchStart = function(e) { if(window.gameMode==='online' || window.drawnNumbers.length>0) return;
-            window.touchstartX = e.changedTouches[0].screenX; window.touchstartY = e.changedTouches[0].screenY; }
-        window.handleTouchEnd = function(e, id) { if(window.gameMode==='online' || window.drawnNumbers.length>0) return;
-            let dx = Math.abs(e.changedTouches[0].screenX - window.touchstartX), dy = Math.abs(e.changedTouches[0].screenY - window.touchstartY); if (dx > 50 && dx > dy) window.deletePlayerOffline(id);
-        }
-        
-        // نویکرنەڤەیا لیستا یاریزانان دگەل دوگمەیێن دەنگی
-        window.renderPlayersTable = function() {
-            const list = document.getElementById('playersList');
-            const pArr = Object.values(window.players); if (pArr.length === 0) { list.innerHTML = ''; return;
-            }
-            const isStarted = window.drawnNumbers.length > 0;
-            let tableHTML = `<table class="players-table"><thead><tr><th style="width: 30%;">ناڤ</th><th style="width: ${window.gameMode==='offline'&&!isStarted?'50%':'40%'};">ژمارە</th><th style="width: 30%;">کردار</th></tr></thead><tbody>`;
-            pArr.forEach(p => {
-                let numsHtml = (p.numbers||[]).map(n => `<span class="number-circle ${window.drawnNumbers.includes(n) ? 'matched' : ''}">${n}</span>`).join('');
-                let rowClass = p.isSafe ? 'safe' : (p.isLoser ? 'loser' : '');
-                let safeText = p.isSafe ? '<br><span class="safe-badge">(قورتال بوو)</span>' : (p.isLoser ? '<br><span class="loser-badge">(خوسارەت)</span>' : '');
-              
-                
-                let muteBtnHtml = (window.gameMode === 'online' && p.id !== window.playerId) ? 
-                    `<button style="background: ${window.mutedPlayers[p.id] ? '#f44336' : '#4caf50'}; color: white; border: none; padding: 4px; border-radius: 4px; font-size: 11px; cursor: pointer;" onclick="window.toggleMutePlayer('${p.id}')">
-                        ${window.mutedPlayers[p.id] ? '🔇 بێدەنگکری' : '🔊 دەنگ ڤەکری'}
- 
-                   </button>` : '';
-
-                let actionHtml = (window.gameMode==='offline'&&!isStarted) ? `<td><div style="display:flex;
-            gap:4px; justify-content:center;"><button class="btn-edit-table" onclick="editPlayerOffline('${p.id}')">دەستکاری</button><button class="btn-delete-table" onclick="deletePlayerOffline('${p.id}')">🗑️</button></div></td>` : (window.gameMode === 'online' ? `<td>${muteBtnHtml}</td>` : '<td>-</td>');
-                
-                tableHTML += `<tr class="${rowClass}" ${window.gameMode==='offline'?`ontouchstart="handleTouchStart(event)" ontouchend="handleTouchEnd(event, '${p.id}')"`:''}><td><strong>${(window.gameMode==='online'&&p.id===window.playerId)?'🟢 ':''}${p.name}</strong>${safeText}</td><td>${numsHtml}</td>${actionHtml}</tr>`;
-            });
-            list.innerHTML = tableHTML + `</tbody></table>`;
-        }
-
-        window.manualDraw = async function() 
-        {
-            if (Object.keys(window.players).length < 2) { 
-                window.stopAutoMode(); alert('ب لایەنی ڤە پێدڤییە ٢ یاریزان بهێنە تۆمارکرن بۆ دەستپێکرنا یاریێ!'); return; 
-            }
-            if (window.pendingAlertTimeout) return;
-            if (window.drawnNumbers.length >= window.maxGameNumbers) { window.stopAutoMode(); alert('هەمی ژمارە دەرکەفتن!'); return;
-            }
-            let drawn;
-            do { drawn = Math.floor(Math.random() * window.maxGameNumbers) + 1; } while (window.drawnNumbers.includes(drawn));
-            if (window.gameMode === 'online') {
-                if (!window.isHost) return;
-                const btnDraw = document.querySelector('.btn-draw');
-                if(btnDraw) btnDraw.disabled = true;
-                try {
-                    await update(ref(db, 'rooms/' + window.roomCode), { drawnNumbers: [...window.drawnNumbers, drawn] });
-                } catch(e) {}
-                if(btnDraw) btnDraw.disabled = false;
-            } else {
-                window.drawnNumbers.push(drawn);
-                window.processDrawUI(drawn, false); window.evaluateGameStateOffline(); window.saveOfflineGameState();
-            }
-        }
-
-        window.toggleAutoDraw = function() {
-            if (window.gameMode === 'online' && !window.isHost) return;
-            if (Object.keys(window.players).length < 2) { alert('ب لایەنی ڤە پێدڤییە ٢ یاریزان بهێنە تۆمارکرن بۆ دەستپێکرنا یاریێ!'); return;
-            }
-            if (window.pendingAlertTimeout) return;
-            if (window.isAutoPlaying) { 
-                window.stopAutoMode();
-            } else {
-                try {
-                    if (!window.audioCtx && window.soundMode !== 0) window.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                    if (window.audioCtx && window.audioCtx.state === 'suspended') window.audioCtx.resume();
-                } catch(e) {}
-                
-                let speedSecs = parseInt(document.getElementById('speedInput').value) ||
-                3;
-                window.isAutoPlaying = true; 
-                window.updateAutoButtonUI();
-                
-                window.manualDraw(); 
-                window.autoInterval = setInterval(window.manualDraw, speedSecs * 1000);
-            }
-        }
-        
-        window.stopAutoMode = function() { 
-            window.isAutoPlaying = false;
-            clearInterval(window.autoInterval); 
-            window.updateAutoButtonUI();
-        }
-
-        window.processDrawUI = function(drawn, isOnlineCall) {
-            if (isOnlineCall) window.drawnNumbers.push(drawn);
-            window.playSound('draw'); window.speakNumber(drawn);
-            const display = document.getElementById('drawnNumberDisplay'); display.innerText = drawn < 10 ? '0' + drawn : drawn; display.classList.remove('pop-animation'); void display.offsetWidth;
-            display.classList.add('pop-animation');
-            window.updateRemainingCount(); const cell = document.getElementById('cell-' + drawn); if(cell) cell.classList.add('drawn');
-            let hit = [];
-            Object.values(window.players).forEach(p => { if ((p.numbers||[]).includes(drawn)) hit.push(p.name); });
-            if (window.alertsEnabled.draw) {
-                const mt = document.getElementById('matchText');
-                if (hit.length > 0) { mt.innerHTML = `ژمارە <span class="highlight-num">${drawn}</span> بۆ: ${hit.join(' و ')}`; mt.classList.add('hit'); setTimeout(() => mt.classList.remove('hit'), 1000);
-                } 
-                else { mt.innerHTML = `ژمارە <span class="highlight-num">${drawn}</span> دەرکەفت!<br><span style="font-size: 0.75em; color: #ccc;">(یا چ کەسان نینە)</span>`;
-                mt.classList.remove('hit'); }
-            }
-            window.renderPlayersTable();
-            if(isOnlineCall) window.evaluateGameStateLocal(); 
-        }
-
-        window.evaluateGameStateOffline = function() {
-            const pArr = Object.values(window.players);
-            let newlySafe = [], hasLoser = false, hasGameEnd = false, loserObj = null;
-            pArr.forEach(p => { if (!p.isSafe && (p.numbers||[]).every(n => window.drawnNumbers.includes(n))) { p.isSafe = true; p.isLoser = false; newlySafe.push(p.name); } });
-            let remain = pArr.filter(p => !p.isSafe);
-            if (remain.length === 1 && pArr.length > 1 && pArr.some(p => p.isSafe)) { if (!remain[0].isLoser) { hasLoser = true;
-            loserObj = remain[0]; } } 
-            else if (remain.length === 0 && pArr.length > 1) { hasGameEnd = true;
-            }
-
-            if (newlySafe.length > 0 || hasLoser || hasGameEnd) {
-                if (window.isAutoPlaying) window.stopAutoMode();
-                window.pendingAlertTimeout = setTimeout(() => {
-                    window.saveOfflineGameState(); window.renderPlayersTable();
-                    if (newlySafe.length > 0) { window.playSound('safe'); window.showCelebration(newlySafe); }
-                    if (hasLoser) {
-                        loserObj.isLoser = 
-                        true; window.saveOfflineGameState(); window.renderPlayersTable();
-                        setTimeout(() => { window.playSound('lose'); if (window.alertsEnabled.lose) { document.getElementById('loserText').innerHTML = `خوسارەت!<br><span>${loserObj.name}</span>`; document.getElementById('winnerModal').style.display = 'flex'; } }, newlySafe.length > 0 ? 3500 : 0);
-                    } else if (hasGameEnd && !hasLoser) {
-                        setTimeout(() => { 
-                            if (document.getElementById('winnerModal').style.display !== 'flex' && window.alertsEnabled.lose) { document.getElementById('loserText').innerHTML = `یاری ب دوماهیک هات!<br><span style="color:var(--col-b); font-size: 0.5em;
-                            text-shadow:none;">چ خوسارەت نینن</span>`; document.getElementById('winnerModal').style.display = 'flex'; } }, newlySafe.length > 0 ? 3500 : 0);
-                    }
-                    window.pendingAlertTimeout = null;
-                }, 2000); 
-            }
-        }
-
-      
-        window.evaluateGameStateLocal = function() {
-            const playersArr = Object.values(window.players); if(playersArr.length < 2) return;
-            let newlySafePlayers = []; let updatesNeeded = {};
-
-            playersArr.forEach(p => {
-                if (!p.isSafe && (p.numbers||[]).every(n => window.drawnNumbers.includes(n))) { 
-                    
-                    p.isSafe = true; p.isLoser = false; newlySafePlayers.push(p.name); 
-                    if(window.isHost) updatesNeeded[`players/${p.id}/isSafe`] = true;
-                }
-            });
-
-            let remainingPlayers = playersArr.filter(p => !p.isSafe); let hasLoser = false, hasGameEnd = false, loserObj = null;
-            if (remainingPlayers.length === 
-            1 && playersArr.length > 1 && playersArr.some(p => p.isSafe)) {
-                if (!remainingPlayers[0].isLoser) { hasLoser = true;
-                loserObj = remainingPlayers[0]; if(window.isHost) updatesNeeded[`players/${loserObj.id}/isLoser`] = true; }
-            } else if (remainingPlayers.length === 0 && playersArr.length > 1) { hasGameEnd = true;
-            }
-
-            if(window.isHost && Object.keys(updatesNeeded).length > 0) update(ref(db, 'rooms/' + window.roomCode), updatesNeeded);
-            if (newlySafePlayers.length > 0 || hasLoser || hasGameEnd) {
-                if (window.isAutoPlaying) window.stopAutoMode();
-                window.pendingAlertTimeout = setTimeout(() => {
-                    window.renderPlayersTable();
-                    if (newlySafePlayers.length > 0) { window.playSound('safe'); window.showCelebration(newlySafePlayers); }
-                    if (hasLoser) {
-                        loserObj.isLoser = true; 
-                        window.renderPlayersTable();
-                        setTimeout(() => { window.playSound('lose'); if (window.alertsEnabled.lose) { document.getElementById('loserText').innerHTML = `خوسارەت!<br><span>${loserObj.name}</span>`; document.getElementById('winnerModal').style.display = 'flex'; } }, newlySafePlayers.length > 0 ? 3500 : 0);
-                    } else if (hasGameEnd && !hasLoser) {
-                        setTimeout(() => { if (document.getElementById('winnerModal').style.display 
-                            !== 'flex' && window.alertsEnabled.lose) { document.getElementById('loserText').innerHTML = `یاری ب دوماهیک هات!<br><span style="color:var(--col-b); font-size: 0.5em; text-shadow:none;">چ خوسارەت نینن</span>`; document.getElementById('winnerModal').style.display = 'flex';
-                        } }, newlySafePlayers.length > 0 ? 3500 : 0);
-                    }
-                    window.pendingAlertTimeout = null;
-                }, 2000); 
-            }
-        }
-
-        window.resetGameDispatcher = async function() {
-            if (window.drawnNumbers.length === 0) { document.getElementById('winnerModal').style.display = 'none';
-            return; }
-            if (confirm("ئایا تو دڤێتی یاریێ ژ نوی دەستپێبکەی؟\n(ژمارەیێن دەرکەفتی دێ هێنە ڕەشکرن، بەلێ یاریزان دێ مینن)")) {
-                if (window.gameMode === 'online') {
-                    if (!window.isHost) return;
-                    let updates = { drawnNumbers: [], status: 'waiting' };
-                    Object.values(window.players).forEach(p => { updates[`players/${p.id}/isSafe`] = false; updates[`players/${p.id}/isLoser`] = false; updates[`players/${p.id}/isReady`] = false; });
-                    window.hasJoined = false;
-                    await update(ref(db, 'rooms/' + window.roomCode), updates);
-                } else {
-                    window.drawnNumbers = [];
-                    Object.values(window.players).forEach(p => { p.isSafe = false; p.isLoser = false; }); 
-                    window.saveOfflineGameState(); window.resetLocalGameUI(); window.initBoard(); window.renderPlayersTable(); window.updateOfflineMenuState();
-                }
-            }
-        }
-
-        window.resetLocalGameUI = function() {
-            window.stopAutoMode();
-            if (window.pendingAlertTimeout) clearTimeout(window.pendingAlertTimeout); window.pendingAlertTimeout = null;
-            if(window.gameMode === 'online') window.drawnNumbers = []; 
-            clearTimeout(window.celebrationTimeout); document.getElementById('celebrationToast').classList.remove('show');
-            document.getElementById('drawnNumberDisplay').innerText = '--'; 
-            window.updateRemainingCount();
-            if (window.alertsEnabled.draw) { document.getElementById('matchText').innerHTML = 'چاڤەڕێی ڕاکێشانێ یە...'; document.getElementById('matchText').classList.remove('hit'); }
-            document.getElementById('winnerModal').style.display = 'none';
-            if(window.gameMode === 'online') { 
-                window.hasJoined = false;
-                document.getElementById('btnReady').innerText = "ئامادەمە (Ready)"; document.getElementById('btnReady').disabled = false; 
-                document.getElementById('setupPlayerName').disabled = false; document.querySelectorAll('#onlineNumberInputs .num-input-box').forEach(i => i.disabled = false); 
-                window.renderOnlineInputs(window.requiredNumbers);
-                window.showWaitingScreen();
-            }
-        }
-
-        // --- لۆژیکا تایبەت ب Agora (چاتا دەنگی) ---
-
-        window.joinAgoraChannel = async function() {
-            if (!window.agoraAppId || window.agoraAppId === "YOUR_AGORA_APP_ID_HERE") {
-                console.warn("تکایە Agora App ID دابنێ د ناڤ کۆدی دا!");
-                return;
-            }
-            try {
-                window.agoraClient = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
-                // یاریزانان دێ ل سەر ناڤێ ژوورێ کۆک بن، و هەریەکێ ژمارەیەکا خۆ یا هەی
-                await window.agoraClient.join(window.agoraAppId, window.roomCode, null, window.playerId);
-                // دەمێ کەسەکێ دی مایکی ڤەدکەت
-                window.agoraClient.on("user-published", async (user, mediaType) => {
-                    await window.agoraClient.subscribe(user, mediaType);
-                    if (mediaType === "audio") {
-                        window.remoteUsers[user.uid] = user;
-  
-                        // ئەگەر مە ئەو یاریزانە بێدەنگ نەکر بیت، دەنگێ وی لێدە
-                        if (!window.mutedPlayers[user.uid] && !window.isAllMuted) {
-                            user.audioTrack.play();
-            
-                        }
-                    }
-                });
-                // دەمێ کەسەک مایکی دگریت
-                window.agoraClient.on("user-unpublished", user => {
-                    if (window.remoteUsers[user.uid]) {
-                        delete window.remoteUsers[user.uid];
-                    }
-          
-                });
-                
-            } catch (error) {
-                console.error("شاشی د گرێدانا Agora دا:", error);
-            }
-        };
-
-        window.leaveAgoraChannel = async function() {
-            if (window.localAudioTrack) {
-                window.localAudioTrack.stop();
-                window.localAudioTrack.close();
-                window.localAudioTrack = null;
-            }
-            if (window.agoraClient) {
-                await window.agoraClient.leave();
-            }
-        };
-
-        // ڤەکرن و گرتنا مایکرۆفۆنێ تە
-        window.toggleMyMic = async function() {
-            if (!window.agoraClient) return;
-            // ئەگەر چاتا دەنگی نەهاتیتە چالاککرن
-            
-            const micBtn = document.getElementById('micToggleBtn');
-            const muteAllBtn = document.getElementById('muteAllBtn');
-            
-            if (window.isMicMuted) {
-                try {
-                    if (!window.localAudioTrack) {
-                        window.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
-                        await window.agoraClient.publish([window.localAudioTrack]);
-                    } else {
-                        await window.localAudioTrack.setMuted(false);
-                    }
-                    window.isMicMuted = false;
-                    micBtn.innerText = "🎤";
-                    micBtn.style.background = "#4caf50";
-                    muteAllBtn.style.display = "flex";
-                } catch (err) {
-                    alert("لێبۆڕینێ دخوازم، نەشیا مایکی ڤەکەت. پێدڤییە دەستویریێ (Allow) بدەیێ.");
-                }
-            } else {
-                if (window.localAudioTrack) {
-                    await window.localAudioTrack.setMuted(true);
-                }
-                window.isMicMuted = true;
-                micBtn.innerText = "🔇";
-                micBtn.style.background = "#f44336";
-                muteAllBtn.style.display = "none";
-            }
-        };
-
-        // گرتن یان ڤەکرنا دەنگێ یاریزانیەکێ دیارکری
-        window.toggleMutePlayer = function(targetPlayerId) {
-            window.mutedPlayers[targetPlayerId] = !window.mutedPlayers[targetPlayerId];
-            const remoteUser = window.remoteUsers[targetPlayerId];
-            if (remoteUser && remoteUser.audioTrack) {
-                if (window.mutedPlayers[targetPlayerId]) {
-                    remoteUser.audioTrack.stop();
-                } else {
-                    remoteUser.audioTrack.play();
-                }
-            }
-            window.renderPlayersTable();
-        };
-
-        // بێدەنگکرنا هەمی یاریزانان پێکڤە
-        window.toggleMuteAll = function() {
-            const muteAllBtn = document.getElementById('muteAllBtn');
-            window.isAllMuted = !window.isAllMuted;
-            
-            Object.values(window.players).forEach(p => {
-                if (p.id !== window.playerId) {
-                    window.mutedPlayers[p.id] = window.isAllMuted;
-                    const remoteUser = window.remoteUsers[p.id];
-                    if (remoteUser && remoteUser.audioTrack) {
-      
-                        if (window.isAllMuted) {
-                            remoteUser.audioTrack.stop();
-                        } else {
-                          
-                            remoteUser.audioTrack.play();
-                        }
-                    }
-                }
-            });
-            if (window.isAllMuted) {
-                muteAllBtn.innerText = "🔊";
-                muteAllBtn.style.background = "#4caf50";
-            } else {
-                muteAllBtn.innerText = "🔕";
-                muteAllBtn.style.background = "#ff9800";
-            }
-            window.renderPlayersTable();
-        };
-
-    </script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>
